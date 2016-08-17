@@ -1,37 +1,26 @@
+var path = require('path');
+var webpack = require('webpack');
 
-var baseConfig = {
-    module: {
-	loaders: [
-	    {
-		test: /\.js$/,
-		loader: "babel-loader",
-		exclude: /node_modules/
-	    }
-	]
-    }
-}
-
-var libConfig = Object.assign({}, baseConfig, {
-    name: "library",
-    entry: ["./src/lib.core.js"],
-    output: {
-	path: "./",
-	filename: "library.bundle.js"
-    }
-});
-
-var examplesConfig = Object.assign({}, baseConfig, {
-    name: "examples",
-    entry: [ __dirname + "/examples/index.js"],
-    output: {
-	path: __dirname + "/examples/",
-	filename: "bundle.js"
-    }
-});
-
-
-// export configurations for library src and example src
-module.exports = [
-    libConfig,
-    examplesConfig,
-]
+module.exports = {
+  devtool: 'eval',
+  entry: [
+    'webpack-dev-server/client?http://localhost:3000',
+    'webpack/hot/only-dev-server',
+    './src/index'
+  ],
+  output: {
+    path: path.join(__dirname, 'dist'),
+    filename: 'bundle.js',
+    publicPath: '/static/'
+  },
+  plugins: [
+    new webpack.HotModuleReplacementPlugin()
+  ],
+  module: {
+    loaders: [{
+      test: /\.js$/,
+      loaders: ['react-hot', 'babel'],
+      include: path.join(__dirname, 'src')
+    }]
+  }
+};
