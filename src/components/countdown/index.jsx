@@ -2,40 +2,68 @@ import React, { Component } from 'react'
 import './index.css'
 
 export default class Countdown extends Component{
+    static propTypes = {
+	seconds: React.PropTypes.number.isRequired,
+	radius: React.PropTypes.number.isRequired,
+	timeFmt: React.PropTypes.string.isRequired,
+	color: React.PropTypes.string.isRequired,
+	onComplete: React.PropTypes.func,	
+    }
+
+    static defaultProps = {
+	color: "#ff8787",
+	timeFmt: "m:s",	
+    }
+
     construct() {
 	// do stuff?
     }
 
     componentDidMount() {
-	this.seconds = this.props.seconds
-	this.radius = this.props.radius
-	this.color = this.props.color
 	this.setup()
     }
 
     componentWillReceiveProps(props) {
-	this.seconds = props.seconds
-	this.radius = props.radius
-	this.color = props.color
-	this.setup()
+	this.setup(props)
     }
 
-    setup() {
+    setup(props=this.props) {
+	this.ctx = this.canvas.getContext('2d')
+	this.ctx.textAlign = 'center'
+	this.ctx.textBaseline = 'middle'	
+
 	this.draw()
     }
 
+    scale() {
+	// scale fontsize and everything according to radius
+	const scale = 0.4
+	return `${scale*this.props.radius}px`
+    }
+
     draw() {
-	const ctx = this.canvas.getContext('2d')
+	const radius = this.props.radius
+	const color = this.props.color
+	let fontSize = this.scale()
+	let font = "courier"
 
-	ctx.textAlign = 'center'
-	ctx.textBase = 'middle'	
+	this.ctx.fillStyle = color
+	this.ctx.font = `bold ${fontSize} ${font}`
+	this.ctx.fillText("1:23", radius, radius)
 
-	ctx.beginPath()
-	ctx.globalAlpha = 1
-	ctx.fillStyle = this.color
-	ctx.arc(this.radius, this.radius, this.radius, Math.PI*1.5, 0, false)
-	ctx.arc(this.radius, this.radius*0.6, this.radius, 0, Math.PI*1.5, false)
-	ctx.fill()
+	this.drawRing(color)
+	this.drawRing(color)
+    }
+
+    drawRing(color) {
+	const radius = this.props.radius
+	const pi = Math.PI
+
+	this.ctx.fillStyle = color
+	this.ctx.beginPath()
+	this.ctx.arc(radius, radius, radius, 0, pi*2, false)
+	this.ctx.arc(radius, radius, radius*0.6, pi*2, 0, true)
+	this.ctx.fill()	
     }
 
     render() {
@@ -49,17 +77,4 @@ export default class Countdown extends Component{
 	    </canvas>
 	)
     }
-}
-
-Countdown.propTypes = {
-    seconds: React.PropTypes.number.isRequired,
-    radius: React.PropTypes.number.isRequired,
-    color: React.PropTypes.string,
-    onComplete: React.PropTypes.func,
-    showMilliseconds: React.PropTypes.bool,
-}
-
-Countdown.defaultProps = {
-    color: "#ff8787",
-    showMilliseconds: false
 }
