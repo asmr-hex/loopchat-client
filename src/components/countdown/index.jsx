@@ -15,8 +15,16 @@ export default class Countdown extends Component{
 	timeFmt: "m:s",	
     }
 
-    construct() {
-	// do stuff?
+    constructor() {
+	super()
+	this.state = {
+	    active: false
+	}
+	this.handleClick = this.handleClick.bind(this)
+    }
+
+    handleClick() {
+	this.setState({active: !this.state.active})
     }
 
     componentDidMount() {
@@ -51,18 +59,33 @@ export default class Countdown extends Component{
 	this.ctx.font = `bold ${fontSize} ${font}`
 	this.ctx.fillText("1:23", radius, radius)
 
-	this.drawRing(color)
-	this.drawRing(color)
+	this.drawRing(this.shader(color, 0.6), 1)
+	this.drawRing(color, (1-0.9))
     }
 
-    drawRing(color) {
+    shader(color, percent) {
+	let f = parseInt(color.slice(1), 16)
+	let t = percent < 0 ? 0:255
+	let p = percent < 0 ? percent*-1:percent
+	let R = f >> 16
+	let G = f >> 8&0x00FF
+	let B = f >> f&0x0000FF
+
+	R = 0x1000000 + (Math.round((t-R)*p)+R)*0x10000
+	G = (Math.round((t-G)*p)+G)*0x100
+	B = (Math.round((t-B)*p)+B)
+	
+	return "#" + (R+B+G).toString(16).slice(1)
+    }
+
+    drawRing(color, p) {
 	const radius = this.props.radius
 	const pi = Math.PI
 
 	this.ctx.fillStyle = color
 	this.ctx.beginPath()
-	this.ctx.arc(radius, radius, radius, 0, pi*2, false)
-	this.ctx.arc(radius, radius, radius*0.6, pi*2, 0, true)
+	this.ctx.arc(radius, radius, radius, 1.5*pi - (2*pi*p), pi*1.5, true)
+	this.ctx.arc(radius, radius, radius*0.6, pi*1.5, 1.5*pi - (2*pi*p), false)
 	this.ctx.fill()	
     }
 
@@ -70,6 +93,7 @@ export default class Countdown extends Component{
 	let {radius} = this.props
 	return (
 	    <canvas className="countdown"
+		    onClick={this.handleClick}
 		    ref={(c) => {this.canvas = c}}
 		    width={radius*2}
 		    height={radius*2}
