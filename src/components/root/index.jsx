@@ -6,7 +6,7 @@ export default class Root extends Component {
     render() {
 	return (
 	    <div className='root'>Welcome to LoopChat.
-		<Countdown seconds={5} radius={50}/>
+		<Countdown seconds={10} radius={50}/>
 	    </div>
 	)
     }

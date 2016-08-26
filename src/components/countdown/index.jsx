@@ -2,6 +2,17 @@ import React, { Component } from 'react'
 import './index.css'
 
 export default class Countdown extends Component{
+    constructor() {
+	super()
+	this.state = {
+	    active: false
+	}
+
+	this.elapsedSeconds = 0
+
+	this.handleClick = this.handleClick.bind(this)
+    }
+
     static propTypes = {
 	seconds: React.PropTypes.number.isRequired,
 	radius: React.PropTypes.number.isRequired,
@@ -13,18 +24,6 @@ export default class Countdown extends Component{
     static defaultProps = {
 	color: "#ff8787",
 	timeFmt: "m:s",	
-    }
-
-    constructor() {
-	super()
-	this.state = {
-	    active: false
-	}
-	this.handleClick = this.handleClick.bind(this)
-    }
-
-    handleClick() {
-	this.setState({active: !this.state.active})
     }
 
     componentDidMount() {
@@ -43,6 +42,38 @@ export default class Countdown extends Component{
 	this.draw()
     }
 
+    handleClick() {
+	this.setState({active: !this.state.active})
+	if (this.state.active) {
+	    // start ticker
+	    this.elapsedSeconds = 0
+	    this.tick()
+	}
+    }
+
+    tick() {
+	/*
+	if (!this.state.active) {
+	    return
+	}*/
+
+	console.log("OK")
+
+	let start = Date.now()
+	setTimeout(() => {
+	    let duration = (Date.now() - start) / 1000
+	    this.elapsedSeconds += duration
+
+	    if (this.elapsedSeconds > this.props.seconds) {
+		this.elapsedSeconds = 0
+		this.tick()
+	    } else {
+		this.draw()
+		this.tick()
+	    }
+	}, 100)
+    }
+
     scale() {
 	// scale fontsize and everything according to radius
 	const scale = 0.4
@@ -54,13 +85,16 @@ export default class Countdown extends Component{
 	const color = this.props.color
 	let fontSize = this.scale()
 	let font = "courier"
+	let p = this.elapsedSeconds/this.props.seconds
+
+	this.ctx.clearRect(0, 0, radius*2, radius*2)
 
 	this.ctx.fillStyle = color
 	this.ctx.font = `bold ${fontSize} ${font}`
-	this.ctx.fillText("1:23", radius, radius)
+	this.ctx.fillText(`${Math.round(this.elapsedSeconds)}`, radius, radius)
 
 	this.drawRing(this.shader(color, 0.6), 1)
-	this.drawRing(color, (1-0.9))
+	this.drawRing(color, (1-p))
     }
 
     shader(color, percent) {
