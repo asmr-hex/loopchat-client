@@ -37,6 +37,6 @@
   "dependencies": {
     "react": "^0.14.6",
     "react-dom": "^0.14.6",
-    "ws": "^1.1.1"
+    "socket.io-client": "^1.7.2"
   }
 }
