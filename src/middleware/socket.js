@@ -1,4 +1,3 @@
-import io from 'socket.io-client'
 import { CONNECT, DISCONNECT, SEND_MESSAGE } from '../action/types'
 import * as actions from '../action/creators'
 
@@ -22,11 +21,11 @@ const socketMiddleware = (function(){
   const onMessage = (ws, store) => evt => {
     let msg = JSON.parse(evt.data)
     switch(msg.type) {
-    case 'chatMessage':
+    case 'chat':
       store.dispatch(actions.receivedMessage(msg))
       break
-    case 'sessionID':
-      store.dispatch(actions.joinedSession(msg))
+    case 'session':
+      store.dispatch(actions.joinedSession(msg.payload))
       break
     default:
       console.log('Received message of unkown type "' + msg.type + '"')

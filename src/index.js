@@ -1,5 +1,5 @@
 import React from 'react'
-import { Router, Route, hashHistory } from 'react-router'
+import { Router, Route, browserHistory } from 'react-router'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
@@ -12,10 +12,10 @@ import socketMiddleware from './middleware/socket'
 let store = createStore(reducers,
                         applyMiddleware(thunk, socketMiddleware))
 
-// TOD (cw|1.20.2017) does this route pickup the case with no sessionID?
+
 render(
   <Provider store={store}>
-    <Router history={hashHistory}>
+    <Router history={browserHistory}>
       <Route path="/" component={Session}/>
       <Route path="/:sessionID" component={Session}/>
     </Router>
@@ -23,6 +23,5 @@ render(
   document.getElementById('root')
 )
 
-
-// TODO (cw|1.20.2017) use redux-thunk for persistent websocket connection: https://exec64.co.uk/blog/websockets_with_redux/
 // TODO (cw|1.20.2017) use material-ui: https://github.com/callemall/material-ui
+// TODO (cw|1.22.2017) possibly use CSS Modules as opposed to inline styling

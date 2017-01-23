@@ -44,5 +44,9 @@ export function receivedMessage(message) {
 
 // The JOINED_SESSION action is dispatched by the socketMiddleware
 export function joinedSession(session) {
+  console.info(`%cSuccessfully Joined Session %c${session.id}`,
+              'color:green; font-weight:bold',
+              'color:blue; font-weight:bold'
+             )
   return { type: actions.JOINED_SESSION, session }
 }
