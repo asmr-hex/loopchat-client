@@ -6,7 +6,6 @@ import { createStore, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import reducers from './reducers'
-import Root from './components/root/index'
 import Session from './containers/session'
 import socketMiddleware from './middleware/socket'
 
@@ -18,8 +17,7 @@ render(
   <MuiThemeProvider>
     <Provider store={store}>
       <Router history={browserHistory}>
-        <Route path="/" component={Session}/>
-        <Route path="/:sessionID" component={Session}/>
+        <Route path="/(:sessionID)" component={Session}/>
       </Router>
     </Provider>
   </MuiThemeProvider>,
