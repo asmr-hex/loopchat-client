@@ -1,6 +1,6 @@
 import React, {Component } from 'react'
 import { connect } from 'react-redux'
-import { connect as socketConnect } from '../../action/creators'
+import * as actions from '../../actions'
 import RefreshIndicator from 'material-ui/RefreshIndicator'
 import Dashboard from '../../components/dashboard'
 
@@ -46,7 +46,7 @@ const mapDispatchToProps = dispatch => {
     joinSession: (sessionID='') => {
       let delimiter = sessionID === '' ? '':'/'
       let endpoint = `ws://${host}:${port}/ws${delimiter}${sessionID}`
-      dispatch(socketConnect(endpoint, ''))
+      dispatch(actions.connect(endpoint, ''))
     }
   }
 }

@@ -1,5 +1,4 @@
-import { CONNECT, DISCONNECT, SEND_MESSAGE } from '../action/types'
-import * as actions from '../action/creators'
+import * as actions from '../actions'
 
 
 const socketMiddleware = (function(){
@@ -38,7 +37,7 @@ const socketMiddleware = (function(){
   // a message to a server, etc.). This is made possible by using a thunk.
   return store => next => action => {
     switch(action.type) {
-    case CONNECT:
+    case actions.CONNECT:
       // close any existing socket connections
       if (socket != null) {
         socket.close()
@@ -57,7 +56,7 @@ const socketMiddleware = (function(){
       socket.onmessage = onMessage(socket, store)
 
       break
-    case DISCONNECT:
+    case actions.DISCONNECT:
       // close socket connection if it exists
       if (socket != null) {
         socket.close()
@@ -67,7 +66,7 @@ const socketMiddleware = (function(){
       store.dispatch(actions.disconnected())
 
       break
-    case SEND_MESSAGE:
+    case actions.SEND_MESSAGE:
       socket.send(JSON.stringify(action.message))
 
       break

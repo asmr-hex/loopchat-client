@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 import { List, Map } from  'immutable'
-import * as actions from '../action/types'
+import * as actions from '../actions'
 
 
 function connected(state=false, action) {
