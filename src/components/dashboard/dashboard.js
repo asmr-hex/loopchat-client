@@ -5,6 +5,7 @@ import IconButton from 'material-ui/IconButton'
 import Menu from 'material-ui/svg-icons/navigation/Menu'
 import Share from 'material-ui/svg-icons/social/Share'
 import injectTapEventPlugin from 'react-tap-event-plugin'
+import Peers from '../../containers/peers'
 import './dashboard.css'
 
 // we need this for this component to work with AppBar
@@ -18,7 +19,7 @@ const Dashboard = (props) => {
   }
   return(
       <div className='dashboard'>
-        <IconMenu
+      <IconMenu className='dashboard-icon'
           iconButtonElement={
             <IconButton iconStyle={iconStyles}>
               <Menu/>
@@ -27,7 +28,7 @@ const Dashboard = (props) => {
     anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
     targetOrigin={{horizontal: 'left', vertical: 'top'}}
       />
-        <IconMenu
+        <IconMenu className='dashboard-icon'
           iconButtonElement={
             <IconButton iconStyle={iconStyles}>
               <Share/>
@@ -38,6 +39,7 @@ const Dashboard = (props) => {
       >
       <MenuItem primaryText={props.session.id}/>
         </IconMenu>
+    <Peers/>
     </div>
   )
 }

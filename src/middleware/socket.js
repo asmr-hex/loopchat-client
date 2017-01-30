@@ -26,6 +26,9 @@ const socketMiddleware = (function(){
     case 'session':
       store.dispatch(actions.joinedSession(msg.payload))
       break
+    case 'users':
+      store.dispatch(actions.joinedByPeers(msg.payload))
+      break
     default:
       console.log('Received message of unkown type "' + msg.type + '"')
     }

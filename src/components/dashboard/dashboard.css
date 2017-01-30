@@ -12,3 +12,8 @@ html {
     overflow: hidden;
     overflow-y: scroll;
 }
+
+.dashboard-icon {
+    margin-right: 10px;
+    margin-left: 10px;
+}

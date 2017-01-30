@@ -53,13 +53,30 @@ function session(state=Map(), action) {
   }
 }
 
+function peers(state=List(), action) {
+  switch(action.type) {
+  case actions.JOINED_BY_PEERS:
+    return List(action.peers)
+  default:
+    return state
+  }
+}
 
 const reducers = combineReducers({
   connected,
   connecting,
   sentMessages,
   receivedMessages,
-  session
+  session,
+  peers
 })
 
 export default reducers
+
+
+
+
+
+
+
+

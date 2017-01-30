@@ -57,3 +57,18 @@ export function joinedSession(session) {
              )
   return { type: JOINED_SESSION, session }
 }
+
+// the JOINED_BY_USERS action is dispatched by the socketMiddleware
+export const JOINED_BY_PEERS = 'JOINED_BY_PEERS'
+export function joinedByPeers(peers) {
+  return { type: JOINED_BY_PEERS, peers }
+}
+
+
+
+
+
+
+
+
+
