@@ -18,28 +18,28 @@ const Dashboard = (props) => {
     color: '#ff9694'
   }
   return(
-      <div className='dashboard'>
+    <div className='dashboard'>
       <IconMenu className='dashboard-icon'
-          iconButtonElement={
-            <IconButton iconStyle={iconStyles}>
-              <Menu/>
-            </IconButton>
-          }
-    anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-    targetOrigin={{horizontal: 'left', vertical: 'top'}}
-      />
-        <IconMenu className='dashboard-icon'
-          iconButtonElement={
-            <IconButton iconStyle={iconStyles}>
-              <Share/>
-            </IconButton>
-          }
-    anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-    targetOrigin={{horizontal: 'left', vertical: 'top'}}
-      >
-      <MenuItem primaryText={props.session.id}/>
-        </IconMenu>
-    <Peers/>
+                iconButtonElement={
+                    <IconButton iconStyle={iconStyles}>
+                        <Menu/>
+                      </IconButton>
+                    }
+                    anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+                    targetOrigin={{horizontal: 'left', vertical: 'top'}}
+                    />
+      <IconMenu className='dashboard-icon'
+                iconButtonElement={
+                    <IconButton iconStyle={iconStyles}>
+                        <Share/>
+                      </IconButton>
+                    }
+                    anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+                    targetOrigin={{horizontal: 'left', vertical: 'top'}}
+                    >
+        <MenuItem primaryText={props.session.id}/>
+      </IconMenu>
+      <Peers/>
     </div>
   )
 }

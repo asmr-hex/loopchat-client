@@ -3,6 +3,7 @@ html {
 }
 
 .dashboard {
+    display: flex;
     position: absolute;
     background: #FFF59D;
     top: 0px;

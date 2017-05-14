@@ -2,13 +2,14 @@ import React, {Component } from 'react'
 import { connect } from 'react-redux'
 import * as actions from '../../actions'
 import Avatar from 'material-ui/Avatar'
+import './peers.css'
 
 class Peers extends Component {
   render() {
     const peers = this.props.peers.toJS()
     const avatars = peers.map((peer, i) => {
       return (
-        <Avatar key={i}>
+        <Avatar className='peer' key={i}>
           {peer.name[0]}
         </Avatar>
       )

@@ -1,0 +1,9 @@
+.peer-list {
+    flex: 0 0 %100;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.peer {
+}
