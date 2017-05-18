@@ -62,17 +62,26 @@ function peers(state=List(), action) {
   }
 }
 
+const midiDevices = (state = List(), action) => {
+  switch (action.type) {
+  case actions.REGISTERED_MIDI_DEVICES:
+    return List(action.payload)
+  default:
+    return state
+  }
+}
+
 const reducers = combineReducers({
   connected,
   connecting,
   sentMessages,
   receivedMessages,
   session,
-  peers
+  midiDevices,
+  peers,
 })
 
 export default reducers
-
 
 
 

@@ -3,17 +3,28 @@ import { connect } from 'react-redux'
 import * as actions from '../../actions'
 import RefreshIndicator from 'material-ui/RefreshIndicator'
 import Dashboard from '../../components/dashboard'
+import { setupMIDI } from '../../midi'
 
 const host = '127.0.0.1'
 const port = '3145'
 
 class Session extends Component {
+  
   componentDidMount() {
-    this.props.joinSession(this.props.sessionID)
+    const { joinSession, registerMIDIDevices, sessionID } = this.props
+    
+    // join a session
+    joinSession(sessionID)
+
+    // setup MIDI
+    setupMIDI(registerMIDIDevices)
   }
 
   render() {
     const loading = this.props.connected ? 'hide':'loading'
+    const devices = this.props.midiDevices
+    console.log(devices)
+    
     return (
       <div>
         <RefreshIndicator
@@ -33,21 +44,25 @@ class Session extends Component {
 const mapStateToProps = (state, { params }) => {
   // check for sessionID from router
   let sessionID = params.sessionID || ''
-
+  
   return {
     connected: state.connected,
     session: state.session.toJS(),
-    sessionID
+    sessionID,
+    midiDevices: state.midiDevices.toJS(),
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
     joinSession: (sessionID='') => {
-      let delimiter = sessionID === '' ? '':'/'
-      let endpoint = `ws://${host}:${port}/ws${delimiter}${sessionID}`
+      const delimiter = sessionID === '' ? '':'/'
+      const endpoint = `ws://${host}:${port}/ws${delimiter}${sessionID}`
       dispatch(actions.connect(endpoint, ''))
-    }
+    },
+    registerMIDIDevices: devices => {
+      dispatch(actions.registerMIDIDevices(devices))
+    },
   }
 }
 

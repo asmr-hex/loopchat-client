@@ -4,6 +4,9 @@ freaky friend beats  :musical_score:
 ## What is LoopChat?
 LoopChat is a real-time music collaboration application. Think Google Docs, but for making beats, noise loops, etc. with your friends!
 
+## Links
+[**Kanban Board**](https://trello.com/b/RbMlhUSk/loopchat)
+
 ## Functional Requirements
 1. **Real-Time Music Generation**: players shall be able to generate sounds and apply treatments in real-time with session-mates.
 2. **MIDI Generation**: players shall be able to generate MIDI data from their browsers.
@@ -53,3 +56,7 @@ LoopChat is a real-time music collaboration application. Think Google Docs, but 
 * [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
 * [MIDI.JS](https://github.com/mudcube/MIDI.js/)
 * [JSSoundRecorder](https://github.com/daaain/JSSoundRecorder)
+* [ToneJS](https://github.com/Tonejs/Tone.js)
+* [TunaJS](https://github.com/Theodeus/tuna)
+* [NexusUI](http://www.nexusosc.com/)
+* [Example Web Synth](http://joeldarling.com/joliesynth/)

@@ -1,5 +1,8 @@
 /*
  * Action Types and Creators
+ * 
+ * TODO (cw|5.18.2017) fix all these action creators to use FSA (Flux Standard Actions)
+ * (see https://github.com/acdlite/flux-standard-action).
  */
 
 
@@ -64,11 +67,8 @@ export function joinedByPeers(peers) {
   return { type: JOINED_BY_PEERS, peers }
 }
 
-
-
-
-
-
-
-
+export const REGISTERED_MIDI_DEVICES = 'REGISTERED_MIDI_DEVICES'
+export const registerMIDIDevices = devices => {
+  return { type: REGISTERED_MIDI_DEVICES, payload: devices }
+}
 
