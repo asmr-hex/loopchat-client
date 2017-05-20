@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 import { List, Map } from  'immutable'
 import * as actions from '../actions'
-
+import { map, omit } from 'lodash'
 
 function connected(state=false, action) {
   switch(action.type) {
@@ -62,14 +62,34 @@ function peers(state=List(), action) {
   }
 }
 
-const midiDevices = (state = List(), action) => {
+// const midiDevices = (state = [], action) => {
+//   switch (action.type) {
+//   case actions.REGISTERED_MIDI_DEVICES:
+//     return action.payload
+//   case actions.MIDI_MSG_HANDLER_ASSIGNED_TO_DEVICE:
+//     return map(state, device => {
+//       if (device.id === action.deviceId) device.onmidimessage = action.msgHandler
+//       return device
+//     })
+//   default:
+//     return state
+//   }
+// }
+
+const midiDevices = (state = {}, action) => {
   switch (action.type) {
-  case actions.REGISTERED_MIDI_DEVICES:
-    return List(action.payload)
+  case actions.REGISTERED_MIDI_DEVICE:
+      return { ...state, [action.payload.id]: action.payload }
+  case actions.UNREGISTERED_MIDI_DEVICE:
+      return omit(state, action.payload.id)
   default:
     return state
   }
 }
+
+// const midiDevices = combineReducers({
+//   byId,
+// })
 
 const reducers = combineReducers({
   connected,

@@ -67,8 +67,22 @@ export function joinedByPeers(peers) {
   return { type: JOINED_BY_PEERS, peers }
 }
 
-export const REGISTERED_MIDI_DEVICES = 'REGISTERED_MIDI_DEVICES'
-export const registerMIDIDevices = devices => {
-  return { type: REGISTERED_MIDI_DEVICES, payload: devices }
+export const REGISTERED_MIDI_DEVICE = 'REGISTERED_MIDI_DEVICE'
+export const registerMIDIDevice = device => {
+  return { type: REGISTERED_MIDI_DEVICE, payload: device }
 }
 
+export const UNREGISTERED_MIDI_DEVICE = 'UNREGISTERED_MIDI_DEVICE'
+export const unregisterMidiDevice = device => ({
+  type: UNREGISTERED_MIDI_DEVICE,
+  payload: device,
+})
+
+export const MIDI_MSG_HANDLER_ASSIGNED_TO_DEVICE = 'MIDI_MSG_HANDLER_ASSIGNED_TO_DEVICE'
+export const assignMidiMsgHandlerTo = (deviceId, msgHandler) => ({
+  type: MIDI_MSG_HANDLER_ASSIGNED_TO_DEVICE,
+  payload: {
+    deviceId,
+    msgHandler,
+  }
+})
