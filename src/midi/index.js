@@ -1,5 +1,7 @@
+import { forEach, get } from 'lodash'
 import { MidiEventBus, MIDI_MSG_RECEIVED } from './bus'
-import { forEach, pick, get } from 'lodash'
+import { connectMidiDeviceWith, disconnectMidiDeviceWith } from './connect'
+import { DEVICE_STATE_CONNECTED, DEVICE_STATE_DISCONNECTED } from './connect'
 
 /** 
  * setupMIDI provides access to the WebMIDI API and takes a handler
@@ -26,16 +28,12 @@ export const setupMIDI = (register, unregister) => {
   )
 }
 
-const DEVICE_STATE_CONNECTED = 'connected'
-const DEVICE_STATE_DISCONNECTED = 'disconnected'
-
 export let midiEventBus = new MidiEventBus()
-// midiEventBus.addEventListener(MIDI_MSG_RECEIVED, e => { console.log(e)} )
 
 const initMIDIAccess = (midi, register, unregister) => {
 
   // make connect/disconnect functions
-  const connect = connectMidiDeviceWith(register)
+  const connect = connectMidiDeviceWith(register, midiEventBus)
   const disconnect = disconnectMidiDeviceWith(unregister)
   const handleStateChange = handleStateChangeWith(connect, disconnect)
   
@@ -53,31 +51,6 @@ const initMIDIAccess = (midi, register, unregister) => {
   }
 }
 
-const connectMidiDeviceWith = register => device => {
-  // register connected device using curried register function
-  register(pick(device, ['id', 'name', 'manufacturer', 'type', 'state']))
-
-  // send midi messages to midiEventBus
-  redirectMidiMessageEvents(device)
-
-  console.info(
-    `%cConnected --> %c${device.name}`,
-    'color:green; font-weight:bold',
-    'color:purple; font-weight:bold',
-  )
-}
-
-const disconnectMidiDeviceWith = unregister => device => {
-  // unregister disconnected device using curried unregister function
-  unregister(device)
-
-  console.info(
-    `%cDisconnected -/-> %c${device.name}`,
-    'color:red; font-weight:bold',
-    'color:purple; font-weight:bold',
-  )
-}
-
 const handleStateChangeWith = (connect, disconnect) => event => {
   // on connection/disconnection, connect/disconnect devices
   if (event instanceof MIDIConnectionEvent) {
@@ -93,19 +66,6 @@ const handleStateChangeWith = (connect, disconnect) => event => {
     }
   }  
 }
-
-const redirectMidiMessageEvents = device => {
-  device.onmidimessage = msg => {
-    const event = {
-      type: MIDI_MSG_RECEIVED,
-      payload: msg,
-    }
-
-    // maybe it can be curried?
-    midiEventBus.dispatchEvent(event)
-  }
-}
-
 
 const MIDIAccessFailure = err => console.log(`Could not gain access to MIDI: ${err}`)
 

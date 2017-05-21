@@ -1,10 +1,15 @@
-import React, {Component } from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import * as actions from '../../actions'
 import Avatar from 'material-ui/Avatar'
 import './peers.css'
 
-class Peers extends Component {
+
+const mapStateToProps = state => ({
+  peers: state.peers,
+})
+
+@connect(mapStateToProps)
+export default class Peers extends Component {
   render() {
     const peers = this.props.peers.toJS()
     const avatars = peers.map((peer, i) => {
@@ -21,11 +26,3 @@ class Peers extends Component {
     )
   }
 }
-
-const mapStateToProps = ({peers}) => ({
-  peers
-})
-
-export default connect(
-  mapStateToProps
-)(Peers)
