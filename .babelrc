@@ -1,6 +1,13 @@
 {
-  "presets": ["es2015",
-  	      "stage-0",
-	      "react"
-	     ]
+  "presets": [
+    "latest",
+    "react",
+    "es2017",
+    "stage-0",
+    "stage-1"
+  ],
+  "plugins": [
+  "transform-class-properties",
+  "transform-decorators-legacy" 
+ ]
 }

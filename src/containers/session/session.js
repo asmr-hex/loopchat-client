@@ -1,30 +1,60 @@
 import React, {Component } from 'react'
 import { connect } from 'react-redux'
-import * as actions from '../../actions'
 import RefreshIndicator from 'material-ui/RefreshIndicator'
+import FlatButton from 'material-ui/FlatButton'
 import Dashboard from '../../components/dashboard'
 import { setupMIDI } from '../../midi'
+import { connectAndJoinSession } from '../../actions/connection'
+import { registerMidiDevice, unregisterMidiDevice } from '../../actions/midiDevices'
+import { connectionStatus } from '../../types/connectionStatus'
 
 const host = '127.0.0.1'
 const port = '3145'
 
-class Session extends Component {
+const mapStateToProps = (state, { params }) => {
+  // check for sessionID from router
+  let sessionID = params.sessionID || ''
+  
+  return {
+    connectionStatus: state.connection.status,
+    session: state.session,
+    sessionID,
+    midiDevices: state.midiDevices,
+  }
+}
+
+const actions = {
+  connectAndJoinSession,
+  registerMidiDevice,
+  unregisterMidiDevice,
+}
+
+@connect(mapStateToProps, actions)
+export default class Session extends Component {
   
   componentDidMount() {
-    const { joinSession, registerMIDIDevices, sessionID } = this.props
+    const {
+      connectAndJoinSession,
+      registerMidiDevice,
+      unregisterMidiDevice,
+      sessionID,
+    } = this.props
     
     // join a session
-    joinSession(sessionID)
+    connectAndJoinSession(host, port, sessionID)
 
     // setup MIDI
-    setupMIDI(registerMIDIDevices)
+    setupMIDI(registerMidiDevice, unregisterMidiDevice)
+
   }
 
   render() {
-    const loading = this.props.connected ? 'hide':'loading'
-    const devices = this.props.midiDevices
-    console.log(devices)
-    
+    const loading = this.props.connectionStatus === connectionStatus.CONNECTING
+          ? 'loading'
+          : 'hide'
+    let devices = this.props.midiDevices
+//    console.log(devices)
+
     return (
       <div>
         <RefreshIndicator
@@ -40,33 +70,3 @@ class Session extends Component {
     )
   }
 }
-
-const mapStateToProps = (state, { params }) => {
-  // check for sessionID from router
-  let sessionID = params.sessionID || ''
-  
-  return {
-    connected: state.connected,
-    session: state.session.toJS(),
-    sessionID,
-    midiDevices: state.midiDevices.toJS(),
-  }
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    joinSession: (sessionID='') => {
-      const delimiter = sessionID === '' ? '':'/'
-      const endpoint = `ws://${host}:${port}/ws${delimiter}${sessionID}`
-      dispatch(actions.connect(endpoint, ''))
-    },
-    registerMIDIDevices: devices => {
-      dispatch(actions.registerMIDIDevices(devices))
-    },
-  }
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Session)

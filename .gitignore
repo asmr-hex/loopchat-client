@@ -1,5 +1,14 @@
+# node
 node_modules
 npm-debug.log
-.DS_Store
 dist
+
+# Webstorm/IntelliJ
+.idea
+.tmp
+
+# OSX
+.DS_Store
+
+# tern
 .tern-port

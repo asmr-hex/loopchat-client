@@ -1,5 +1,8 @@
-import * as actions from '../actions'
-
+import { CONNECT, DISCONNECT } from '../actions/connection'
+import { connecting, connected, disconnected } from '../actions/connection/status'
+import { receivedMessage, SEND_MESSAGE } from '../actions/messages'
+import { joinedSession } from '../actions/session'
+import { joinedByPeers } from '../actions/peers'
 
 const socketMiddleware = (function(){
   let socket = null
@@ -9,25 +12,25 @@ const socketMiddleware = (function(){
     // TODO (cw|1.20.2017) write authentication logic
     
     // perform connected action against state
-    store.dispatch(actions.connected())
+    store.dispatch(connected())
   }
 
   const onClose = (ws, store) => evt => {
     // perform disconnected action against state
-    store.dispatch(actions.disconnected())
+    store.dispatch(disconnected())
   }
 
-  const onMessage = (ws, store) => evt => {
-    let msg = JSON.parse(evt.data)
+  const onMessage = (ws, store) => event => {
+    let msg = JSON.parse(event.data)
     switch(msg.type) {
     case 'chat':
-      store.dispatch(actions.receivedMessage(msg))
+      store.dispatch(receivedMessage(msg))
       break
     case 'session':
-      store.dispatch(actions.joinedSession(msg.payload))
+      store.dispatch(joinedSession(msg.payload))
       break
     case 'users':
-      store.dispatch(actions.joinedByPeers(msg.payload))
+      store.dispatch(joinedByPeers(msg.payload))
       break
     default:
       console.log('Received message of unkown type "' + msg.type + '"')
@@ -40,37 +43,37 @@ const socketMiddleware = (function(){
   // a message to a server, etc.). This is made possible by using a thunk.
   return store => next => action => {
     switch(action.type) {
-    case actions.CONNECT:
+    case CONNECT:
       // close any existing socket connections
       if (socket != null) {
         socket.close()
       }
 
       // dispatch that we are currently connection.
-      store.dispatch(actions.connecting())
+      store.dispatch(connecting())
 
       // attempt to connect
       // TODO (cw|1.20.2017) attempt t connect with retries
-      socket = new WebSocket(action.endpoint)
+      socket = new WebSocket(action.payload.endpoint)
 
       // provide socket handlers
-      socket.onopen = onOpen(socket, store, action.token)
+      socket.onopen = onOpen(socket, store, action.payload.token)
       socket.onclose = onClose(socket, store)
       socket.onmessage = onMessage(socket, store)
 
       break
-    case actions.DISCONNECT:
+    case DISCONNECT:
       // close socket connection if it exists
       if (socket != null) {
         socket.close()
       }
       socket = null
 
-      store.dispatch(actions.disconnected())
+      store.dispatch(disconnected())
 
       break
-    case actions.SEND_MESSAGE:
-      socket.send(JSON.stringify(action.message))
+    case SEND_MESSAGE:
+      socket.send(JSON.stringify(action.payload.message))
 
       break
     default:

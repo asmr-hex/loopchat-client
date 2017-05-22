@@ -1,11 +1,12 @@
 # LoopChat Client
 freaky friend beats  :musical_score:
 
+[![Build Status](https://travis-ci.org/connorwalsh/loopchat-client.svg?branch=master)](https://travis-ci.org/connorwalsh/loopchat-client)
+[![GitBook](https://img.shields.io/badge/docs-GitBook-blue.svg)](https://connorwalsh.gitbooks.io/loopchat/)
+[![Trello](https://img.shields.io/badge/kanban-Trello-green.svg)](https://trello.com/b/RbMlhUSk/loopchat)
+
 ## What is LoopChat?
 LoopChat is a real-time music collaboration application. Think Google Docs, but for making beats, noise loops, etc. with your friends!
-
-## Links
-[**Kanban Board**](https://trello.com/b/RbMlhUSk/loopchat)
 
 ## Functional Requirements
 1. **Real-Time Music Generation**: players shall be able to generate sounds and apply treatments in real-time with session-mates.
