@@ -7,7 +7,6 @@
     "unitTests": "NODE_ENV=test mocha-webpack test/unit --recursive",
     "lint": "eslint src",
     "test": "npm run unitTests"
-
   },
   "repository": {
     "type": "git",
@@ -23,6 +22,8 @@
   },
   "homepage": "https://github.com/connorwalsh/loopchat-client",
   "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-cli": "^6.24.1",
     "babel-core": "^6.0.20",
     "babel-eslint": "^4.1.3",
     "babel-loader": "^6.0.1",
