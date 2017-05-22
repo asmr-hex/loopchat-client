@@ -4,7 +4,7 @@
   "description": "collaborative music chat",
   "scripts": {
     "start": "node server.js",
-    "unitTests": "NODE_ENV=test mocha-webpack --webpack-config test.config.js --colors test/unit --recursive",
+    "unitTests": "NODE_ENV=test mocha-webpack --opts mocha-webpack.opts test/unit --recursive",
     "lint": "eslint src",
     "test": "npm run unitTests"
   },
@@ -43,7 +43,8 @@
     "redux-mock-store": "^1.2.3",
     "style-loader": "^0.13.1",
     "webpack": "^1.12.2",
-    "webpack-dev-server": "^1.12.1"
+    "webpack-dev-server": "^1.12.1",
+    "webpack-node-externals": "^1.6.0"
   },
   "dependencies": {
     "immutable": "^3.8.1",
