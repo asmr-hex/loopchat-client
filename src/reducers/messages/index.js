@@ -1,20 +1,19 @@
 import { combineReducers } from 'redux'
-import { List } from 'immutable'
 import { SEND_MESSAGE, RECEIVED_MESSAGE } from '../../actions/messages'
 
-const sent = (state=List(), action) => {
+export const sent = (state = [], action) => {
   switch (action.type) {
   case SEND_MESSAGE:
-    return state.push(action.payload.message)
+    return [...state, action.payload]
   default:
     return state
   }
 }
 
-const received = (state=List(), action) => {
+export const received = (state=[], action) => {
   switch (action.type) {
   case RECEIVED_MESSAGE:
-    return state.push(action.payload.message)
+    return [...state, action.payload]
   default:
     return state
   }
