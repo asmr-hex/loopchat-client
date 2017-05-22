@@ -5,7 +5,9 @@
   "scripts": {
     "start": "node server.js",
     "unitTests": "NODE_ENV=test mocha-webpack test/unit --recursive",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "test": "npm run unitTests"
+
   },
   "repository": {
     "type": "git",

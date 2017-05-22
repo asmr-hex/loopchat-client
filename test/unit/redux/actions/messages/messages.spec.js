@@ -1,8 +1,7 @@
 import { expect } from 'chai'
 import { mockStore } from '../../../../support/setup'
-import { sendMessage } from '../../../../../src/actions/messages'
+import { sendMessage, receivedMessage, SEND_MESSAGE, RECEIVED_MESSAGE } from '../../../../../src/actions/messages'
 import { getSampleMessages } from '../../../../support/data/messages'
-import { SEND_MESSAGE } from '../../../../../src/actions/messages/index'
 
 describe('messages actions', () => {
 
@@ -20,5 +19,14 @@ describe('messages actions', () => {
         { type: SEND_MESSAGE, payload: sampleMessage[0] },
       ])
     })
+  })
+
+  describe('receivedMessage', () => {
+    const store = setup([sampleMessage[0]])
+
+    store.dispatch(receivedMessage(sampleMessage[1]))
+    expect(store.getActions()).to.eql([
+      { type: RECEIVED_MESSAGE, payload: sampleMessage[1] }
+    ])
   })
 })

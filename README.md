@@ -1,5 +1,7 @@
 # LoopChat Client
 freaky friend beats  :musical_score:
+[![Build Status](https://travis-ci.org/connorwalsh/loopchat-client.svg?branch=master)](https://travis-ci.org/connorwalsh/loopchat-client)
+[![GitBook](https://img.shields.io/badge/docs-GitBook-blue.svg)](https://connorwalsh.gitbooks.io/loopchat/)
 
 ## What is LoopChat?
 LoopChat is a real-time music collaboration application. Think Google Docs, but for making beats, noise loops, etc. with your friends!
