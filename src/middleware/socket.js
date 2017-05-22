@@ -54,10 +54,10 @@ const socketMiddleware = (function(){
 
       // attempt to connect
       // TODO (cw|1.20.2017) attempt t connect with retries
-      socket = new WebSocket(action.endpoint)
+      socket = new WebSocket(action.payload.endpoint)
 
       // provide socket handlers
-      socket.onopen = onOpen(socket, store, action.token)
+      socket.onopen = onOpen(socket, store, action.payload.token)
       socket.onclose = onClose(socket, store)
       socket.onmessage = onMessage(socket, store)
 
@@ -73,7 +73,7 @@ const socketMiddleware = (function(){
 
       break
     case SEND_MESSAGE:
-      socket.send(JSON.stringify(action.message))
+      socket.send(JSON.stringify(action.payload.message))
 
       break
     default:

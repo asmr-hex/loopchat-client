@@ -12,7 +12,7 @@ export const connectAndJoinSession = (host, port, sessionID = '') => dispatch =>
 // Thus, there is no corresponding reducer
 export const CONNECT = 'CONNECT'
 export function connect(endpoint, token) {
-  return { type: CONNECT, endpoint, token }
+  return { type: CONNECT, payload: { endpoint, token } }
 }
 
 // The DISCONNECT action is intercepted by socketMiddleware

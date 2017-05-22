@@ -17,7 +17,7 @@ const mapStateToProps = (state, { params }) => {
   
   return {
     connectionStatus: state.connection.status,
-    session: state.session.toJS(),
+    session: state.session,
     sessionID,
     midiDevices: state.midiDevices,
   }

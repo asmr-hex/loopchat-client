@@ -1,11 +1,25 @@
 import { expect } from 'chai'
+import { reduce } from 'lodash'
 import { getSampleMessages } from '../../../../support/data/messages'
-import { sent, received } from '../../../../../src/reducers/messages'
+import { messages, sent, received } from '../../../../../src/reducers/messages'
 import { SEND_MESSAGE, RECEIVED_MESSAGE } from '../../../../../src/actions/messages'
 
 describe('messages reducer', () => {
 
   const sampleMessages = getSampleMessages(3)
+
+  it('appends to sent and received sub-reducers when appropriate', () => {
+    const initialState = {}
+    const actions = [
+      { type: SEND_MESSAGE, payload: sampleMessages[0] },
+      { type: RECEIVED_MESSAGE, payload: sampleMessages[1] },
+    ]
+
+    expect(reduce(actions, (state, action) => messages(state, action), initialState)).to.eql({
+      sent: [sampleMessages[0]],
+      received: [sampleMessages[1]],
+    })
+  })
 
   describe('sent sub-reducer', () => {
 

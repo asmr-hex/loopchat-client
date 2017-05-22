@@ -22,11 +22,14 @@ describe('messages actions', () => {
   })
 
   describe('receivedMessage', () => {
-    const store = setup([sampleMessage[0]])
 
-    store.dispatch(receivedMessage(sampleMessage[1]))
-    expect(store.getActions()).to.eql([
-      { type: RECEIVED_MESSAGE, payload: sampleMessage[1] }
-    ])
+    it('broadcasts received message', () => {
+      const store = setup([sampleMessage[0]])
+
+      store.dispatch(receivedMessage(sampleMessage[1]))
+      expect(store.getActions()).to.eql([
+        { type: RECEIVED_MESSAGE, payload: sampleMessage[1] }
+      ])
+    })
   })
 })

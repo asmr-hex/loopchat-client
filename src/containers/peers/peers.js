@@ -11,7 +11,7 @@ const mapStateToProps = state => ({
 @connect(mapStateToProps)
 export default class Peers extends Component {
   render() {
-    const peers = this.props.peers.toJS()
+    const peers = this.props.peers
     const avatars = peers.map((peer, i) => {
       return (
         <Avatar className='peer' key={i}>

@@ -1,5 +1,5 @@
 
-// the REGISTERED_MIDI_DEVICE action is dispathed by the midiDevice middleware
+// the REGISTERED_MIDI_DEVICE action is dispatched by the midiDevice middleware
 export const REGISTERED_MIDI_DEVICE = 'REGISTERED_MIDI_DEVICE'
 export const registerMidiDevice = device => dispatch => {
   dispatch({
@@ -8,7 +8,7 @@ export const registerMidiDevice = device => dispatch => {
   })
 }
 
-// the UNREGISTERED_MIDI_DEVICE action is dispathed by the midiDevice middleware
+// the UNREGISTERED_MIDI_DEVICE action is dispatched by the midiDevice middleware
 export const UNREGISTERED_MIDI_DEVICE = 'UNREGISTERED_MIDI_DEVICE'
 export const unregisterMidiDevice = device => dispatch => {
   dispatch({
