@@ -4,7 +4,7 @@
   "description": "collaborative music chat",
   "scripts": {
     "start": "node server.js",
-    "unitTests": "NODE_ENV=test mocha-webpack test/unit --recursive",
+    "unitTests": "NODE_ENV=test mocha-webpack --webpack-config test.config.js --colors test/unit --recursive",
     "lint": "eslint src",
     "test": "npm run unitTests"
   },

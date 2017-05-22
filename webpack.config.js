@@ -23,14 +23,14 @@ module.exports = {
   module: {
     loaders: [
       {
-	test: /\.js.*$/,
-	loaders: ['react-hot', 'babel'],
-	exclude: /node_modules/
+        test: /\.js.*$/,
+        loader: 'babel',
+        exclude: /node_modules/
       },
       {
-	test: /\.css$/,
-	loader: 'style-loader!css-loader' 
-	},
+        test: /\.css$/,
+        loader: 'style-loader!css-loader'
+      },
     ]
   }
 };
