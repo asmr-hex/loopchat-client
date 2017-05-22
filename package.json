@@ -4,9 +4,9 @@
   "description": "collaborative music chat",
   "scripts": {
     "start": "node server.js",
-    "unitTests": "NODE_ENV=test mocha-webpack --opts mocha-webpack.opts test/unit --recursive && pwd && ls",
+    "unitTests": " pwd && ls && mocha-webpack --opts mocha-webpack.opts test/unit --recursive",
     "lint": "eslint src",
-    "test": "npm run unitTests && pwd"
+    "test": "pwd && ls && npm run unitTests"
   },
   "repository": {
     "type": "git",
