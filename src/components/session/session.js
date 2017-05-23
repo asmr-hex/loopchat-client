@@ -4,7 +4,10 @@ import RefreshIndicator from 'material-ui/RefreshIndicator'
 import Dashboard from '../dashboard/index'
 import { setupMIDI } from '../../middleware/midi/index'
 import { connectAndJoinSession } from '../../redux/actions/connection/index'
-import { registerMidiDevice, unregisterMidiDevice } from '../../redux/actions/midiDevices/index'
+import {
+  addMidiEventHandler, connectMidiDevices, registerMidiDevice,
+  unregisterMidiDevice
+} from '../../redux/actions/midiDevices/index'
 import { connectionStatus } from '../../types/connectionStatus'
 
 const host = '127.0.0.1'
@@ -24,8 +27,10 @@ const mapStateToProps = (state, { params }) => {
 
 const actions = {
   connectAndJoinSession,
-  registerMidiDevice,
-  unregisterMidiDevice,
+  connectMidiDevices,
+  addMidiEventHandler,
+  // registerMidiDevice,
+  // unregisterMidiDevice,
 }
 
 @connect(mapStateToProps, actions)
@@ -34,8 +39,10 @@ export default class Session extends Component {
   componentDidMount() {
     const {
       connectAndJoinSession,
-      registerMidiDevice,
-      unregisterMidiDevice,
+      connectMidiDevices,
+      addMidiEventHandler,
+      // registerMidiDevice,
+      // unregisterMidiDevice,
       sessionID,
     } = this.props
     
@@ -43,8 +50,10 @@ export default class Session extends Component {
     connectAndJoinSession(host, port, sessionID)
 
     // setup MIDI
-    setupMIDI(registerMidiDevice, unregisterMidiDevice)
+    connectMidiDevices()
+    //setupMIDI(registerMidiDevice, unregisterMidiDevice)
 
+    addMidiEventHandler(() => console.log('OMG OMG'))
   }
 
   render() {

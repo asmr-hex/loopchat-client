@@ -7,13 +7,14 @@ import thunk from 'redux-thunk'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import reducers from './redux/reducers'
 import Session from './components/session'
-import socketMiddleware from './middleware/socket'
+import socketMiddleware from './middleware/websocket/websocket'
 import { setupMIDI } from './middleware/midi'
+import {midiMiddleware} from './middleware/midi/index'
 
 // setup redux store
 let store = createStore(
   reducers,
-  applyMiddleware(thunk, socketMiddleware),
+  applyMiddleware(thunk, socketMiddleware, midiMiddleware),
 )
 
 render(

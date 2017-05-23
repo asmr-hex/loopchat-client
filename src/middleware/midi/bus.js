@@ -23,6 +23,10 @@ export class MidiEventBus {
     }
   }
 
+  addHandler(handler) {
+    this.handlers.push(handler)
+  }
+
   process(event) {
     forEach(this.handlers, handler => {
       handler(event)
