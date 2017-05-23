@@ -6,7 +6,7 @@ import {
   registerMidiDevice,
   UNREGISTERED_MIDI_DEVICE,
   unregisterMidiDevice
-} from '../../../../../src/actions/midiDevices'
+} from '../../../../../src/redux/actions/midiDevices'
 
 describe('midi device actions', () => {
 

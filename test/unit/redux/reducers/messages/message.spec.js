@@ -1,8 +1,8 @@
 import { expect } from 'chai'
 import { reduce } from 'lodash'
 import { getSampleMessages } from '../../../../support/data/messages'
-import { messages, sent, received } from '../../../../../src/reducers/messages'
-import { SEND_MESSAGE, RECEIVED_MESSAGE } from '../../../../../src/actions/messages'
+import { messages, sent, received } from '../../../../../src/redux/reducers/messages'
+import { SEND_MESSAGE, RECEIVED_MESSAGE } from '../../../../../src/redux/actions/messages'
 
 describe('messages reducer', () => {
 

@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { mockStore } from '../../../../support/setup'
-import {JOINED_SESSION, joinedSession} from '../../../../../src/actions/session'
+import {JOINED_SESSION, joinedSession} from '../../../../../src/redux/actions/session'
 import {getSampleSession} from '../../../../support/data/session'
 
 describe('session actions', () => {

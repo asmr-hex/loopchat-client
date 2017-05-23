@@ -1,7 +1,7 @@
 import { expect } from 'chai'
-import {session} from '../../../../../src/reducers/session'
+import {session} from '../../../../../src/redux/reducers/session'
 import {getSampleSession} from '../../../../support/data/session'
-import {JOINED_SESSION} from '../../../../../src/actions/session'
+import {JOINED_SESSION} from '../../../../../src/redux/actions/session'
 
 describe('session reducer', () => {
 

@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { SEND_MESSAGE, RECEIVED_MESSAGE } from '../../actions/messages'
+import { SEND_MESSAGE, RECEIVED_MESSAGE } from '../../actions/messages/index'
 
 export const sent = (state = [], action) => {
   switch (action.type) {

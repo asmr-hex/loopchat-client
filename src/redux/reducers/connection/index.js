@@ -1,5 +1,5 @@
 import { combineReducers } from  'redux'
-import { connectionStatus } from '../../types/connectionStatus'
+import { connectionStatus } from '../../../types/connectionStatus'
 import { CONNECTING, CONNECTED, DISCONNECTED } from '../../actions/connection/status'
 
 export const status = (state = connectionStatus.DISCONNECTED, action) => {

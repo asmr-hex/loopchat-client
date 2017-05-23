@@ -1,8 +1,8 @@
-import { CONNECT, DISCONNECT } from '../actions/connection'
-import { connecting, connected, disconnected } from '../actions/connection/status'
-import { receivedMessage, SEND_MESSAGE } from '../actions/messages'
-import { joinedSession } from '../actions/session'
-import { joinedByPeers } from '../actions/peers'
+import { CONNECT, DISCONNECT } from '../redux/actions/connection'
+import { connecting, connected, disconnected } from '../redux/actions/connection/status'
+import { receivedMessage, SEND_MESSAGE } from '../redux/actions/messages'
+import { joinedSession } from '../redux/actions/session'
+import { joinedByPeers } from '../redux/actions/peers'
 
 const socketMiddleware = (function(){
   let socket = null

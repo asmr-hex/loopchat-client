@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { mockStore } from '../../../../support/setup'
 import {getSamplePeers} from '../../../../support/data/peers'
-import {JOINED_BY_PEERS, joinedByPeers} from '../../../../../src/actions/peers'
+import {JOINED_BY_PEERS, joinedByPeers} from '../../../../../src/redux/actions/peers'
 
 describe('peer actions', () => {
 

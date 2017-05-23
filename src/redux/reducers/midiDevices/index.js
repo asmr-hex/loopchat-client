@@ -1,5 +1,5 @@
 import { omit } from 'lodash'
-import { REGISTERED_MIDI_DEVICE, UNREGISTERED_MIDI_DEVICE } from '../../actions/midiDevices'
+import { REGISTERED_MIDI_DEVICE, UNREGISTERED_MIDI_DEVICE } from '../../actions/midiDevices/index'
 
 export const midiDevices = (state = {}, action) => {
   switch (action.type) {

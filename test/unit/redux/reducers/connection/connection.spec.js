@@ -1,6 +1,6 @@
 import { expect } from 'chai'
-import { connection, status } from '../../../../../src/reducers/connection'
-import { CONNECTING, CONNECTED, DISCONNECTED } from '../../../../../src/actions/connection/status'
+import { connection, status } from '../../../../../src/redux/reducers/connection'
+import { CONNECTING, CONNECTED, DISCONNECTED } from '../../../../../src/redux/actions/connection/status'
 import { connectionStatus } from '../../../../../src/types/connectionStatus'
 
 describe('connection reducer', () => {

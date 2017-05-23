@@ -1,4 +1,4 @@
-import { JOINED_BY_PEERS } from '../../actions/peers'
+import { JOINED_BY_PEERS } from '../../actions/peers/index'
 
 export const peers = (state=[], action) => {
   switch(action.type) {

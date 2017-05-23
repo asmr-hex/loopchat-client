@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { mockStore } from '../../../../support/setup'
-import { sendMessage, receivedMessage, SEND_MESSAGE, RECEIVED_MESSAGE } from '../../../../../src/actions/messages'
+import { sendMessage, receivedMessage, SEND_MESSAGE, RECEIVED_MESSAGE } from '../../../../../src/redux/actions/messages'
 import { getSampleMessages } from '../../../../support/data/messages'
 
 describe('messages actions', () => {

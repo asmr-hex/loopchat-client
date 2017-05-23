@@ -1,6 +1,6 @@
 import { expect } from 'chai'
-import { midiDevices } from '../../../../../src/reducers/midiDevices'
-import { REGISTERED_MIDI_DEVICE, UNREGISTERED_MIDI_DEVICE } from '../../../../../src/actions/midiDevices'
+import { midiDevices } from '../../../../../src/redux/reducers/midiDevices'
+import { REGISTERED_MIDI_DEVICE, UNREGISTERED_MIDI_DEVICE } from '../../../../../src/redux/actions/midiDevices'
 import {getSampleMidiDevices} from '../../../../support/data/midiDevices'
 
 describe('midiDevices reducer', () => {

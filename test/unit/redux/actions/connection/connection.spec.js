@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { mockStore } from '../../../../support/setup'
-import { connectAndJoinSession, CONNECT } from '../../../../../src/actions/connection'
+import { connectAndJoinSession, CONNECT } from '../../../../../src/redux/actions/connection'
 import { connectionStatus } from '../../../../../src/types/connectionStatus'
 
 describe('connection actions', () => {

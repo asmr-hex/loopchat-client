@@ -5,7 +5,7 @@ import IconButton from 'material-ui/IconButton'
 import Menu from 'material-ui/svg-icons/navigation/Menu'
 import Share from 'material-ui/svg-icons/social/Share'
 import injectTapEventPlugin from 'react-tap-event-plugin'
-import Peers from '../../containers/peers'
+import Peers from '../peers'
 import './dashboard.css'
 
 // we need this for this component to work with AppBar

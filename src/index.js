@@ -5,10 +5,10 @@ import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import reducers from './reducers'
-import Session from './containers/session'
+import reducers from './redux/reducers'
+import Session from './components/session'
 import socketMiddleware from './middleware/socket'
-import { setupMIDI } from './midi'
+import { setupMIDI } from './middleware/midi'
 
 // setup redux store
 let store = createStore(

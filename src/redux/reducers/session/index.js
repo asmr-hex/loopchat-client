@@ -1,4 +1,4 @@
-import { JOINED_SESSION } from '../../actions/session'
+import { JOINED_SESSION } from '../../actions/session/index'
 
 export const session = (state={}, action) => {
   switch(action.type) {
