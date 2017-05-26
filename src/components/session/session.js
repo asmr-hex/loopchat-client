@@ -1,14 +1,12 @@
-import React, {Component } from 'react'
-import { connect } from 'react-redux'
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
 import RefreshIndicator from 'material-ui/RefreshIndicator'
-import Dashboard from '../dashboard/index'
-import { setupMIDI } from '../../middleware/midi/index'
-import { connectAndJoinSession } from '../../redux/actions/connection/index'
-import {
-  addMidiEventHandler, connectMidiDevices, registerMidiDevice,
-  unregisterMidiDevice
-} from '../../redux/actions/midiDevices/index'
-import { connectionStatus } from '../../types/connectionStatus'
+import {setupMIDI} from '../../middleware/midi/index'
+import {connectAndJoinSession} from '../../redux/actions/connection/index'
+import {addMidiEventHandler, connectMidiDevices} from '../../redux/actions/midiDevices/index'
+import {connectionStatus} from '../../types/connectionStatus'
+import {Header} from '../header/header'
+import {Dashboard} from '../dashboard/dashboard'
 
 const host = '127.0.0.1'
 const port = '3145'
@@ -29,8 +27,6 @@ const actions = {
   connectAndJoinSession,
   connectMidiDevices,
   addMidiEventHandler,
-  // registerMidiDevice,
-  // unregisterMidiDevice,
 }
 
 @connect(mapStateToProps, actions)
@@ -41,8 +37,6 @@ export default class Session extends Component {
       connectAndJoinSession,
       connectMidiDevices,
       addMidiEventHandler,
-      // registerMidiDevice,
-      // unregisterMidiDevice,
       sessionID,
     } = this.props
     
@@ -51,9 +45,8 @@ export default class Session extends Component {
 
     // setup MIDI
     connectMidiDevices()
-    //setupMIDI(registerMidiDevice, unregisterMidiDevice)
 
-    addMidiEventHandler(() => console.log('OMG OMG'))
+    //addMidiEventHandler(() => console.log('OMG OMG'))
   }
 
   render() {
@@ -65,10 +58,11 @@ export default class Session extends Component {
 
     return (
       <div>
+        <Header session={this.props.session}/>
         <RefreshIndicator
           top={window.innerHeight/2}
           left={window.innerWidth/2}
-          style={{backgroundColor:'#FFF59D'}}
+          style={{backgroundColor:'#ffffff'}}
           status={loading}
           size={100}
           loadingColor={'#80DEEA'}

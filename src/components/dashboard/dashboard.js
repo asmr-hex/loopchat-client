@@ -1,47 +1,36 @@
-import React from 'react'
-import IconMenu from 'material-ui/IconMenu'
-import MenuItem from 'material-ui/MenuItem'
-import IconButton from 'material-ui/IconButton'
-import Menu from 'material-ui/svg-icons/navigation/Menu'
-import Share from 'material-ui/svg-icons/social/Share'
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
+import {values} from 'lodash'
 import injectTapEventPlugin from 'react-tap-event-plugin'
-import Peers from '../peers'
 import './dashboard.css'
+import {Timeline} from '../timeline/timeline'
 
 // we need this for this component to work with AppBar
 injectTapEventPlugin()
 
-const Dashboard = (props) => {
-  const iconStyles = {
-    width: 40,
-    height: 40,
-    color: '#ff9694'
+
+const mapStateToProps = (state, { params }) => ({
+  inputs: values(state.midiDevices),
+})
+
+@connect(mapStateToProps)
+export class Dashboard extends Component {
+  render() {
+    const iconStyles = {
+      width: 40,
+      height: 40,
+      color: '#ff9694'
+    }
+    return(
+      <div className='dashboard'>
+        <Timeline
+          width={800}
+          height={200}
+          background={'#f195c8'}
+          inputs={this.props.inputs}
+        />
+      </div>
+    )
   }
-  return(
-    <div className='dashboard'>
-      <IconMenu className='dashboard-icon'
-                iconButtonElement={
-                    <IconButton iconStyle={iconStyles}>
-                        <Menu/>
-                      </IconButton>
-                    }
-                    anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-                    targetOrigin={{horizontal: 'left', vertical: 'top'}}
-                    />
-      <IconMenu className='dashboard-icon'
-                iconButtonElement={
-                    <IconButton iconStyle={iconStyles}>
-                        <Share/>
-                      </IconButton>
-                    }
-                    anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-                    targetOrigin={{horizontal: 'left', vertical: 'top'}}
-                    >
-        <MenuItem primaryText={props.session.id}/>
-      </IconMenu>
-      <Peers/>
-    </div>
-  )
 }
 
-export default Dashboard

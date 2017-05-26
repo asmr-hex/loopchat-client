@@ -10,33 +10,28 @@ export const MIDI_MSG_RECEIVED = 'MIDI_MSG_RECEIVED'
 // midi state.
 export class MidiEventBus {
   constructor() {
-    this.handlers = [e => console.log(e)]
+    // this.handlers = [e => console.log(e)]
+    this.handlers = {}
   }
 
-  dispatchEvent(event) {
-    switch (event.type) {
-    case MIDI_MSG_RECEIVED:
-      this.process(event.payload)
-      return
-    default:
-      return
+  addHandler(handler, deviceId) {
+    this.handlers = {
+      ...this.handlers,
+      [deviceId]: [...this.handlers[deviceId], handler],
     }
   }
 
-  addHandler(handler) {
-    this.handlers.push(handler)
-  }
-
   process(event) {
-    forEach(this.handlers, handler => {
+    const deviceId = get(event, `target.id`)
+    const handlers = get(this.handlers, `${deviceId}`, [])
+
+    forEach(handlers, handler => {
       handler(event)
     })
   }
 
-  
-  
   flush() {
-    this.handlers = []
+    this.handlers = {}
   }
 }
 

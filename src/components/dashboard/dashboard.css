@@ -1,20 +1,10 @@
-html {
-    background-size: 100%;
-}
 
 .dashboard {
-    display: flex;
     position: absolute;
-    background: #FFF59D;
-    top: 0px;
-    left: 0px;
-    bottom: 0px;
-    right: 0px;
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
     overflow: hidden;
     overflow-y: scroll;
 }
 
-.dashboard-icon {
-    margin-right: 10px;
-    margin-left: 10px;
-}

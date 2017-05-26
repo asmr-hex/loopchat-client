@@ -10,11 +10,14 @@ export const connectMidiDevices = () => dispatch => {
 
 // the ADD_MIDI_EVENT_HANDLER action is handled by the midiMiddleware, so there
 // is no corresponding reducer.
-export const ADD_MIDI_EVENT_HANDLER = 'ADD_MIDI_EVENT_HANLDER'
-export const addMidiEventHandler = handler => dispatch => {
+export const ADD_MIDI_EVENT_HANDLER = 'ADD_MIDI_EVENT_HANDLER'
+export const addMidiEventHandler = (handler, deviceId) => dispatch => {
   dispatch({
     type: ADD_MIDI_EVENT_HANDLER,
-    payload: handler,
+    payload: {
+      deviceId,
+      handler,
+    },
   })
 }
 
