@@ -10,7 +10,7 @@ injectTapEventPlugin()
 
 
 const mapStateToProps = (state, { params }) => ({
-  inputs: values(state.midiDevices),
+  inputs: values(state.midi.input),
 })
 
 @connect(mapStateToProps)

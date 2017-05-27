@@ -1,37 +1,79 @@
 import { expect } from 'chai'
-import { midiDevices } from '../../../../../src/redux/reducers/midiDevices'
-import { REGISTERED_MIDI_DEVICE, UNREGISTERED_MIDI_DEVICE } from '../../../../../src/redux/actions/midiDevices'
 import {getSampleMidiDevices} from '../../../../support/data/midiDevices'
+import {input} from '../../../../../src/redux/reducers/midi/input/input'
+import {
+  REGISTERED_MIDI_INPUT_DEVICE,
+  UNREGISTERED_MIDI_INPUT_DEVICE
+} from '../../../../../src/redux/actions/midi/input/input'
+import {output} from '../../../../../src/redux/reducers/midi/output/output'
+import {
+  REGISTERED_MIDI_OUTPUT_DEVICE,
+  UNREGISTERED_MIDI_OUTPUT_DEVICE
+} from '../../../../../src/redux/actions/midi/output/output'
 
-describe('midiDevices reducer', () => {
+describe('midi reducer', () => {
 
   const sampleMidiDevices = getSampleMidiDevices(2)
 
-  it('defaults to an empty object {} initially when state is undefined', () => {
-    const state = undefined
-    const action = { type: 'SOME_ARBITRARY_ACTION' }
+  describe('input sub-reducer', () => {
 
-    expect(midiDevices(state, action)).to.eql({})
-  })
+    it('defaults to an empty object {} initially when state is undefined', () => {
+      const state = undefined
+      const action = { type: 'SOME_ARBITRARY_ACTION' }
 
-  it('adds a midiDevice byId on REGSTERED_MIDI_DEVICE', () => {
-    const state = {}
-    const action = { type: REGISTERED_MIDI_DEVICE, payload: sampleMidiDevices[0] }
+      expect(input(state, action)).to.eql({})
+    })
 
-    expect(midiDevices(state, action)).to.eql({
-      [sampleMidiDevices[0].id]: sampleMidiDevices[0],
+    it('adds a midiDevice byId on REGSTERED_MIDI_INPUT_DEVICE', () => {
+      const state = {}
+      const action = { type: REGISTERED_MIDI_INPUT_DEVICE, payload: sampleMidiDevices[0] }
+
+      expect(input(state, action)).to.eql({
+        [sampleMidiDevices[0].id]: sampleMidiDevices[0],
+      })
+    })
+
+    it('removes a midiDevice byId on UNREGISTERED_MIDI_INPUT_DEVICE', () => {
+      const state = {
+        [sampleMidiDevices[0].id]: sampleMidiDevices[0],
+        [sampleMidiDevices[1].id]: sampleMidiDevices[1],
+      }
+      const action = { type: UNREGISTERED_MIDI_INPUT_DEVICE, payload: sampleMidiDevices[1] }
+
+      expect(input(state, action)).to.eql({
+        [sampleMidiDevices[0].id]: sampleMidiDevices[0],
+      })
     })
   })
 
-  it('removes a midiDevice byId on UNREGISTERED_MIDI_DEVICE', () => {
-    const state = {
-      [sampleMidiDevices[0].id]: sampleMidiDevices[0],
-      [sampleMidiDevices[1].id]: sampleMidiDevices[1],
-    }
-    const action = { type: UNREGISTERED_MIDI_DEVICE, payload: sampleMidiDevices[1] }
+  describe('output sub-reducer', () => {
 
-    expect(midiDevices(state, action)).to.eql({
-      [sampleMidiDevices[0].id]: sampleMidiDevices[0],
+    it('defaults to an empty object {} initially when state is undefined', () => {
+      const state = undefined
+      const action = { type: 'SOME_ARBITRARY_ACTION' }
+
+      expect(output(state, action)).to.eql({})
+    })
+
+    it('adds a midiDevice byId on REGSTERED_MIDI_OUTPUT_DEVICE', () => {
+      const state = {}
+      const action = { type: REGISTERED_MIDI_OUTPUT_DEVICE, payload: sampleMidiDevices[0] }
+
+      expect(output(state, action)).to.eql({
+        [sampleMidiDevices[0].id]: sampleMidiDevices[0],
+      })
+    })
+
+    it('removes a midiDevice byId on UNREGISTERED_MIDI_OUTPUT_DEVICE', () => {
+      const state = {
+        [sampleMidiDevices[0].id]: sampleMidiDevices[0],
+        [sampleMidiDevices[1].id]: sampleMidiDevices[1],
+      }
+      const action = { type: UNREGISTERED_MIDI_OUTPUT_DEVICE, payload: sampleMidiDevices[1] }
+
+      expect(output(state, action)).to.eql({
+        [sampleMidiDevices[0].id]: sampleMidiDevices[0],
+      })
     })
   })
 })

@@ -1,5 +1,5 @@
 import {get, pick} from 'lodash'
-import {registerMidiDevice, unregisterMidiDevice} from '../../redux/actions/midiDevices/index'
+import {registerMidiDevice, unregisterMidiDevice} from '../../redux/actions/midi/index'
 
 export const DEVICE_STATE_CONNECTED = 'connected'
 export const DEVICE_STATE_DISCONNECTED = 'disconnected'
@@ -30,6 +30,9 @@ const midiAccessSuccess = (midi, midiEventBus, store) => {
   const disconnect = disconnectMidiDeviceWith(store.dispatch)
   const handleStateChange = handleStateChangeWith(connect, disconnect)
 
+  // pass dispatcher to MidiEventBus
+  midiEventBus.setDispatcher(store.dispatch)
+
   // reset midi events bus
   // midiEventBus.flush()
 
@@ -46,13 +49,18 @@ const midiAccessSuccess = (midi, midiEventBus, store) => {
 
 export const connectMidiDeviceWith = (dispatch, midiBus) => device => {
   // get device copy
-  const deviceCopy = pick(device, ['id', 'name', 'manufacturer', 'type', 'state'])
+  const deviceCopy = {
+    ...pick(device, ['id', 'name', 'manufacturer', 'type', 'state']),
+    activated: false,
+    recording: false,
+  }
+
 
   // register connected device using curried register function
   dispatch(registerMidiDevice(deviceCopy))
 
   // forward onmidimessage events to midi bus
-  device.onmidimessage = event => midiBus.process(event)
+  device.onmidimessage = event => midiBus.handleEvent(event)
 
   console.info(
     `%cConnected --> %c${device.name}`,
