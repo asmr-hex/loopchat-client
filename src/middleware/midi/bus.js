@@ -23,7 +23,7 @@ export class MidiEventBus {
     // or not.
     this.recording = {}
 
-    // assignedInstrument is a string-keyed, function-vaued map which provides
+    // assignedInstrument is a string-keyed, function-valued map which provides
     // a device corresponding to a deviceId an instrument which will play the
     // data contained in incoming midi events. The functions should accept the
     // processed data of an event.
@@ -82,7 +82,7 @@ export class MidiEventBus {
    */
   activateDevice(deviceId) {
     // ensure this device has been registered already
-    if (has(this.activated, deviceId)) {
+    if (!has(this.activated, deviceId)) {
       // TODO (cw|5.27.2017) dispatch an error?
       return
     }
@@ -99,7 +99,7 @@ export class MidiEventBus {
    */
   deactivateDevice(deviceId) {
     // ensure this device has been registered already
-    if (has(this.activated, deviceId)) {
+    if (!has(this.activated, deviceId)) {
       // TODO (cw|5.27.2017) dispatch an error?
       return
     }
@@ -120,7 +120,7 @@ export class MidiEventBus {
     const note = data[1] // note number (5-124)?
     const velocity = data[2] // velocity (0-127)
 
-    console.log(`Toggle: ${toggle}  Note: ${note}  Velocity: ${vel}`)
+    console.log(`Toggle: ${toggle}  Note: ${note}  Velocity: ${velocity}`)
 
     return { note, velocity, toggle }
   }

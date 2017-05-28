@@ -1,5 +1,6 @@
 import {get, pick} from 'lodash'
-import {registerMidiDevice, unregisterMidiDevice} from '../../redux/actions/midi/index'
+import {registerMidiInputDevice, unregisterMidiInputDevice} from '../../redux/actions/midi/input/input'
+import {registerMidiOutputDevice, unregisterMidiOutputDevice} from '../../redux/actions/midi/output/output'
 
 export const DEVICE_STATE_CONNECTED = 'connected'
 export const DEVICE_STATE_DISCONNECTED = 'disconnected'
@@ -55,9 +56,16 @@ export const connectMidiDeviceWith = (dispatch, midiBus) => device => {
     recording: false,
   }
 
-
-  // register connected device using curried register function
-  dispatch(registerMidiDevice(deviceCopy))
+  switch (deviceCopy.type) {
+  case 'input':
+    // register connected device using curried register function
+    dispatch(registerMidiInputDevice(deviceCopy))
+    break
+  case 'output':
+    // register connected device using curried register function
+    dispatch(registerMidiOutputDevice(deviceCopy))
+    break
+  }
 
   // forward onmidimessage events to midi bus
   device.onmidimessage = event => midiBus.handleEvent(event)
@@ -70,8 +78,15 @@ export const connectMidiDeviceWith = (dispatch, midiBus) => device => {
 }
 
 export const disconnectMidiDeviceWith = dispatch => device => {
-  // unregister disconnected device using curried unregister function
-  dispatch(unregisterMidiDevice(device))
+  switch (device.type) {
+  case 'input':
+    // unregister disconnected device using curried unregister function
+    dispatch(unregisterMidiInputDevice(device))
+    break
+  case 'output':
+    dispatch(unregisterMidiOutputDevice(device))
+    break
+  }
 
   console.info(
     `%cDisconnected -/-> %c${device.name}`,

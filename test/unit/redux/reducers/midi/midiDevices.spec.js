@@ -10,6 +10,7 @@ import {
   REGISTERED_MIDI_OUTPUT_DEVICE,
   UNREGISTERED_MIDI_OUTPUT_DEVICE
 } from '../../../../../src/redux/actions/midi/output/output'
+import {ACTIVATE_MIDI_INPUT_DEVICE, DEACTIVATE_MIDI_INPUT_DEVICE} from '../../../../../src/redux/actions/midi/index'
 
 describe('midi reducer', () => {
 
@@ -42,6 +43,32 @@ describe('midi reducer', () => {
 
       expect(input(state, action)).to.eql({
         [sampleMidiDevices[0].id]: sampleMidiDevices[0],
+      })
+    })
+
+    it('sets a midiDevice activated status on ACTIVATE_MIDI_INPUT_DEVICE', () => {
+      const state = {
+        [sampleMidiDevices[0].id]: sampleMidiDevices[0],
+        [sampleMidiDevices[1].id]: sampleMidiDevices[1],
+      }
+      const action = { type: ACTIVATE_MIDI_INPUT_DEVICE, payload: sampleMidiDevices[0].id }
+
+      expect(input(state, action)).to.eql({
+        [sampleMidiDevices[0].id]: { ...sampleMidiDevices[0], activated: true },
+        [sampleMidiDevices[1].id]: sampleMidiDevices[1],
+      })
+    })
+
+    it('sets a midiDevice activated status on DEACTIVATE_MIDI_INPUT_DEVICE', () => {
+      const state = {
+        [sampleMidiDevices[0].id]: {...sampleMidiDevices[0], activated: true },
+        [sampleMidiDevices[1].id]: {...sampleMidiDevices[1], activated: true },
+      }
+      const action = { type: DEACTIVATE_MIDI_INPUT_DEVICE, payload: sampleMidiDevices[0].id }
+
+      expect(input(state, action)).to.eql({
+        [sampleMidiDevices[0].id]: { ...sampleMidiDevices[0], activated: false },
+        [sampleMidiDevices[1].id]: {...sampleMidiDevices[1], activated: true },
       })
     })
   })

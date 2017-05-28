@@ -6,6 +6,8 @@ const defaultMidiDevice = {
   manufacturer: 'Strange Beats Engineering',
   type: 'input', // input || output
   state: 'connected', // connected || disconnected
+  activated: false,
+  recording: false,
 }
 
 export const getSampleMidiDevices = (n, overrides={}) =>
