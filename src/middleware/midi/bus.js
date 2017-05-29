@@ -1,6 +1,7 @@
 import { forEach, get, omit, has, noop } from 'lodash'
 import {fromMidi} from 'tonal-note'
 import {play} from '../../instruments/synth'
+import {getMidiEventTypeAndChannel, MIDI_NOTE_OFF, MIDI_NOTE_ON} from '../../types/midiEvent'
 
 // Since the MidiAccess object cannot change object reference
 // (i.e. we cannot process it through a reducer since it should
@@ -120,13 +121,27 @@ export class MidiEventBus {
    */
   process(event) {
     const { data } = event
-    const toggle = data[0] & 0xf0 // on (144) / off (128) toggle
-    const note = fromMidi(data[1]) // note number (0-124)?
+    const command = data[0] & 0xf0 // on (144) / off (128) toggle
+    const note = data[1] // note number (0-127)?
     const velocity = data[2]/127 // velocity (0-127)
 
-    console.log(`Toggle: ${toggle}  Note: ${note}  Velocity: ${velocity}`)
+    // get the midi event type and channel from the event command code
+    const { type, channel } = getMidiEventTypeAndChannel(command)
 
-    return { note, velocity, toggle }
+    // MIDI_NOTE_ON/OFF events have slightly different formats than other events
+    // related to parameter controls (e.g. MIDI_CONTROL_CHANGE, MIDI_PITCH_BEND)
+    const processedEvent = type === MIDI_NOTE_ON || type === MIDI_NOTE_OFF
+      ? { type, channel, note: fromMidi(note), velocity }
+      : { type, channel, control: note, value: velocity }
+
+    // for debugging only...
+    if (type === MIDI_NOTE_ON || type === MIDI_NOTE_OFF) {
+      console.log(`Event: ${type}  Channel: ${channel} Note: ${fromMidi(note)}  Velocity: ${velocity}`)
+    } else {
+      console.log(`Event: ${type}  Channel: ${channel} Control: ${note}  Value: ${velocity}`)
+    }
+
+    return processedEvent
   }
 
   /**
