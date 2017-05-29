@@ -82,7 +82,7 @@ describe('midi reducer', () => {
       expect(output(state, action)).to.eql({})
     })
 
-    it('adds a midiDevice byId on REGSTERED_MIDI_OUTPUT_DEVICE', () => {
+    it('adds a midiDevice byId on REGISTERED_MIDI_OUTPUT_DEVICE', () => {
       const state = {}
       const action = { type: REGISTERED_MIDI_OUTPUT_DEVICE, payload: sampleMidiDevices[0] }
 
@@ -101,6 +101,17 @@ describe('midi reducer', () => {
       expect(output(state, action)).to.eql({
         [sampleMidiDevices[0].id]: sampleMidiDevices[0],
       })
+    })
+  })
+
+  describe('setMidiDeviceActivationState', () => {
+
+    it('returns the original state if the provided device is undefined', () => {
+      const state = {
+        [sampleMidiDevices[0].id]: sampleMidiDevices[0],
+      }
+
+      expect(state, sampleMidiDevices[1].id, true).to.eql(state)
     })
   })
 })

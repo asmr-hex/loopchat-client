@@ -1,4 +1,6 @@
 import { forEach, get, omit, has, noop } from 'lodash'
+import {fromMidi} from 'tonal-note'
+import {play} from '../../instruments/synth'
 
 // Since the MidiAccess object cannot change object reference
 // (i.e. we cannot process it through a reducer since it should
@@ -89,6 +91,8 @@ export class MidiEventBus {
 
     // set activated to true in the MidiEventBus
     this.activated[deviceId] = true
+
+    this.assignedInstrument[deviceId] = play
   }
 
   /**
@@ -117,8 +121,8 @@ export class MidiEventBus {
   process(event) {
     const { data } = event
     const toggle = data[0] & 0xf0 // on (144) / off (128) toggle
-    const note = data[1] // note number (5-124)?
-    const velocity = data[2] // velocity (0-127)
+    const note = fromMidi(data[1]) // note number (0-124)?
+    const velocity = data[2]/127 // velocity (0-127)
 
     console.log(`Toggle: ${toggle}  Note: ${note}  Velocity: ${velocity}`)
 

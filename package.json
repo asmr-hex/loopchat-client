@@ -59,6 +59,8 @@
     "react-tap-event-plugin": "^2.0.1",
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
-    "socket.io-client": "^1.7.2"
+    "socket.io-client": "^1.7.2",
+    "tonal": "^0.69.6",
+    "tone": "^0.10.0"
   }
 }
