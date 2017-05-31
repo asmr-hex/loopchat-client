@@ -7,6 +7,7 @@ import {
   CONNECT_MIDI_DEVICES,
   DEACTIVATE_MIDI_INPUT_DEVICE
 } from '../../redux/actions/midi/index'
+import {MIDI_RECORDING_STARTED, MIDI_RECORDING_STOPPED} from '../../redux/actions/recordings/midi/midi'
 
 export const midiMiddleware = (() => {
   // hide global midiEventBus using a closure
@@ -38,6 +39,14 @@ export const midiMiddleware = (() => {
     case UNREGISTERED_MIDI_OUTPUT_DEVICE:
       // handle unregistering input/output midi devices similarly
       midiEventBus.unregister(action.payload)
+      return next(action)
+
+    case MIDI_RECORDING_STARTED:
+      midiEventBus.startRecording(action.payload)
+      return next(action)
+
+    case MIDI_RECORDING_STOPPED:
+      midiEventBus.stopRecording(action.payload)
       return next(action)
 
     default:

@@ -1,7 +1,9 @@
 import { forEach, get, omit, has, noop } from 'lodash'
+import tone from 'tone'
 import {fromMidi} from 'tonal-note'
 import {play} from '../../instruments/synth'
 import {getMidiEventTypeAndChannel, MIDI_NOTE_OFF, MIDI_NOTE_ON} from '../../types/midiEvent'
+import {recordMidiEvent} from '../../redux/actions/recordings/midi/midi'
 
 // Since the MidiAccess object cannot change object reference
 // (i.e. we cannot process it through a reducer since it should
@@ -21,9 +23,10 @@ export class MidiEventBus {
     // deactivated.
     this.activated = {}
 
-    // recording is a string-keyed, boolean-valued map which indicates
+    // recording is a string-keyed, string-valued map which indicates
     // whether a device corresponding to a deviceId is currently recording
-    // or not.
+    // or not. The string values correspond to the recordingId of the recording
+    // this device is ... err ... recording to.
     this.recording = {}
 
     // assignedInstrument is a string-keyed, function-valued map which provides
@@ -55,7 +58,7 @@ export class MidiEventBus {
     this.activated[device.id] = false
 
     // set the device as not recording
-    this.recording[device.id] = false
+    this.recording[device.id] = 'none'
 
     // set the assigned instrument as a nop
     this.assignedInstrument[device.id] = noop
@@ -124,6 +127,7 @@ export class MidiEventBus {
     const command = data[0] & 0xf0 // on (144) / off (128) toggle
     const note = data[1] // note number (0-127)?
     const velocity = data[2]/127 // velocity (0-127)
+    const time = tone.now()
 
     // get the midi event type and channel from the event command code
     const { type, channel } = getMidiEventTypeAndChannel(command)
@@ -131,8 +135,8 @@ export class MidiEventBus {
     // MIDI_NOTE_ON/OFF events have slightly different formats than other events
     // related to parameter controls (e.g. MIDI_CONTROL_CHANGE, MIDI_PITCH_BEND)
     const processedEvent = type === MIDI_NOTE_ON || type === MIDI_NOTE_OFF
-      ? { type, channel, note: fromMidi(note), velocity }
-      : { type, channel, control: note, value: velocity }
+      ? { type, channel, note: fromMidi(note), velocity, time }
+      : { type, channel, control: note, value: velocity, time }
 
     // for debugging only...
     if (type === MIDI_NOTE_ON || type === MIDI_NOTE_OFF) {
@@ -155,7 +159,7 @@ export class MidiEventBus {
   handleEvent(event) {
     const deviceId = get(event, `target.id`)
     const isActivated = get(this.activated, deviceId, false)
-    const isRecording = get(this.recording, deviceId, false)
+    const isRecording = get(this.recording, deviceId, 'none') !== 'none'
     const play = get(this.assignedInstrument, deviceId, noop)
 
     if (!isActivated) return // ignore events from deactivated devices
@@ -164,13 +168,28 @@ export class MidiEventBus {
     const music = this.process(event)
 
     // record be dispatching to the redux store
-    if (isRecording) this.record(music)
+    if (isRecording) this.record(deviceId, music)
 
     // send music to instrument
     play(music)
   }
 
-  record(music) {
-    // TBD
+  startRecording(recording) {
+    const {input, id} = recording
+
+    // set the recording for this device
+    this.recording[input] = id
+  }
+
+  stopRecording(recording) {
+    const {input} = recording
+
+    this.recording[input] = 'none'
+  }
+
+  record(deviceId, music) {
+    const recordingId = this.recording[deviceId]
+
+    this.dispatch(recordMidiEvent(recordingId, music))
   }
 }

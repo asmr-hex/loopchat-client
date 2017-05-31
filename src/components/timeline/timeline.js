@@ -1,15 +1,24 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {DropDownMenu, MenuItem} from 'material-ui'
-import { map, filter } from 'lodash'
+import { map, filter, get } from 'lodash'
+import uuidV4 from 'uuid/v4'
 import './timeline.css'
 import {activateMidiInputDevice, deactivateMidiInputDevice} from '../../redux/actions/midi/index'
+import {startMidiRecording, stopMidiRecording} from '../../redux/actions/recordings/midi/midi'
 
-@connect(_, {activateMidiInputDevice, deactivateMidiInputDevice})
+const actions = {
+  activateMidiInputDevice,
+  deactivateMidiInputDevice,
+  startMidiRecording,
+  stopMidiRecording,
+}
+
+@connect(_, actions)
 export class Timeline extends Component {
   constructor(props) {
     super(props)
-    this.state = {value: 0}
+    this.state = {value: 0, recordingId: undefined}
   }
 
   handleChange = (event, index, deviceId) => {
@@ -41,6 +50,10 @@ export class Timeline extends Component {
       ...filter(this.props.inputs, input => input.type === 'input'),
     ]
 
+    const recording = get(filter(this.props.inputs, i => i.id === this.state.value), '0.recording', false)
+    const selectedDeviceId = this.state.value
+    const recordingId = this.state.recordingId
+
     return (
       <div className='timeline' style={styles}>
         timeline
@@ -49,7 +62,32 @@ export class Timeline extends Component {
             map(inputs, (input, idx) => <MenuItem value={input.id} key={idx} primaryText={input.name} />)
           }
         </DropDownMenu>
+        <button onClick={() => this.handleRecording(selectedDeviceId, recording, recordingId)}>
+          {
+            recording ? 'stop' : 'record'
+          }
+        </button>
       </div>
     )
+  }
+
+  handleRecording(deviceId, isRecording, recordingId = uuidV4()) {
+    const {startMidiRecording, stopMidiRecording} = this.props
+
+    if (deviceId === 0) return
+
+    if (!isRecording) {
+      startMidiRecording(deviceId, recordingId)
+      this.setState({
+        ...this.state,
+        recordingId,
+      })
+    } else {
+      stopMidiRecording(deviceId, recordingId)
+      this.setState({
+        ...this.state,
+        recordingId: undefined,
+      })
+    }
   }
 }

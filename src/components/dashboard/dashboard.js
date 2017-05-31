@@ -21,6 +21,7 @@ export class Dashboard extends Component {
       height: 40,
       color: '#ff9694'
     }
+
     return(
       <div className='dashboard'>
         <Timeline
