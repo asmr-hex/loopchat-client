@@ -1,3 +1,4 @@
 --webpack-config test.config.js
+--require test/support/browser/webAudio.js
 --colors
 --growl
