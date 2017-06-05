@@ -65,13 +65,13 @@ describe('MidiEventBus', () => {
       expect(midiEventBus.activated[device.id]).to.be.false
     })
 
-    it('initializes recording to false', () => {
+    it('initializes recording to "none"', () => {
       let midiEventBus = new MidiEventBus()
       const device = sampleMidiDevices[0]
 
       midiEventBus.register(device)
 
-      expect(midiEventBus.recording[device.id]).to.be.false
+      expect(midiEventBus.recording[device.id]).to.eql('none')
     })
 
     it('initializes assignedInstrument to false', () => {
