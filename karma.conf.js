@@ -80,7 +80,7 @@ module.exports = function(config) {
   // when running tests on Travis CI, we should use the appropriate
   // custom launcher.
   if (process.env.TRAVIS) {
-    configuration.browsers = ['ChromeTraviHeadless'];
+    configuration.browsers = ['ChromeTravisHeadless'];
   }
 
   config.set(configuration);
