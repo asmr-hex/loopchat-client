@@ -10,7 +10,7 @@ injectTapEventPlugin()
 
 
 const mapStateToProps = (state, { params }) => ({
-  inputs: values(state.midiDevices),
+  inputs: values(state.midi.input),
 })
 
 @connect(mapStateToProps)
@@ -21,6 +21,7 @@ export class Dashboard extends Component {
       height: 40,
       color: '#ff9694'
     }
+
     return(
       <div className='dashboard'>
         <Timeline

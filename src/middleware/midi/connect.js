@@ -1,5 +1,6 @@
 import {get, pick} from 'lodash'
-import {registerMidiDevice, unregisterMidiDevice} from '../../redux/actions/midiDevices/index'
+import {registerMidiInputDevice, unregisterMidiInputDevice} from '../../redux/actions/midi/input/input'
+import {registerMidiOutputDevice, unregisterMidiOutputDevice} from '../../redux/actions/midi/output/output'
 
 export const DEVICE_STATE_CONNECTED = 'connected'
 export const DEVICE_STATE_DISCONNECTED = 'disconnected'
@@ -30,6 +31,9 @@ const midiAccessSuccess = (midi, midiEventBus, store) => {
   const disconnect = disconnectMidiDeviceWith(store.dispatch)
   const handleStateChange = handleStateChangeWith(connect, disconnect)
 
+  // pass dispatcher to MidiEventBus
+  midiEventBus.setDispatcher(store.dispatch)
+
   // reset midi events bus
   // midiEventBus.flush()
 
@@ -46,13 +50,25 @@ const midiAccessSuccess = (midi, midiEventBus, store) => {
 
 export const connectMidiDeviceWith = (dispatch, midiBus) => device => {
   // get device copy
-  const deviceCopy = pick(device, ['id', 'name', 'manufacturer', 'type', 'state'])
+  const deviceCopy = {
+    ...pick(device, ['id', 'name', 'manufacturer', 'type', 'state']),
+    activated: false,
+    recording: false,
+  }
 
-  // register connected device using curried register function
-  dispatch(registerMidiDevice(deviceCopy))
+  switch (deviceCopy.type) {
+  case 'input':
+    // register connected device using curried register function
+    dispatch(registerMidiInputDevice(deviceCopy))
+    break
+  case 'output':
+    // register connected device using curried register function
+    dispatch(registerMidiOutputDevice(deviceCopy))
+    break
+  }
 
   // forward onmidimessage events to midi bus
-  device.onmidimessage = event => midiBus.process(event)
+  device.onmidimessage = event => midiBus.handleEvent(event)
 
   console.info(
     `%cConnected --> %c${device.name}`,
@@ -62,8 +78,15 @@ export const connectMidiDeviceWith = (dispatch, midiBus) => device => {
 }
 
 export const disconnectMidiDeviceWith = dispatch => device => {
-  // unregister disconnected device using curried unregister function
-  dispatch(unregisterMidiDevice(device))
+  switch (device.type) {
+  case 'input':
+    // unregister disconnected device using curried unregister function
+    dispatch(unregisterMidiInputDevice(device))
+    break
+  case 'output':
+    dispatch(unregisterMidiOutputDevice(device))
+    break
+  }
 
   console.info(
     `%cDisconnected -/-> %c${device.name}`,

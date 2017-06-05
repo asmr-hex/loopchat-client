@@ -1,6 +1,13 @@
 import {MidiEventBus} from './bus'
 import {connect} from './connect'
-import {ADD_MIDI_EVENT_HANDLER, CONNECT_MIDI_DEVICES} from '../../redux/actions/midiDevices/index'
+import {REGISTERED_MIDI_OUTPUT_DEVICE, UNREGISTERED_MIDI_OUTPUT_DEVICE} from '../../redux/actions/midi/output/output'
+import {REGISTERED_MIDI_INPUT_DEVICE, UNREGISTERED_MIDI_INPUT_DEVICE} from '../../redux/actions/midi/input/input'
+import {
+  ACTIVATE_MIDI_INPUT_DEVICE,
+  CONNECT_MIDI_DEVICES,
+  DEACTIVATE_MIDI_INPUT_DEVICE
+} from '../../redux/actions/midi/index'
+import {MIDI_RECORDING_STARTED, MIDI_RECORDING_STOPPED} from '../../redux/actions/recordings/midi/midi'
 
 export const midiMiddleware = (() => {
   // hide global midiEventBus using a closure
@@ -9,28 +16,45 @@ export const midiMiddleware = (() => {
   // return middleware we can apply using thunk-middleware
   return store => next => action => {
     switch (action.type) {
+
     case CONNECT_MIDI_DEVICES:
       connect(midiEventBus, store)
-      break
-    case ADD_MIDI_EVENT_HANDLER:
-      midiEventBus.addHandler(action.payload)
+      return next(action)
+
+    case ACTIVATE_MIDI_INPUT_DEVICE:
+      midiEventBus.activateDevice(action.payload)
+      return next(action)
+
+    case DEACTIVATE_MIDI_INPUT_DEVICE:
+      midiEventBus.deactivateDevice(action.payload)
+      return next(action)
+
+    case REGISTERED_MIDI_INPUT_DEVICE:
+    case REGISTERED_MIDI_OUTPUT_DEVICE:
+      // handle registering input/output midi devices similarly
+      midiEventBus.register(action.payload)
+      return next(action)
+
+    case UNREGISTERED_MIDI_INPUT_DEVICE:
+    case UNREGISTERED_MIDI_OUTPUT_DEVICE:
+      // handle unregistering input/output midi devices similarly
+      midiEventBus.unregister(action.payload)
+      return next(action)
+
+    case MIDI_RECORDING_STARTED:
+      midiEventBus.startRecording(action.payload)
+      return next(action)
+
+    case MIDI_RECORDING_STOPPED:
+      midiEventBus.stopRecording(action.payload)
+      return next(action)
+
     default:
       return next(action)
     }
 
   }
 })()
-
-
-// NOTE (cw|5.20.17) this is the code to process the midi data
-// msg => {
-//   const { data } = msg
-//   const toggle = data[0] & 0xf0 // on (144) / off (128) toggle
-//   const note = data[1] // note number (5-124)?
-//   const vel = data[2] // velocity (0-127)
-
-//   console.log(`Toggle: ${toggle}  Note: ${note}  Velocity: ${vel}`)
-// }
 
 
 
