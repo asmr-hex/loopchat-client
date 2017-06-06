@@ -9,7 +9,7 @@ export const midi = (state = {}, action) => {
   case MIDI_RECORDING_STARTED:
     return {...state, [action.payload.id]: action.payload }
   case MIDI_RECORDING_STOPPED:
-    // TODO (cw|5.30.2017)
+    // TODO (cw|5.30.2017) consolidate overdubs into master
     return state
   case MIDI_EVENT_RECORDED:
     return recordEvent(state, action.payload.id, action.payload.event)
@@ -27,3 +27,6 @@ export const recordEvent = (state, recordingId, midiEvent) => {
     }
   }
 }
+
+export const
+

@@ -1,19 +1,24 @@
 import uuidV4 from  'uuid/v4'
 import tone from 'tone'
-import {recordingStatus} from '../../../../types/recording'
+import {newRecording, recordingStatus} from '../../../../types/recording'
 
 export const MIDI_RECORDING_STARTED = 'MIDI_RECORDING_STARTED'
-export const startMidiRecording = (deviceId, recordingId = uuidV4(), startTime = tone.now())=> dispatch => {
+export const createMidiRecording = (
+  deviceId,
+  recordingId = uuidV4(),
+  overdubId = uuidV4,
+  startTime = tone.now()
+) => dispatch => {
+  // start a new recording
   dispatch({
     type: MIDI_RECORDING_STARTED,
     payload: {
-      id: recordingId,
       input: deviceId,
-      start: startTime,
-      status: recordingStatus.IN_PROGRESS,
-      events: [],
-    },
+      recording: newRecording(recordingId, startTime),
+    }
   })
+  // start a new initial overdub for this recording
+  dispatch(startMidiOverdub(deviceId, recordingId, overdubId))
 }
 
 export const MIDI_RECORDING_STOPPED = 'MIDI_RECORDING_STOPPED'
@@ -25,6 +30,18 @@ export const stopMidiRecording = (deviceId, recordingId) => dispatch => {
       input: deviceId,
       end: tone.now(),
       status: recordingStatus.DONE,
+    }
+  })
+}
+
+export const MIDI_OVERDUB_STARTED = 'MIDI_OVERDUB_STARTED'
+export const startMidiOverdub = (deviceId, recordingId, overdubId = uuidV4()) => dispatch => {
+  dispatch({
+    type: MIDI_OVERDUB_STARTED,
+    payload: {
+      input: deviceId,
+      recordingId,
+      overdubId,
     }
   })
 }

@@ -5,16 +5,16 @@ import { map, filter, get } from 'lodash'
 import uuidV4 from 'uuid/v4'
 import './timeline.css'
 import {activateMidiInputDevice, deactivateMidiInputDevice} from '../../redux/actions/midi/index'
-import {startMidiRecording, stopMidiRecording} from '../../redux/actions/recordings/midi/midi'
+import {createMidiRecording, stopMidiRecording} from '../../redux/actions/recordings/midi/midi'
 
 const actions = {
   activateMidiInputDevice,
   deactivateMidiInputDevice,
-  startMidiRecording,
+  createMidiRecording,
   stopMidiRecording,
 }
 
-@connect(_, actions)
+@connect((state) => ({}), actions)
 export class Timeline extends Component {
   constructor(props) {
     super(props)

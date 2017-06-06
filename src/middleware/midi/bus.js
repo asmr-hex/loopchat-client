@@ -127,7 +127,7 @@ export class MidiEventBus {
     const command = data[0] & 0xf0 // on (144) / off (128) toggle
     const note = data[1] // note number (0-127)?
     const velocity = data[2]/127 // velocity (0-127)
-    const time = 0//tone.now()
+    const time = tone.now()
 
     // get the midi event type and channel from the event command code
     const { type, channel } = getMidiEventTypeAndChannel(command)
