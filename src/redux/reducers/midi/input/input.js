@@ -1,7 +1,7 @@
 import { omit, get, isUndefined } from 'lodash'
 import {REGISTERED_MIDI_INPUT_DEVICE, UNREGISTERED_MIDI_INPUT_DEVICE} from '../../../actions/midi/input/input'
 import {ACTIVATE_MIDI_INPUT_DEVICE, DEACTIVATE_MIDI_INPUT_DEVICE} from '../../../actions/midi/index'
-import {MIDI_RECORDING_STARTED, MIDI_RECORDING_STOPPED} from '../../../actions/recordings/midi/midi'
+import {MIDI_RECORDING_CREATED, MIDI_OVERDUB_RECORDING_STOPPED} from '../../../actions/recordings/midi/midi'
 
 export const input = (state = {}, action) => {
   switch (action.type) {
@@ -13,9 +13,9 @@ export const input = (state = {}, action) => {
     return setMidiDeviceActivationState(state, action.payload, true)
   case DEACTIVATE_MIDI_INPUT_DEVICE:
     return setMidiDeviceActivationState(state, action.payload, false)
-  case MIDI_RECORDING_STARTED:
+  case MIDI_RECORDING_CREATED:
     return setMidiDeviceRecordingState(state, action.payload.input, true)
-  case MIDI_RECORDING_STOPPED:
+  case MIDI_OVERDUB_RECORDING_STOPPED:
     return setMidiDeviceRecordingState(state, action.payload.input, false)
   default:
     return state

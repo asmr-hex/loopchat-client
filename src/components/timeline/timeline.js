@@ -5,20 +5,20 @@ import { map, filter, get } from 'lodash'
 import uuidV4 from 'uuid/v4'
 import './timeline.css'
 import {activateMidiInputDevice, deactivateMidiInputDevice} from '../../redux/actions/midi/index'
-import {createMidiRecording, stopMidiRecording} from '../../redux/actions/recordings/midi/midi'
+import {startNewMidiRecording, stopMidiOverdub} from '../../redux/actions/recordings/midi/midi'
 
 const actions = {
   activateMidiInputDevice,
   deactivateMidiInputDevice,
-  createMidiRecording,
-  stopMidiRecording,
+  startNewMidiRecording,
+  stopMidiOverdub,
 }
 
 @connect((state) => ({}), actions)
 export class Timeline extends Component {
   constructor(props) {
     super(props)
-    this.state = {value: 0, recordingId: undefined}
+    this.state = {value: 0, recordingId: undefined, overdubId: undefined}
   }
 
   handleChange = (event, index, deviceId) => {
@@ -71,22 +71,24 @@ export class Timeline extends Component {
     )
   }
 
-  handleRecording(deviceId, isRecording, recordingId = uuidV4()) {
-    const {startMidiRecording, stopMidiRecording} = this.props
+  handleRecording(deviceId, isRecording, recordingId = uuidV4(), overdubId = uuidV4()) {
+    const {startNewMidiRecording, stopMidiOverdub} = this.props
 
     if (deviceId === 0) return
 
     if (!isRecording) {
-      startMidiRecording(deviceId, recordingId)
+      startNewMidiRecording(deviceId, recordingId, overdubId)
       this.setState({
         ...this.state,
         recordingId,
+        overdubId,
       })
     } else {
-      stopMidiRecording(deviceId, recordingId)
+      stopMidiOverdub(deviceId, recordingId, overdubId)
       this.setState({
         ...this.state,
         recordingId: undefined,
+        overdubId: undefined,
       })
     }
   }

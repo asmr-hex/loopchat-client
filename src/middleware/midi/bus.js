@@ -58,7 +58,7 @@ export class MidiEventBus {
     this.activated[device.id] = false
 
     // set the device as not recording
-    this.recording[device.id] = 'none'
+    this.recording[device.id] = null
 
     // set the assigned instrument as a nop
     this.assignedInstrument[device.id] = noop
@@ -159,7 +159,7 @@ export class MidiEventBus {
   handleEvent(event) {
     const deviceId = get(event, `target.id`)
     const isActivated = get(this.activated, deviceId, false)
-    const isRecording = get(this.recording, deviceId, 'none') !== 'none'
+    const isRecording = get(this.recording, deviceId, null) !== null
     const play = get(this.assignedInstrument, deviceId, noop)
 
     if (!isActivated) return // ignore events from deactivated devices
@@ -174,22 +174,25 @@ export class MidiEventBus {
     play(music)
   }
 
-  startRecording(recording) {
-    const {input, id} = recording
+  startRecording(payload) {
+    const {input, recordingId, overdub} = payload
 
     // set the recording for this device
-    this.recording[input] = id
+    this.recording[input] = {
+      recordingId,
+      overdubId: overdub.id
+    }
   }
 
-  stopRecording(recording) {
-    const {input} = recording
+  stopRecording(payload) {
+    const {input} = payload
 
-    this.recording[input] = 'none'
+    this.recording[input] = null
   }
 
   record(deviceId, music) {
-    const recordingId = this.recording[deviceId]
+    const {recordingId, overdubId} = this.recording[deviceId]
 
-    this.dispatch(recordMidiEvent(recordingId, music))
+    this.dispatch(recordMidiEvent(recordingId, overdubId, music))
   }
 }

@@ -1,3 +1,4 @@
+import tone from 'tone'
 
 export const recordingStatus = {
   IN_PROGRESS: 'IN_PROGRESS',
@@ -10,27 +11,15 @@ export const newRecording = (recordingId = uuidV4(), startTime = tone.now()) => 
   status: recordingStatus.IN_PROGRESS,
   master: [],
   overdubs: {
-    active: [],
-    complete: [],
+    recording: {},
+    recorded: {},
   },
 })
 
-// Maybe this is just an action...
-// export const newOverdub = (recordingId, overdubId = uuidV4(), startTime = tone.now(), overwrite = false) => ({
-//
-// })
-
-
-const recording = {
-  id: 'soemthing',
-  master: [],
-  overdubs: {
-    'time': [{}],
-  },
-}
-
-const event = {
-  user: 'me',
-  time: 'something',
-  overwrite: true,
-}
+export const newOverdub = (overdubId = uuidV4(), timeOffset = 0, startTime = tone.now()) => ({
+  id: overdubId,
+  start: startTime,
+  offset: timeOffset,
+  events: [],
+  // creator: user, // TODO (cw|6.6.2017) incorporate user info
+})
