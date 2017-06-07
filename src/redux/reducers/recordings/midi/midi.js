@@ -35,3 +35,24 @@ export const recordEvent = (state, recordingId, overdubId, midiEvent) => {
   return set({...state}, `${recordingId}.overdubs.recording.${overdubId}.events`, [...events, midiEvent])
 }
 
+export const processRecording = (state, recordingId, overdubId) => {
+  const unprocessedRecording = get(state, `${recordingId}`)
+  const unproccessedOverdub = get(recording, `overdubs.recording.${overdubId}`)
+
+  // process overdub times
+  const overdub = processOverdub(unprocessedOverdub)
+
+  // remove overdub from recording and put in recorded
+  
+}
+
+export const processOverdub = overdub => ({
+  ...overdub,
+  events: map(
+    overdub.events,
+    event => {
+      event.time -= overdub.startTime
+      return event
+    },
+  )
+})
