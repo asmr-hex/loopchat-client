@@ -71,7 +71,7 @@ describe('MidiEventBus', () => {
 
       midiEventBus.register(device)
 
-      expect(midiEventBus.recording[device.id]).to.eql('none')
+      expect(midiEventBus.recording[device.id]).to.eql(null)
     })
 
     it('initializes assignedInstrument to false', () => {
