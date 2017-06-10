@@ -140,9 +140,9 @@ export class MidiEventBus {
 
     // for debugging only...
     if (type === MIDI_NOTE_ON || type === MIDI_NOTE_OFF) {
-      console.log(`Event: ${type}  Channel: ${channel} Note: ${fromMidi(note)}  Velocity: ${velocity}`)
+      console.log(`Event: ${type}  Channel: ${channel} Note: ${fromMidi(note)}  Velocity: ${velocity} Time: ${time}`)
     } else {
-      console.log(`Event: ${type}  Channel: ${channel} Control: ${note}  Value: ${velocity}`)
+      console.log(`Event: ${type}  Channel: ${channel} Control: ${note}  Value: ${velocity} Time: ${time}`)
     }
 
     return processedEvent

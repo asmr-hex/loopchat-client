@@ -16,10 +16,11 @@ export const newRecording = (recordingId = uuidV4(), startTime = tone.now()) => 
   },
 })
 
-export const newOverdub = (overdubId = uuidV4(), timeOffset = 0, startTime = tone.now()) => ({
+export const newOverdub = (overdubId = uuidV4(), timeOffset = 0, startTime = tone.now(), overwrite=true) => ({
   id: overdubId,
   start: startTime,
   offset: timeOffset,
   events: [],
+  overwrite,
   // creator: user, // TODO (cw|6.6.2017) incorporate user info
 })
