@@ -1,95 +1,72 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import {DropDownMenu, MenuItem} from 'material-ui'
-import { map, filter, get } from 'lodash'
-import uuidV4 from 'uuid/v4'
 import './timeline.css'
-import {activateMidiInputDevice, deactivateMidiInputDevice} from '../../redux/actions/midi/index'
-import {startNewMidiRecording, stopMidiOverdub} from '../../redux/actions/recordings/midi/midi'
+import {renderVisibleNotes} from './notes'
 
-const actions = {
-  activateMidiInputDevice,
-  deactivateMidiInputDevice,
-  startNewMidiRecording,
-  stopMidiOverdub,
-}
-
-@connect((state) => ({}), actions)
 export class Timeline extends Component {
   constructor(props) {
     super(props)
-    this.state = {value: 0, recordingId: undefined, overdubId: undefined}
   }
 
-  handleChange = (event, index, deviceId) => {
-    const oldDeviceId = this.state.value
-    this.setState({value: deviceId})
-    if (deviceId !== 0) {
-      this.props.activateMidiInputDevice(deviceId)
-    }
-    if (oldDeviceId !== 0) {
-      this.props.deactivateMidiInputDevice(oldDeviceId)
-    }
+  componentDidMount(){
   }
 
-  render() {
+  componentDidUpdate(){
+  }
+  
+  
+  getTimelineStyles() {
     const {width, height, background} = this.props
     const top = (window.innerHeight - height)/2
     const left = (window.innerWidth - width)/2
 
-    const styles = {
+    return ({
       width,
       height,
       top,
       left,
       background,
-    }
-
-    const inputs = [
-      {id: 0, name: 'No Input'},
-      ...filter(this.props.inputs, input => input.type === 'input'),
-    ]
-
-    const recording = get(filter(this.props.inputs, i => i.id === this.state.value), '0.recording', false)
-    const selectedDeviceId = this.state.value
-    const recordingId = this.state.recordingId
-
-    return (
-      <div className='timeline' style={styles}>
-        timeline
-        <DropDownMenu value={this.state.value} onChange={this.handleChange}>
-          {
-            map(inputs, (input, idx) => <MenuItem value={input.id} key={idx} primaryText={input.name} />)
-          }
-        </DropDownMenu>
-        <button onClick={() => this.handleRecording(selectedDeviceId, recording, recordingId)}>
-          {
-            recording ? 'stop' : 'record'
-          }
-        </button>
-      </div>
-    )
+    })
   }
 
-  handleRecording(deviceId, isRecording, recordingId = uuidV4(), overdubId = uuidV4()) {
-    const {startNewMidiRecording, stopMidiOverdub} = this.props
+  render() {
+    const styles = this.getTimelineStyles()
 
-    if (deviceId === 0) return
+    const notes = [
+      {start: 4.23, pitch: 4},
+      {start: 4.99, pitch: 6},
+      {start: 6.01, pitch: 2},
+      {start: 12.02, pitch: 9},
+      {start: 13.88, pitch: 1},
+    ]
 
-    if (!isRecording) {
-      startNewMidiRecording(deviceId, recordingId, overdubId)
-      this.setState({
-        ...this.state,
-        recordingId,
-        overdubId,
-      })
-    } else {
-      stopMidiOverdub(deviceId, recordingId, overdubId)
-      this.setState({
-        ...this.state,
-        recordingId: undefined,
-        overdubId: undefined,
-      })
+    const view = {
+      width: this.props.width,
+      height: this.props.height,
     }
+
+    const timeInterval = {
+      start: 0.00,
+      end: 16.00,
+      duration: 16.00,
+    }
+
+    const pitchInterval = {
+      start: 0,
+      end: 14,
+      length: 15,
+    }
+    
+    return (
+      <div className='timeline-container' style={styles}>
+        <svg
+          className='timeline'
+          ref={element => this.element = element}
+          width={styles.width}
+          height={styles.height}
+          >
+          {renderVisibleNotes(notes, view, timeInterval, pitchInterval)}
+        </svg>
+      </div>
+    )
   }
 }

@@ -1,8 +1,8 @@
 import React, {Component } from 'react'
 import './header.css'
 import {IconButton, IconMenu, MenuItem} from 'material-ui'
-import Menu from 'material-ui/svg-icons/navigation/Menu'
-import Share from 'material-ui/svg-icons/social/Share'
+import Menu from 'material-ui/svg-icons/navigation/menu'
+import Share from 'material-ui/svg-icons/social/share'
 import Peers from '../peers/peers'
 
 export const Header = props => {

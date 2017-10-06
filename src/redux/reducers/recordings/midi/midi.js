@@ -1,4 +1,4 @@
-import {filter, first, get, last, map, merge, omit, reduce, reverse, set, slice, sortBy} from 'lodash'
+import {filter, first, get, isUndefined, last, map, merge, omit, reduce, reverse, set, slice, sortBy} from 'lodash'
 import {
   MIDI_EVENT_RECORDED,
   MIDI_OVERDUB_RECORDING_STARTED,
@@ -7,6 +7,9 @@ import {
 } from '../../../actions/recordings/midi/midi'
 import {MIDI_NOTE_OFF, MIDI_NOTE_ON} from '../../../../types/midiEvent'
 
+/**
+ * midi recording reducer
+ */
 export const midi = (state = {}, action) => {
   switch (action.type) {
   case MIDI_RECORDING_CREATED:
@@ -84,7 +87,7 @@ export const processRecording = (state, recordingId, overdubId) => {
   const recordedOverdubs = get(unprocessedRecording, `overdubs.recorded`)
   const recordingOverdubs = get(unprocessedRecording, `overdubs.recording`)
   const unprocessedMaster = get(unprocessedRecording, `master`)
-
+  
   // process overdub times
   const overdub = normalizeOverdubTime(unprocessedOverdub)
 
@@ -193,7 +196,6 @@ export const filterAfter = (master, endTime) =>
       if (e.type !== MIDI_NOTE_OFF) return true
 
       // the event is guaranteed to be a midi off event
-
       const pairedWithMidiOnEvent = reduce(
         reverse(slice(master, 0, idx)),
         (acc, nextEvent) => acc || (nextEvent.type === MIDI_NOTE_ON && nextEvent.note === e.note),

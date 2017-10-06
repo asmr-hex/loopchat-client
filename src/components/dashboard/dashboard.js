@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import {values} from 'lodash'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 import './dashboard.css'
+import {TimelineControls} from '../timeline/timelineControls'
 import {Timeline} from '../timeline/timeline'
 
 // we need this for this component to work with AppBar
@@ -24,12 +25,17 @@ export class Dashboard extends Component {
 
     return(
       <div className='dashboard'>
-        <Timeline
+        <TimelineControls
           width={800}
           height={200}
           background={'#f195c8'}
           inputs={this.props.inputs}
-        />
+          />
+        <Timeline
+          width={800}
+          height={200}
+          background={'#abef92'}
+          />
       </div>
     )
   }
