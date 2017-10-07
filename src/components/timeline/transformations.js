@@ -4,9 +4,12 @@ import React from 'react'
  * scaling methods
  */
 export const computeScalingFactors = (view, timeInterval, pitchInterval) => ({
-  xScale: view.width / timeInterval.duration,
+  xScale: computeXScalingFactor(view, timeInterval),
   yScale: computeYScalingFactor(view, pitchInterval),
 })
+
+export const computeXScalingFactor = (view, timeInterval) =>
+  view.width / timeInterval.duration
 
 export const computeYScalingFactor = (view, pitchInterval) =>
   view.height / pitchInterval.length

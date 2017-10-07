@@ -28,7 +28,7 @@ export class Dashboard extends Component {
         <TimelineControls
           width={800}
           height={200}
-          background={'#f195c8'}
+          background={'#ffffff'}
           inputs={this.props.inputs}
           />
         <Timeline

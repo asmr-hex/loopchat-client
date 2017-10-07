@@ -4,6 +4,9 @@ import {computeYScalingFactor, pitch2Pixel} from './transformations'
 import {DEFAULT_NOTE_PIXELS_PER_HEIGHT_PIXELS} from './constants'
 
 export const renderKeyboardUnderlay = (show, view, pitchInterval) => {
+  // if we aren't showing the underlay, just return an empty array
+  if (!show) return []
+
   const yScale = computeYScalingFactor(view, pitchInterval)
 
   return map(
