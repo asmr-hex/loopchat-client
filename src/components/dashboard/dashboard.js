@@ -34,7 +34,7 @@ export class Dashboard extends Component {
         <Timeline
           width={800}
           height={200}
-          background={'#abef92'}
+          background={'#ffbf75'}
           />
       </div>
     )

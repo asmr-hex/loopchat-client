@@ -1,21 +1,22 @@
 import React from 'react'
 import {filter, map} from 'lodash'
-/*
-  given notes, timeline width/height, visible time interval, visible note interval
+import {
+  computeScalingFactors,
+  time2Pixel,
+  pitch2Pixel,
+} from './transformations'
+import {
+  DEFAULT_NOTE_PIXELS_PER_HEIGHT_PIXELS,
+  DEFAULT_NOTE_PIXELS_PER_WIDTH_PIXELS,
+} from './constants'
 
-  filter for all notes within the visible time/note interval
-
-  transform note times to x,y positions by
-  x = (note_time - visible_start_time) * (timeline_width / visible_interval_length)
-
-*/
-
-const DEFAULT_TIME_PIXELS_PER_WIDTH_PIXELS = 1 / 30 // pixels/pixels
-const DEFAULT_PITCH_PIXELS_PER_HEIGHT_PIXELS = 1 / 20 // pixels/pixels
-const DEFAULT_PIXELS_PER_SECOND = 10 // pixels/second
-const DEFAULT_PIXELS_PER_PITCH = 30 // pixels/pitch
-
-
+/**
+ * renderVisibleNotes takes state information about the current sequence of notes
+ * on a timeline along with the dimensional and boundary information for each axis
+ * on the timeline UI. Then, the set of notes are filtered down to only the visible
+ * notes and transformed into the appropriate coordinate system. This function returns
+ * an array of svg elements to be rendered within the timeline svg element.
+ */
 export const renderVisibleNotes = (notes, view, timeInterval, pitchInterval) => {
   // compute the scaling factors once
   const {xScale, yScale} = computeScalingFactors(view, timeInterval, pitchInterval)
@@ -31,29 +32,22 @@ export const renderVisibleNotes = (notes, view, timeInterval, pitchInterval) => 
     ),
     (note, idx) =>
       renderNote(
-        time2Pixel(note, timeInterval, xScale),
-        pitch2Pixel(note, pitchInterval, yScale),
-        view.width * DEFAULT_TIME_PIXELS_PER_WIDTH_PIXELS,
-        view.height * DEFAULT_PITCH_PIXELS_PER_HEIGHT_PIXELS,
+        time2Pixel(note.start, timeInterval, xScale),
+        pitch2Pixel(note.pitch, pitchInterval, yScale),
+        view.width * DEFAULT_NOTE_PIXELS_PER_WIDTH_PIXELS,
+        view.height * DEFAULT_NOTE_PIXELS_PER_HEIGHT_PIXELS,
         idx
       )
   )
 }
 
-const computeScalingFactors = (view, timeInterval, pitchInterval) => ({
-  xScale: view.width / timeInterval.duration,
-  yScale: view.height / pitchInterval.length,
-})
-
-const time2Pixel = (note, timeInterval, xScale) =>
-      (note.start - timeInterval.start) * xScale
-
-const pitch2Pixel = (note, pitchInterval, yScale) =>
-      (note.pitch - pitchInterval.start) * yScale
-
+/**
+ * renderNote takes x/y coordinates, width/height, and a unique id to
+ * generate an svg rectange representing a midi note.
+ */
 const renderNote = (x, y, width, height, id) => {
   const style = {
-    fill: 'red',
+    fill: '#c9e7db',
   }
   
   return (

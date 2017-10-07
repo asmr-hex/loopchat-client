@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import './timeline.css'
 import {renderVisibleNotes} from './notes'
+import {renderKeyboardUnderlay} from './keyboardUnderlay'
 
 export class Timeline extends Component {
   constructor(props) {
@@ -55,6 +56,8 @@ export class Timeline extends Component {
       end: 14,
       length: 15,
     }
+
+    const showKeyboard = true
     
     return (
       <div className='timeline-container' style={styles}>
@@ -64,6 +67,7 @@ export class Timeline extends Component {
           width={styles.width}
           height={styles.height}
           >
+          {renderKeyboardUnderlay(showKeyboard, view, pitchInterval)}
           {renderVisibleNotes(notes, view, timeInterval, pitchInterval)}
         </svg>
       </div>
