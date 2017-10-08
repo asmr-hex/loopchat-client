@@ -51,13 +51,35 @@ const renderNote = (x, y, width, height, id) => {
   }
   
   return (
-    <rect
-      x={x}
-      y={y}
-      width={width}
-      height={height}
-      style={style}
-      key={id}
-      />
+    <g key={id}>
+      <rect
+        className='midi-note'
+        id={id}
+        x={x}
+        y={y}
+        width={width}
+        height={height}
+        style={style}
+        />
+      <line
+        id={'midi-note-left-boundary-' + id}
+        x1={x}
+        x2={x}
+        y1={y}
+        y2={y + height}
+        strokeWidth={3}
+        stroke={'black'}
+        data-foo={'bar'}
+        />
+      <line
+        id={'midi-note-right-boundary-' + id}
+        x1={x + width}
+        x2={x + width}
+        y1={y}
+        y2={y + height}
+        strokeWidth={3}
+        stroke={'black'}
+        />
+    </g>
   )  
 }

@@ -1,8 +1,12 @@
 import React, { Component } from 'react'
+import {select, selectAll, event as currentEvent} from 'd3-selection'
+import {drag} from 'd3-drag'
+import {forEach} from 'lodash'
 import './timeline.css'
 import {renderVisibleNotes} from './notes'
 import {renderKeyboardUnderlay} from './keyboardUnderlay'
 import {renderTimeGridUnderlay} from './timeGridUnderlay'
+import {handleMidiNoteDragging} from './eventHandlers'
 
 export class Timeline extends Component {
   constructor(props) {
@@ -10,12 +14,17 @@ export class Timeline extends Component {
   }
 
   componentDidMount(){
+    // this.handleUserSVGInteractions()
   }
 
   componentDidUpdate(){
+    this.handleUserSVGInteractions()
   }
-  
-  
+
+  handleUserSVGInteractions() {
+    handleMidiNoteDragging()
+  }
+
   getTimelineStyles() {
     const {width, height, background} = this.props
     const top = (window.innerHeight - height)/2
@@ -30,9 +39,7 @@ export class Timeline extends Component {
     })
   }
 
-  render() {
-    const styles = this.getTimelineStyles()
-
+  getSampleData() {
     const notes = [
       {start: 4.23, pitch: 4},
       {start: 4.99, pitch: 6},
@@ -58,8 +65,29 @@ export class Timeline extends Component {
       length: 15,
     }
 
-    const showKeyboardGrid = true
-    const showTimeGrid = true
+    const showKeyboardGrid = false
+    const showTimeGrid = false
+
+    return {
+      notes,
+      view,
+      timeInterval,
+      pitchInterval,
+      showKeyboardGrid,
+      showTimeGrid,
+    }
+  }
+  
+  render() {
+    const styles = this.getTimelineStyles()
+    const {
+      notes,
+      view,
+      timeInterval,
+      pitchInterval,
+      showKeyboardGrid,
+      showTimeGrid,
+    } = this.getSampleData()
     
     return (
       <div className='timeline-container' style={styles}>
