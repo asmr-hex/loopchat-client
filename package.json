@@ -62,6 +62,7 @@
     "immutable": "^3.8.1",
     "material-ui": "^0.16.7",
     "moment": "^2.18.1",
+    "prop-types": "^15.6.0",
     "react": "^15.4.2",
     "react-dom": "^15.0.0",
     "react-redux": "^5.0.2",
