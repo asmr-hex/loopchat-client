@@ -58,6 +58,7 @@ const renderNote = (x, y, width, height, id) => {
 
   const style = {
     fill: '#c9e7db',
+    cursor: 'move',
   }
   
   return (
@@ -81,6 +82,7 @@ const renderNote = (x, y, width, height, id) => {
         y2={y + height}
         strokeWidth={3}
         stroke={'black'}
+        cursor={'ew-resize'}
         data-note-id={id}
         />
       <line
@@ -92,6 +94,7 @@ const renderNote = (x, y, width, height, id) => {
         y2={y + height}
         strokeWidth={3}
         stroke={'black'}
+        cursor={'ew-resize'}
         data-note-id={id}
         />
     </g>
