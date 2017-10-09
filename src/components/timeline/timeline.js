@@ -11,6 +11,7 @@ import {
   handleMidiNoteResize
 } from './eventHandlers'
 
+
 export class Timeline extends Component {
   constructor(props) {
     super(props)
@@ -69,8 +70,8 @@ export class Timeline extends Component {
       length: 15,
     }
 
-    const showKeyboardGrid = false
-    const showTimeGrid = false
+    const showKeyboardGrid = true
+    const showTimeGrid = true
 
     return {
       notes,

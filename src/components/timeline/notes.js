@@ -82,6 +82,7 @@ const renderNote = (x, y, width, height, id) => {
         y2={y + height}
         strokeWidth={3}
         stroke={'black'}
+        opacity={0}
         cursor={'ew-resize'}
         data-note-id={id}
         />
@@ -94,6 +95,7 @@ const renderNote = (x, y, width, height, id) => {
         y2={y + height}
         strokeWidth={3}
         stroke={'black'}
+        opacity={0}
         cursor={'ew-resize'}
         data-note-id={id}
         />
