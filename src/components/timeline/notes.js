@@ -10,12 +10,19 @@ import {
   DEFAULT_NOTE_PIXELS_PER_WIDTH_PIXELS,
 } from './constants'
 
+
 /**
  * renderVisibleNotes takes state information about the current sequence of notes
  * on a timeline along with the dimensional and boundary information for each axis
  * on the timeline UI. Then, the set of notes are filtered down to only the visible
  * notes and transformed into the appropriate coordinate system. This function returns
  * an array of svg elements to be rendered within the timeline svg element.
+ *
+ * @param {} notes
+ * @param {} view
+ * @param {} timeInterval
+ * @param {} pitchInterval
+ * @returns {} 
  */
 export const renderVisibleNotes = (notes, view, timeInterval, pitchInterval) => {
   // compute the scaling factors once
@@ -45,7 +52,10 @@ export const renderVisibleNotes = (notes, view, timeInterval, pitchInterval) => 
  * renderNote takes x/y coordinates, width/height, and a unique id to
  * generate an svg rectange representing a midi note.
  */
+
+
 const renderNote = (x, y, width, height, id) => {
+
   const style = {
     fill: '#c9e7db',
   }
@@ -54,14 +64,16 @@ const renderNote = (x, y, width, height, id) => {
     <g key={id}>
       <rect
         className='midi-note'
-        id={id}
+        id={`midi-note-${id}`}
         x={x}
         y={y}
         width={width}
         height={height}
         style={style}
+        data-note-id={id}
         />
       <line
+        className={'midi-note-left-boundary'}
         id={'midi-note-left-boundary-' + id}
         x1={x}
         x2={x}
@@ -69,9 +81,10 @@ const renderNote = (x, y, width, height, id) => {
         y2={y + height}
         strokeWidth={3}
         stroke={'black'}
-        data-foo={'bar'}
+        data-note-id={id}
         />
       <line
+        className={'midi-note-right-boundary'}
         id={'midi-note-right-boundary-' + id}
         x1={x + width}
         x2={x + width}
@@ -79,6 +92,7 @@ const renderNote = (x, y, width, height, id) => {
         y2={y + height}
         strokeWidth={3}
         stroke={'black'}
+        data-note-id={id}
         />
     </g>
   )  

@@ -4,19 +4,59 @@ import {drag} from 'd3-drag'
 
 export const handleMidiNoteDragging = () =>
   registerHandlerTo('.midi-note', midiNote => {
-    
     return drag().on('drag', () => {
-      console.log(midiNote)
-      console.log(midiNote.id)
-      midiNote.attr('x', currentEvent.x + currentEvent.dx)
+      const midiNoteId = midiNote.attr('data-note-id')
+      const {x, dx} = currentEvent
+      const width = parseFloat(midiNote.attr('width'))
+
+      // drag midiNote rectangle
+      midiNote.attr('x', x + dx)
+
+      // select left boundary and adjust its position
+      select(`#midi-note-left-boundary-${midiNoteId}`)
+        .attr('x1', x + dx)
+        .attr('x2', x + dx)
+
+      // select right boundary and adjust its position
+      select(`#midi-note-right-boundary-${midiNoteId}`)
+        .attr('x1', x + width + dx)
+        .attr('x2', x + width + dx)
     })
   })
 
-export const handleMidiNoteResize = () =>
-  registerHandlerTo('.midi-note', midiNote => {
+export const handleMidiNoteResize = () => {
+  // register left boundary
+  registerHandlerTo('.midi-note-left-boundary', midiNoteLeftBoundary => {
+    return drag().on('drag', () => {
+      const midiNote = select(`#midi-note-${midiNoteLeftBoundary.attr('data-note-id')}`)
+      const {x, dx} = currentEvent
 
-    return 
+      // move right boundary
+      midiNoteLeftBoundary.attr('x1', x + dx)
+      midiNoteLeftBoundary.attr('x2', x + dx)
+
+      // adjust width of midinote element
+      midiNote.attr('width', parseInt(midiNote.attr('width')) - dx)
+      midiNote.attr('x', parseInt(midiNote.attr('x')) + dx)
+    })
   })
+
+  // register right boundary
+  registerHandlerTo('.midi-note-right-boundary', midiNoteRightBoundary => {
+    return drag().on('drag', () => {
+      const midiNote = select(`#midi-note-${midiNoteRightBoundary.attr('data-note-id')}`)
+      const {x, dx} = currentEvent
+
+      // move right boundary
+      midiNoteRightBoundary.attr('x1', x + dx)
+      midiNoteRightBoundary.attr('x2', x + dx)
+
+      // adjust width of midinote element
+      midiNote.attr('width', parseInt(midiNote.attr('width')) + dx)
+    })
+  })
+  
+}
 
 /**
  * registerHandlerTo selects all elements of a specified class and registers the
@@ -30,6 +70,6 @@ export const handleMidiNoteResize = () =>
 const registerHandlerTo = (elements, f) =>
       selectAll(elements).each(function () {
         const element = select(this)
-
+        
         element.call(f(element))
       })

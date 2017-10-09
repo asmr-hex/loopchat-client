@@ -6,7 +6,10 @@ import './timeline.css'
 import {renderVisibleNotes} from './notes'
 import {renderKeyboardUnderlay} from './keyboardUnderlay'
 import {renderTimeGridUnderlay} from './timeGridUnderlay'
-import {handleMidiNoteDragging} from './eventHandlers'
+import {
+  handleMidiNoteDragging,
+  handleMidiNoteResize
+} from './eventHandlers'
 
 export class Timeline extends Component {
   constructor(props) {
@@ -23,6 +26,7 @@ export class Timeline extends Component {
 
   handleUserSVGInteractions() {
     handleMidiNoteDragging()
+    handleMidiNoteResize()
   }
 
   getTimelineStyles() {
