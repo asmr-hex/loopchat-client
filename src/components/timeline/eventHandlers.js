@@ -29,20 +29,21 @@ export const handleMidiNoteResize = () => {
   registerHandlerTo('.midi-note-left-boundary', midiNoteLeftBoundary => {
     return drag().on('drag', () => {
       const midiNoteId = midiNoteLeftBoundary.attr('data-note-id')
-      const rightBoundary = select(`#midi-note-right-boundary-${midiNoteId}`).attr('x1')
+      const rightBoundary = parseFloat(select(`#midi-note-right-boundary-${midiNoteId}`).attr('x1'))
+      const leftBoundary = parseFloat(select(`#midi-note-left-boundary-${midiNoteId}`).attr('x1'))
       const midiNote = select(`#midi-note-${midiNoteId}`)
-      const {x, dx} = currentEvent
+      const {dx} = currentEvent
 
       // constrain resizing
-      if (x + dx >= rightBoundary) return
+      if (leftBoundary + dx >= rightBoundary) return
       
       // move right boundary
-      midiNoteLeftBoundary.attr('x1', x + dx)
-      midiNoteLeftBoundary.attr('x2', x + dx)
+      midiNoteLeftBoundary.attr('x1', leftBoundary + dx)
+      midiNoteLeftBoundary.attr('x2', leftBoundary + dx)
 
       // adjust width of midinote element
-      midiNote.attr('width', parseInt(midiNote.attr('width')) - dx)
-      midiNote.attr('x', parseInt(midiNote.attr('x')) + dx)
+      midiNote.attr('width', parseFloat(midiNote.attr('width')) - dx)
+      midiNote.attr('x', parseFloat(midiNote.attr('x')) + dx)
     })
   })
 
@@ -50,19 +51,26 @@ export const handleMidiNoteResize = () => {
   registerHandlerTo('.midi-note-right-boundary', midiNoteRightBoundary => {
     return drag().on('drag', () => {
       const midiNoteId = midiNoteRightBoundary.attr('data-note-id')
-      const leftBoundary = select(`#midi-note-left-boundary-${midiNoteId}`).attr('x1')
+      const leftBoundaryX = parseFloat(select(`#midi-note-left-boundary-${midiNoteId}`).attr('x1'))
+      const rightBoundaryX = parseFloat(select(`#midi-note-right-boundary-${midiNoteId}`).attr('x1'))
       const midiNote = select(`#midi-note-${midiNoteRightBoundary.attr('data-note-id')}`)
-      const {x, dx} = currentEvent
+      const {x,dx} = currentEvent
 
+      console.log("dx", dx)
+      console.log("rightBoundaryX: ", midiNoteRightBoundary.attr('x1'))
+      console.log("dx type: ", typeof(dx))
+      
       // constrain resizing
-      if (x + dx <= leftBoundary) return
+      if (rightBoundaryX + dx <= leftBoundaryX || x + dx <= leftBoundaryX) return
+
+      console.log("WE ARE HERE")
 
       // adjust width of midinote element
-      midiNote.attr('width', parseInt(midiNote.attr('width')) + dx)
+      midiNote.attr('width', parseFloat(midiNote.attr('width')) + dx)
       
       // move right boundary
-      midiNoteRightBoundary.attr('x1', x + dx)
-      midiNoteRightBoundary.attr('x2', x + dx)
+      midiNoteRightBoundary.attr('x1', rightBoundaryX + dx)
+      midiNoteRightBoundary.attr('x2', rightBoundaryX + dx)
     })
   })
   
