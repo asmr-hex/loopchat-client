@@ -77,7 +77,7 @@ export class MidiNote extends Component {
       cursor: 'ew-resize',
       stroke: 'black',
       strokeWidth: 3,
-      opacity: 0,
+      opacity: 100,
     }
 
     return (

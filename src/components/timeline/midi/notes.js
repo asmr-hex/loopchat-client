@@ -67,34 +67,40 @@ export class MidiNotes extends Component {
 
     this._registerHandlerTo('.midi-note', note => {
       return drag().on('drag', () => {
-        const {dx, dy, y} = currentEvent
+        const {dx, dy} = currentEvent
+        const eventY = currentEvent.y
         const id = note.attr('data-note-id')
         const x = parseFloat(note.attr('x'))
+        const y = parseFloat(note.attr('y'))
         const width = parseFloat(note.attr('width'))
+        const height = parseFloat(note.attr('height'))
 
+        const rBound = select(`#midi-note-right-boundary-${id}`)
+        const lBound = select(`#midi-note-left-boundary-${id}`)
+        
         // drag midiNote rectangle
         note.attr('x', x + dx)
 
-        // select left boundary and adjust its position
-        select(`#midi-note-left-boundary-${id}`)
-          .attr('x1', x + dx)
-          .attr('x2', x + dx)
-
         // select right boundary and adjust its position
-        select(`#midi-note-right-boundary-${id}`)
-          .attr('x1', x + width + dx)
-          .attr('x2', x + width + dx)
+        rBound.attr('x1', x + width + dx).attr('x2', x + width + dx)
+
+        // select left boundary and adjust its position
+        lBound.attr('x1', x + dx).attr('x2', x + dx)
 
         // handle vertical movement on the pitch axis
-        // TODO (cw|10.10.2017) clean up this code! (it works)
-        const height = (view.height * DEFAULT_NOTE_PIXELS_PER_HEIGHT_PIXELS)
-        if (Math.abs(y - parseInt(note.attr('y'))) >= (height)) {
+        if (Math.abs(eventY - y) >= (height)) {
           const pitch = parseInt(note.attr('data-pitch'))
-          const newPitch = pitch - (Math.sign(dy) * 1)
+          const newPitch = pitch - Math.sign(dy)
           const newY = (pitchInterval.end - newPitch) * scale.y
 
           note.attr('y', newY)
           note.attr('data-pitch', newPitch)
+
+          // select right boundary and adjust its position
+          rBound.attr('y1', newY).attr('y2', newY + height)
+        
+          // select left boundary and adjust its position
+          lBound.attr('y1', newY).attr('y2', newY + height)
         }
       })
     })    
