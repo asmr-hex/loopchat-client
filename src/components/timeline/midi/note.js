@@ -98,9 +98,8 @@ export class MidiNote extends Component {
     const {view, timeInterval, pitchInterval, note} = this.props
     
     // compute dimensions of this midi note
-    // TODO (cw|10.9.2017) modify width definition to take into account midi length
-    const width = view.width * DEFAULT_NOTE_PIXELS_PER_WIDTH_PIXELS
-    const height = view.height * DEFAULT_NOTE_PIXELS_PER_HEIGHT_PIXELS
+    const width = (note.end - note.start) * scale.x
+    const height = scale.y
     
     // compute position of this midi note
     const x1 = (note.start - timeInterval.start) * scale.x

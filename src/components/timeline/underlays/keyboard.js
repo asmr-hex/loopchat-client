@@ -27,7 +27,7 @@ export class KeyboardUnderlay extends Component {
           x,
           pitchY,
           width,
-          height,
+          yScalingFactor,
           this.isBlackKey(currentPitch),
           offset,
         )
@@ -45,7 +45,7 @@ export class KeyboardUnderlay extends Component {
         x={x}
         y={y}
         width={width}
-        height={height * DEFAULT_NOTE_PIXELS_PER_HEIGHT_PIXELS}
+        height={height}
         style={style}
         key={id}
       />

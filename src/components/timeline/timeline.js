@@ -37,11 +37,11 @@ export class Timeline extends Component {
 
   getSampleData() {
     const notes = [
-      {start: 4.23, pitch: 4, id: 0},
-      {start: 4.99, pitch: 6, id: 1},
-      {start: 6.01, pitch: 2, id: 2},
-      {start: 12.02, pitch: 9, id: 3},
-      {start: 13.88, pitch: 1, id: 4},
+      {start: 4.00, end: 5.00, pitch: 4, id: 0},
+      {start: 4.99, end: 8.23, pitch: 6, id: 1},
+      {start: 10.01, end: 13.70, pitch: 6, id: 2},
+      {start: 12.02, end: 13.88, pitch: 9, id: 3},
+      {start: 13.88, end: 18.23, pitch: 1, id: 4},
     ]
 
     const view = {
@@ -53,12 +53,12 @@ export class Timeline extends Component {
 
     const timeInterval = {
       start: 0.00,
-      end: 16.00,
+      end: 24.00,
     }
 
     const pitchInterval = {
       start: 0,
-      end: 14,
+      end: 12,
     }
 
     const showKeyboardGrid = true
