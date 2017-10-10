@@ -1,7 +1,4 @@
 import React, { Component } from 'react'
-import {select, selectAll, event as currentEvent} from 'd3-selection'
-import {drag} from 'd3-drag'
-import {forEach} from 'lodash'
 import './timeline.css'
 import {KeyboardUnderlay} from './underlays/keyboard'
 import {TimeGrid} from './underlays/timeGrid'

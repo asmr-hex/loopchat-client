@@ -65,6 +65,7 @@ export class MidiNote extends Component {
         height={height}
         style={style}
         data-note-id={note.id}
+        data-pitch={note.pitch}
       />
     )
   }
