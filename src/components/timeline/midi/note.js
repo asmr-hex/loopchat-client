@@ -102,8 +102,8 @@ export class MidiNote extends Component {
     const height = scale.y
     
     // compute position of this midi note
-    const x1 = (note.start - timeInterval.start) * scale.x
-    const y1 = (pitchInterval.end - note.pitch) * scale.y
+    const x1 = view.x + (note.start - timeInterval.start) * scale.x
+    const y1 = view.y + (pitchInterval.end - note.pitch) * scale.y
     const x2 = x1 + width
     const y2 = y1 + height
 

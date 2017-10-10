@@ -25,7 +25,7 @@ export class KeyboardUnderlay extends Component {
         
         return this.renderKeyRect(
           x,
-          pitchY,
+          y + pitchY,
           width,
           yScalingFactor,
           this.isBlackKey(currentPitch),

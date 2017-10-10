@@ -3,6 +3,7 @@ import './timeline.css'
 import {KeyboardUnderlay} from './underlays/keyboard'
 import {TimeGrid} from './underlays/timeGrid'
 import {MidiNotes} from './midi/notes'
+import {TimeAxis} from './panels/time/axis'
 
 
 export class Timeline extends Component {
@@ -85,10 +86,14 @@ export class Timeline extends Component {
       showTimeGrid,
     } = this.getSampleData()
 
-    // compute visual scale
+    // partition different views
+    const timeAxisView = {x: 0, y:0, width: view.width, height: 20}
+    const notesView = {x: 0, y: timeAxisView.height, width: view.width, height: view.height - timeAxisView.height}
+
+    // compute visual scale (NOTE: this is for the notesView)
     const scale = {
-      x: view.width / (timeInterval.end - timeInterval.start),
-      y: view.height / (pitchInterval.end - pitchInterval.start + 1),
+      x: notesView.width / (timeInterval.end - timeInterval.start),
+      y: notesView.height / (pitchInterval.end - pitchInterval.start + 1),
     }
 
     
@@ -102,26 +107,31 @@ export class Timeline extends Component {
           >
           <KeyboardUnderlay
             show={showKeyboardGrid}
-            x={0}
-            y={0}
-            width={view.width}
-            height={view.height}
+            x={notesView.x}
+            y={notesView.y}
+            width={notesView.width}
+            height={notesView.height}
             pitchStart={pitchInterval.start}
             pitchEnd={pitchInterval.end}
           />
           <TimeGrid
             show={showTimeGrid}
-            view={view}
+            view={notesView}
             timeInterval={timeInterval}
             scale={scale}
           />
           <MidiNotes
             notes={notes}
-            view={view}
+            view={notesView}
             timeInterval={timeInterval}
             pitchInterval={pitchInterval}
             scale={scale}
-          />
+            />
+          <TimeAxis
+            show={true}
+            view={timeAxisView}
+            timeInterval={timeInterval}
+            />
         </svg>
       </div>
     )

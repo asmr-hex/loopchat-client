@@ -91,7 +91,7 @@ export class MidiNotes extends Component {
         if (Math.abs(eventY - y) >= (height)) {
           const pitch = parseInt(note.attr('data-pitch'))
           const newPitch = pitch - Math.sign(dy)
-          const newY = (pitchInterval.end - newPitch) * scale.y
+          const newY = view.y + (pitchInterval.end - newPitch) * scale.y
 
           note.attr('y', newY)
           note.attr('data-pitch', newPitch)
