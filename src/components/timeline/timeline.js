@@ -3,10 +3,6 @@ import {select, selectAll, event as currentEvent} from 'd3-selection'
 import {drag} from 'd3-drag'
 import {forEach} from 'lodash'
 import './timeline.css'
-import {
-  handleMidiNoteDragging,
-  handleMidiNoteResize
-} from './eventHandlers'
 import {KeyboardUnderlay} from './underlays/keyboard'
 import {TimeGrid} from './underlays/timeGrid'
 import {MidiNotes} from './midi/notes'
@@ -18,11 +14,9 @@ export class Timeline extends Component {
   }
 
   componentDidMount(){
-    // this.handleUserSVGInteractions()
   }
 
   componentDidUpdate(){
-    this.handleUserSVGInteractions()
   }
 
   handleUserSVGInteractions() {
