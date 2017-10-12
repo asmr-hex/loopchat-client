@@ -91,6 +91,7 @@ export class Timeline extends Component {
     const notesView = {x: 0, y: timeAxisView.height, width: view.width, height: view.height - timeAxisView.height}
 
     // compute visual scale (NOTE: this is for the notesView)
+    // TODO (cw|10.12.2017) each panel should have its own scale
     const scale = {
       x: notesView.width / (timeInterval.end - timeInterval.start),
       y: notesView.height / (pitchInterval.end - pitchInterval.start + 1),
@@ -131,6 +132,7 @@ export class Timeline extends Component {
             show={true}
             view={timeAxisView}
             timeInterval={timeInterval}
+            scale={scale}
             />
         </svg>
       </div>
