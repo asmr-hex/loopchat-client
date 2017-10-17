@@ -1,25 +1,22 @@
 import React, { Component } from 'react'
 import './timeline.css'
+import {TimelineControls} from '../timeline/timelineControls'
 import {KeyboardUnderlay} from './underlays/keyboard'
 import {TimeGrid} from './underlays/timeGrid'
 import {MidiNotes} from './midi/notes'
 import {TimeAxis} from './panels/time/axis'
+import {Scrubber} from './controls/scrubber'
 
+// const actions = {}
 
+// const mapStateToProps = (state, ownProps) => ({
+  
+// })
+
+// @connect(mapStateToProps, actions)
 export class Timeline extends Component {
   constructor(props) {
     super(props)
-  }
-
-  componentDidMount(){
-  }
-
-  componentDidUpdate(){
-  }
-
-  handleUserSVGInteractions() {
-    handleMidiNoteDragging()
-    handleMidiNoteResize()
   }
 
   getTimelineStyles() {
@@ -96,45 +93,61 @@ export class Timeline extends Component {
       x: notesView.width / (timeInterval.end - timeInterval.start),
       y: notesView.height / (pitchInterval.end - pitchInterval.start + 1),
     }
-
     
     return (
-      <div className='timeline-container' style={styles}>
-        <svg
-          className='timeline'
-          ref={element => this.element = element}
-          width={styles.width}
-          height={styles.height}
-          >
-          <KeyboardUnderlay
-            show={showKeyboardGrid}
-            x={notesView.x}
-            y={notesView.y}
-            width={notesView.width}
-            height={notesView.height}
-            pitchStart={pitchInterval.start}
-            pitchEnd={pitchInterval.end}
+      <div>
+        <TimelineControls
+          width={800}
+          height={200}
+          background={'#ffffff'}
+          inputs={this.props.inputs}
+          timelineId={this.props.id}
+          playing={this.props.playing}
           />
-          <TimeGrid
-            show={showTimeGrid}
-            view={notesView}
-            timeInterval={timeInterval}
-            scale={scale}
-          />
-          <MidiNotes
-            notes={notes}
-            view={notesView}
-            timeInterval={timeInterval}
-            pitchInterval={pitchInterval}
-            scale={scale}
-            />
-          <TimeAxis
-            show={true}
-            view={timeAxisView}
-            timeInterval={timeInterval}
-            scale={scale}
-            />
-        </svg>
+        <div className='timeline-container' style={styles}>
+          <svg
+            className='timeline'
+            ref={element => this.element = element}
+            width={styles.width}
+            height={styles.height}
+            >
+            <KeyboardUnderlay
+              show={showKeyboardGrid}
+              x={notesView.x}
+              y={notesView.y}
+              width={notesView.width}
+              height={notesView.height}
+              pitchStart={pitchInterval.start}
+              pitchEnd={pitchInterval.end}
+              />
+            <TimeGrid
+              show={showTimeGrid}
+              view={notesView}
+              timeInterval={timeInterval}
+              scale={scale}
+              />
+            <MidiNotes
+              notes={notes}
+              view={notesView}
+              timeInterval={timeInterval}
+              pitchInterval={pitchInterval}
+              scale={scale}
+              />
+            <TimeAxis
+              show={true}
+              view={timeAxisView}
+              timeInterval={timeInterval}
+              scale={scale}
+              />
+            <Scrubber
+              view={view}
+              time={this.props.scrubberTime}
+              scale={scale}
+              playing={this.props.playing}
+              timelineId={this.props.id}
+              />
+          </svg>
+        </div>
       </div>
     )
   }

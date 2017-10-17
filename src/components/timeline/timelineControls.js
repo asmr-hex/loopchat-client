@@ -6,6 +6,8 @@ import uuidV4 from 'uuid/v4'
 import './timelineControls.css'
 import {activateMidiInputDevice, deactivateMidiInputDevice} from '../../redux/actions/midi/index'
 import {startNewMidiRecording, stopMidiOverdub} from '../../redux/actions/recordings/midi/midi'
+import {PlayButton} from './controls/playButton'
+
 
 const actions = {
   activateMidiInputDevice,
@@ -18,7 +20,7 @@ const actions = {
 export class TimelineControls extends Component {
   constructor(props) {
     super(props)
-    this.state = {value: 0, recordingId: undefined, overdubId: undefined}
+    this.state = {value: 0, recordingId: undefined, overdubId: undefined, playing: false}
   }
 
   handleChange = (event, index, deviceId) => {
@@ -53,6 +55,8 @@ export class TimelineControls extends Component {
     const recordingId = this.state.recordingId
     const overdubId = this.state.overdubId
 
+    const {playing} = this.state
+    
     return (
       <div className='timeline-controls' style={styles}>
         timeline
@@ -66,10 +70,14 @@ export class TimelineControls extends Component {
             recording ? 'stop' : 'record'
           }
         </button>
+        <PlayButton
+          timelineId={this.props.timelineId}
+          playing={this.props.playing}
+        />
       </div>
     )
   }
-
+  
   handleRecording(deviceId, isRecording, recordingId = uuidV4(), overdubId = uuidV4()) {
     const {startNewMidiRecording, stopMidiOverdub} = this.props
 
