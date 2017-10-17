@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {array, bool, number, object, string} from 'prop-types'
 import './timeline.css'
 import {TimelineControls} from '../timeline/timelineControls'
 import {KeyboardUnderlay} from './underlays/keyboard'
@@ -7,14 +8,28 @@ import {MidiNotes} from './midi/notes'
 import {TimeAxis} from './panels/time/axis'
 import {Scrubber} from './controls/scrubber'
 
-// const actions = {}
 
-// const mapStateToProps = (state, ownProps) => ({
-  
-// })
-
-// @connect(mapStateToProps, actions)
 export class Timeline extends Component {
+  static propTypes = {
+    id: string.isRequired,
+    tracks: array.isRequired,
+    selections: object.isRequired,
+    tempo: number.isRequired,
+    timeSignature: string.isRequired,
+    playing: bool.isRequired,
+    scrubberTime: number.isRequired,
+    inputDevices: array.isRequired, // TODO (cw|10.17.2017) move this to track component
+    styles: object,
+  }
+
+  static defaultProps = {
+    style: {
+      width: 800,
+      height: 200,
+      background: '#ffbf75',
+    }
+  }
+  
   constructor(props) {
     super(props)
   }
@@ -24,13 +39,7 @@ export class Timeline extends Component {
     const top = (window.innerHeight - height)/2
     const left = (window.innerWidth - width)/2
 
-    return ({
-      width,
-      height,
-      top,
-      left,
-      background,
-    })
+    return ({width, height, top, left, background})
   }
 
   getSampleData() {
@@ -100,7 +109,7 @@ export class Timeline extends Component {
           width={800}
           height={200}
           background={'#ffffff'}
-          inputs={this.props.inputs}
+          inputs={this.props.inputDevices}
           timelineId={this.props.id}
           playing={this.props.playing}
           />

@@ -7,6 +7,7 @@ import { peers } from './peers/index'
 import {recordings} from './recordings/index'
 import {timelines} from './timelines/timelines'
 import {tracks} from './tracks/tracks'
+import {ui} from './ui'
 
 
 const reducers = combineReducers({
@@ -18,6 +19,7 @@ const reducers = combineReducers({
   timelines,
   tracks,
   recordings,
+  ui,
 })
 
 export default reducers

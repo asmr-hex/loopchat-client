@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import {object} from 'prop-types'
 import {connect} from 'react-redux'
 import {map, values} from 'lodash'
 import injectTapEventPlugin from 'react-tap-event-plugin'
@@ -21,6 +22,10 @@ const mapStateToProps = (state, { params }) => ({
 
 @connect(mapStateToProps, actions)
 export class Dashboard extends Component {
+  static propTypes = {
+    session: object,
+  }
+  
   constructor(props) {
     super(props)
   }
@@ -29,6 +34,24 @@ export class Dashboard extends Component {
     this.props.createTimeline(uuidV4())
   }
 
+  renderTimelines() {
+    const {timelines} = this.props
+
+    return map(
+      this.props.timelines,
+      (value, id, key) => (
+        <Timeline
+          key={key}
+          {...value}
+          width={800}
+          height={200}
+          background={'#ffbf75'}
+          inputDevices={this.props.inputs}
+        />       
+      )
+    )
+  }
+  
   render() {
     const iconStyles = {
       width: 40,
@@ -41,21 +64,7 @@ export class Dashboard extends Component {
         <button onClick={() => this.createTimeline()}>
           {'+ timeline'}
         </button>
-        {
-            map(
-              this.props.timelines,
-              (value, id, key) => (
-                <Timeline
-                  key={key}
-                  {...value}
-                  width={800}
-                  height={200}
-                  background={'#ffbf75'}
-                  inputs={this.props.inputs}
-                />       
-              )
-            )
-        }
+        {this.renderTimelines()}
       </div>
     )
   }
