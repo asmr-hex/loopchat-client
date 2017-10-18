@@ -113,6 +113,7 @@ export class Timeline extends Component {
       (track, idx) => (
         <Track
           key={idx}
+          index={idx}
           id={track.id}
           type={track.type}
           view={tracksView}

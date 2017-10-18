@@ -27,52 +27,56 @@ export class MidiTrack extends Component {
   constructor(props) {
     super(props)
 
-    this.state = {scale: {}, view: {}, pitchInterval: {start: 0, end: 16}}
-  }
+    // NOTE: we aren't using React's internal state to store the following
+    // parameters because their values are derivatives of the props passed
+    // into the component. And, since we want to update these parameters
+    // whenever the relevant props change, we want to use React's lifecycle
+    // methods to update the values, but we cannot use setState within these
+    // lifecycle methods or it will trigger an infinite component update loop.
 
-  componentDidMount() {
     // initialize visible pitchInterval
     this.computeVisiblePitchInterval()
-    
-    // initialize scaling factors
-    this.computeScalingFactors()
 
     // initialize this track's view
     this.computeTrackView()
+    
+    // initialize scaling factors
+    this.computeScalingFactors()
   }
-  
-  componentWillUpdate() {
+
+  componentDidUpdate() {
+    // recompute this track's view
+    this.computeTrackView()
+    
     // recompte scaling factors incase something has changed. TODO (cw|10.17.2017) further optimization
     // is possible to only recompute when necessary.
     this.computeScalingFactors()
-
-    // recompute this track's view
-    this.computeTrackView()
   }
   
   computeScalingFactors() {
-    const {view, timeInterval, pitchInterval, trackCount} = this.props
+    const {timeInterval, trackCount} = this.props
+    const {view, pitchInterval} = this
     
     const scale = {
       x: view.width / (timeInterval.end - timeInterval.start),
       y: (view.height / trackCount) / (pitchInterval.end - pitchInterval.start + 1),
     }
 
-    this.setState({scale})
+    this.scale = scale
   }
 
   computeTrackView() {
-    const {view, key, trackCount} = this.props
+    const {view, index, trackCount} = this.props
     const height = view.height / trackCount
-    
+
     const trackView = {
       x: view.x,
-      y: view.y + (height * key),
+      y: view.y + (height * index),
       width: view.width,
       height,
     }
 
-    this.setState({view: trackView})
+    this.view = trackView
   }
 
   computeVisiblePitchInterval() {
@@ -82,12 +86,12 @@ export class MidiTrack extends Component {
       end: 16,
     }
 
-    this.setState({pitchInterval})
+    this.pitchInterval = pitchInterval
   }
 
   render() {
     const {id, timeInterval} = this.props
-    const {scale, view, pitchInterval} = this.state
+    const {scale, view, pitchInterval} = this
 
     return (
       <g className={`track-${id}`}>
