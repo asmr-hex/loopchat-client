@@ -1,10 +1,14 @@
 import React, {Component} from 'react'
+import {object, string} from 'prop-types'
+import {MidiTrack} from './midi'
+import {AudioTrack} from './audio'
 
 
 export class Track extends Component {
   static propTypes = {
     id: string.isRequired,
-    type: bool.isRequired,
+    type: string.isRequired,
+    view: object.isRequired,
   }
 
   constructor(props) {
@@ -12,52 +16,7 @@ export class Track extends Component {
   }
 
   render() {
-
-    return (
-      <div className='timeline-container' style={styles}>
-        <svg
-          className='timeline'
-          ref={element => this.element = element}
-          width={styles.width}
-          height={styles.height}
-          >
-          <KeyboardUnderlay
-            show={showKeyboardGrid}
-            x={notesView.x}
-            y={notesView.y}
-            width={notesView.width}
-            height={notesView.height}
-            pitchStart={pitchInterval.start}
-            pitchEnd={pitchInterval.end}
-            />
-          <TimeGrid
-            show={showTimeGrid}
-            view={notesView}
-            timeInterval={timeInterval}
-            scale={scale}
-            />
-          <MidiNotes
-            notes={notes}
-            view={notesView}
-            timeInterval={timeInterval}
-            pitchInterval={pitchInterval}
-            scale={scale}
-            />
-          <TimeAxis
-            show={true}
-            view={timeAxisView}
-            timeInterval={timeInterval}
-            scale={scale}
-            />
-          <Scrubber
-            view={view}
-            time={this.props.scrubberTime}
-            scale={scale}
-            playing={this.props.playing}
-            timelineId={this.props.id}
-            />
-        </svg>
-      </div>
-    )
+    const {type} = this.props
+    return type == 'midi' ? <MidiTrack {...this.props}/> : <AudioTrack {...this.props}/>
   }
 }

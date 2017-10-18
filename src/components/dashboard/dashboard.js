@@ -47,6 +47,7 @@ export class Dashboard extends Component {
           height={200}
           background={'#ffbf75'}
           inputDevices={this.props.inputs}
+          timeInterval={{start: 0, end: 60}}
         />       
       )
     )

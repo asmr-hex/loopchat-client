@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
+import {connect} from 'react-redux'
 import {array, bool, number, object, string} from 'prop-types'
+import {get, map} from 'lodash'
 import './timeline.css'
 import {TimelineControls} from '../timeline/timelineControls'
 import {KeyboardUnderlay} from './underlays/keyboard'
@@ -7,8 +9,18 @@ import {TimeGrid} from './underlays/timeGrid'
 import {MidiNotes} from './midi/notes'
 import {TimeAxis} from './panels/time/axis'
 import {Scrubber} from './controls/scrubber'
+import {Track} from '../track/track'
+import {newTrack} from '../../types/track' // TODO (cw|10.17.2017) we don't need this! (ONLY FOR TESTING)
 
 
+const actions = {}
+
+const mapStateToProps = (state, ownProps) => ({
+  ...get(state, `timelines.${ownProps.id}`, {}),
+  ...get(state, `ui.timelines.${ownProps.id}`, {})
+})
+
+@connect(mapStateToProps, actions)
 export class Timeline extends Component {
   static propTypes = {
     id: string.isRequired,
@@ -19,11 +31,12 @@ export class Timeline extends Component {
     playing: bool.isRequired,
     scrubberTime: number.isRequired,
     inputDevices: array.isRequired, // TODO (cw|10.17.2017) move this to track component
+    timeInterval: object.isRequired,
     styles: object,
   }
 
   static defaultProps = {
-    style: {
+    styles: {
       width: 800,
       height: 200,
       background: '#ffbf75',
@@ -32,6 +45,15 @@ export class Timeline extends Component {
   
   constructor(props) {
     super(props)
+
+    this.state = {
+      tracksView: {
+        x: 0, // should be offset by input/recording panel width
+        y: 0, // should be offset by time axis height
+        width: props.styles.width, // should be adjusted by width of input/recording panel
+        height: props.styles.height, // should be adjusted by height of time axis panel
+      }
+    }
   }
 
   getTimelineStyles() {
@@ -80,6 +102,27 @@ export class Timeline extends Component {
       showTimeGrid,
     }
   }
+
+  renderTracks(notes) {
+    const {timeInterval} = this.props // TODO (cw|10.17.2017) get tracks array from here
+    const {tracksView} = this.state
+    const tracks = [newTrack()]
+    
+    return map(
+      tracks,
+      (track, idx) => (
+        <Track
+          key={idx}
+          id={track.id}
+          type={track.type}
+          view={tracksView}
+          timeInterval={timeInterval}
+          trackCount={tracks.length}
+          notes={notes}
+        />
+      )
+    )
+  }
   
   render() {
     const styles = this.getTimelineStyles()
@@ -120,26 +163,10 @@ export class Timeline extends Component {
             width={styles.width}
             height={styles.height}
             >
-            <KeyboardUnderlay
-              show={showKeyboardGrid}
-              x={notesView.x}
-              y={notesView.y}
-              width={notesView.width}
-              height={notesView.height}
-              pitchStart={pitchInterval.start}
-              pitchEnd={pitchInterval.end}
-              />
             <TimeGrid
               show={showTimeGrid}
               view={notesView}
               timeInterval={timeInterval}
-              scale={scale}
-              />
-            <MidiNotes
-              notes={notes}
-              view={notesView}
-              timeInterval={timeInterval}
-              pitchInterval={pitchInterval}
               scale={scale}
               />
             <TimeAxis
@@ -148,6 +175,7 @@ export class Timeline extends Component {
               timeInterval={timeInterval}
               scale={scale}
               />
+            {this.renderTracks(notes)}
             <Scrubber
               view={view}
               time={this.props.scrubberTime}

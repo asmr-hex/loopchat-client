@@ -19,9 +19,10 @@ export const newTimelineUI = () => ({
     height: TIMELINE_HEIGHT_DEFAULT,
     top: (window.innerHeight - TIMELINE_HEIGHT_DEFAULT) / 2,
     left: (window.innerWidth - TIMELINE_WIDTH_DEFAULT) / 2,
+    position: 'absolute',
     backgroundColor: '#ffbf75',
   },
-  timeInterval: {
+  timeInterval: { // TODO (cw|10.17.2017) maybe this should be in React internal state...
     start: 0,
     end: 45,
   },
