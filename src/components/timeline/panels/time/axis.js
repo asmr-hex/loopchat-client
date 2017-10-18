@@ -30,10 +30,30 @@ export class TimeAxis extends Component {
   
   constructor(props) {
     super(props)
+
+    // compute the x scaling factor for this component (only depends on time units)
+    this.computeScalingFactor()
   }
 
+  componentWillUpdate() {
+    // recompute the scaling factor
+    this.computeScalingFactor()
+  }
+  
+  computeScalingFactor() {
+    const {view, timeInterval} = this.props
+
+    // we only care about the x scaling factor in this component since the y axis has no units
+    const scale = {
+      x: view.width / (timeInterval.end - timeInterval.start),
+    }
+
+    this.scale = scale
+  }
+  
   renderTicks() {
-    const {view, timeInterval, scale} = this.props
+    const {view, timeInterval} = this.props
+    const {scale} = this
 
     // how many seconds are contained
     const duration = timeInterval.end - timeInterval.start

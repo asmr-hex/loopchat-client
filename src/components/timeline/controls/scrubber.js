@@ -8,7 +8,7 @@ export class Scrubber extends Component {
   static propTypes = {
     view: object.isRequired,
     time: number.isRequired,
-    scale: object.isRequired,
+    timeInterval: object.isRequired,
     playing: bool.isRequired,
     timelineId: string.isRequired
   }
@@ -36,6 +36,14 @@ export class Scrubber extends Component {
     super(props)
 
     this.state = {playing: this.props.playing}
+
+    // compute scaling factor
+    this.computeScalingFactor()
+  }
+
+  componentWillUpdate() {
+    // recompute scaling factor
+    this.computeScalingFactor()
   }
   
   componentDidUpdate() {
@@ -47,8 +55,20 @@ export class Scrubber extends Component {
     if (this.props.playing) this.animatePlayback()
   }
 
+  computeScalingFactor() {
+    const {view, timeInterval} = this.props
+
+    // the scaling only depends on time, thus we only need x
+    const scale = {
+      x: view.width / (timeInterval.end - timeInterval.start),
+    }
+
+    this.scale = scale
+  }
+  
   animatePlayback() {
-    const {time, view, scale} = this.props
+    const {time, view} = this.props
+    const {scale} = this
     let t = time, last = 0
 
     // create a closure which can access local state (t and last)
@@ -69,7 +89,8 @@ export class Scrubber extends Component {
   }
   
   render() {
-    const {view, time, scale, style} = this.props
+    const {view, time, style} = this.props
+    const {scale} = this
 
     return (
       <line

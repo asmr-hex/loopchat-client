@@ -4,9 +4,6 @@ import {array, bool, number, object, string} from 'prop-types'
 import {get, map} from 'lodash'
 import './timeline.css'
 import {TimelineControls} from '../timeline/timelineControls'
-import {KeyboardUnderlay} from './underlays/keyboard'
-import {TimeGrid} from './underlays/timeGrid'
-import {MidiNotes} from './midi/notes'
 import {TimeAxis} from './panels/time/axis'
 import {Scrubber} from './controls/scrubber'
 import {Track} from '../track/track'
@@ -46,16 +43,31 @@ export class Timeline extends Component {
   constructor(props) {
     super(props)
 
-    this.state = {
-      tracksView: {
-        x: 0, // should be offset by input/recording panel width
-        y: 0, // should be offset by time axis height
-        width: props.styles.width, // should be adjusted by width of input/recording panel
-        height: props.styles.height, // should be adjusted by height of time axis panel
-      }
-    }
+    this.state = this.computeInitialPanelViews()
   }
 
+  computeInitialPanelViews() {
+    const {width, height} = this.props.styles
+    
+    // timeAxis
+    const timeAxisView = {
+      x: 0,
+      y: 0,
+      width,
+      height: 20,
+    }
+
+    // tracksView
+    const tracksView = {
+      x: 0,
+      y: timeAxisView.height,
+      width,
+      height: height - timeAxisView.height,
+    }
+
+    return {timeAxisView, tracksView}
+  }
+  
   getTimelineStyles() {
     const {width, height, background} = this.props
     const top = (window.innerHeight - height)/2
@@ -130,23 +142,11 @@ export class Timeline extends Component {
     const {
       notes,
       view,
-      timeInterval,
       pitchInterval,
       showKeyboardGrid,
       showTimeGrid,
     } = this.getSampleData()
 
-    // partition different views
-    const timeAxisView = {x: 0, y:0, width: view.width, height: 20}
-    const notesView = {x: 0, y: timeAxisView.height, width: view.width, height: view.height - timeAxisView.height}
-
-    // compute visual scale (NOTE: this is for the notesView)
-    // TODO (cw|10.12.2017) each panel should have its own scale
-    const scale = {
-      x: notesView.width / (timeInterval.end - timeInterval.start),
-      y: notesView.height / (pitchInterval.end - pitchInterval.start + 1),
-    }
-    
     return (
       <div>
         <TimelineControls
@@ -156,34 +156,27 @@ export class Timeline extends Component {
           inputs={this.props.inputDevices}
           timelineId={this.props.id}
           playing={this.props.playing}
-          />
+        />
         <div className='timeline-container' style={styles}>
           <svg
             className='timeline'
             ref={element => this.element = element}
             width={styles.width}
             height={styles.height}
-            >
-            <TimeGrid
-              show={showTimeGrid}
-              view={notesView}
-              timeInterval={timeInterval}
-              scale={scale}
-              />
+          >
+            {this.renderTracks(notes)}
             <TimeAxis
               show={true}
-              view={timeAxisView}
-              timeInterval={timeInterval}
-              scale={scale}
-              />
-            {this.renderTracks(notes)}
+              view={this.state.timeAxisView}
+              timeInterval={this.props.timeInterval}
+            />
             <Scrubber
               view={view}
               time={this.props.scrubberTime}
-              scale={scale}
+              timeInterval={this.props.timeInterval}
               playing={this.props.playing}
               timelineId={this.props.id}
-              />
+            />
           </svg>
         </div>
       </div>

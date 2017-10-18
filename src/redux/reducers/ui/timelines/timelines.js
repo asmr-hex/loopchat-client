@@ -5,7 +5,7 @@ import {newTimelineUI} from '../../../../types/timeline'
 export const timelines = (state = {}, action) => {
   switch (action.type) {
   case TIMELINE_CREATED:
-    return makeTimelineUI(state, action.payload.id)
+    return makeTimelineUI(state, action.payload.timelineId)
   // case TIMELINE_VISIBILITY_UPDATED:
   // case TIMELINE_RESIZED:
   // case TIMELINE_RESCALED:
