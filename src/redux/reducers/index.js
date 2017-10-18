@@ -5,6 +5,10 @@ import { session } from './session/index'
 import { midi } from './midi/index'
 import { peers } from './peers/index'
 import {recordings} from './recordings/index'
+import {timelines} from './timelines/timelines'
+import {tracks} from './tracks/tracks'
+import {ui} from './ui'
+
 
 const reducers = combineReducers({
   connection,
@@ -12,7 +16,10 @@ const reducers = combineReducers({
   session,  
   midi,
   peers,
+  timelines,
+  tracks,
   recordings,
+  ui,
 })
 
 export default reducers
