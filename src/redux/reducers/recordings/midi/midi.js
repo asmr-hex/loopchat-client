@@ -63,7 +63,7 @@ export const createOverdub = (state, recordingId, overdub) =>
  */
 export const recordEvent = (state, recordingId, overdubId, midiEvent) => {
   const events = get(state, `${recordingId}.overdubs.recording.${overdubId}.events`)
-
+  
   if (isUndefined(events)) return state // ignore this midiEvent if there is no overdub to record to!
 
   return set({...state}, `${recordingId}.overdubs.recording.${overdubId}.events`, [...events, midiEvent])
@@ -216,7 +216,7 @@ export const normalizeOverdubTime = overdub => ({
   events: map(
     overdub.events,
     event => {
-      event.time -= overdub.startTime
+      event.time -= overdub.start
       return event
     },
   )

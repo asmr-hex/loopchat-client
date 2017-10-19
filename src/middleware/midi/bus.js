@@ -166,7 +166,7 @@ export class MidiEventBus {
 
     // process event (convert to usable data)
     const music = this.process(event)
-
+    
     // record be dispatching to the redux store
     if (isRecording) this.record(deviceId, music)
 
@@ -192,7 +192,7 @@ export class MidiEventBus {
 
   record(deviceId, music) {
     const {recordingId, overdubId} = this.recording[deviceId]
-
+    
     this.dispatch(recordMidiEvent(recordingId, overdubId, music))
   }
 }
