@@ -3,6 +3,9 @@ node_modules
 npm-debug.log
 dist
 
+# code coverage
+coverage
+
 # Webstorm/IntelliJ
 .idea
 .tmp

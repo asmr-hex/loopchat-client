@@ -1,5 +1,6 @@
 const webpackConfig = require('./webpack.config.js') // NOTE (cw|6.4.2017) using the test config didn't work for some reason.
-const testPath = './test/unit/'
+const srcPath = './src/'
+const testPath = './test/!(support)/'
 
 webpackConfig.entry = {}
 
@@ -30,6 +31,7 @@ module.exports = function(config) {
     ],
     plugins: [
       'karma-webpack',
+      'karma-coverage',
       'karma-mocha',
       'karma-mocha-reporter',
       'karma-chai',
@@ -55,7 +57,7 @@ module.exports = function(config) {
     },
 
     // test reporting
-    reporters: ['mocha'],
+    reporters: ['mocha', 'coverage'],
     mochaReporter: {
       colors: {
         success: 'blue',
@@ -71,12 +73,21 @@ module.exports = function(config) {
       },
       showDiff: true,
     },
+    coverageReporter: {
+      includeAllSources: true,
+      reporters: [
+        {type: 'html'},
+        {type: 'lcov'},
+        {type: 'text'},
+      ],
+      dir: 'coverage',
+    },
     colors: true,
     logLevel: config.INFO,
     autoWatch: false,
     singleRun: true,
   }
-
+  
   // when running tests on Travis CI, we should use the appropriate
   // custom launcher.
   if (process.env.TRAVIS) {
