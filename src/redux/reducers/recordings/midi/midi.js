@@ -1,4 +1,4 @@
-import {filter, first, get, isUndefined, last, map, merge, omit, reduce, reverse, set, slice, sortBy} from 'lodash'
+import {filter, first, findIndex, get, isUndefined, last, map, merge, omit, pullAt, reduce, reverse, set, slice, sortBy} from 'lodash'
 import {
   MIDI_EVENT_RECORDED,
   MIDI_OVERDUB_RECORDING_STARTED,
@@ -132,7 +132,7 @@ export const processMaster = (master, overdub) =>
  * @param overdub
  */
 const overlay = (master, overdub) =>
-      sortBy([...master, ...consolidatNotes(overdub.events)], e => e.time)
+      sortBy([...master, ...consolidateNotes(overdub.events)], e => e.start)
 
 /**
  * overwrite updates the master events array s.t. the overdub overwrites any
@@ -156,10 +156,10 @@ const overwrite = (master, overdub) => {
   ]
 }
 
-const consolidateNotes = events => {
+export const consolidateNotes = events => {
   const onEvents = filter(events, e => e.type === MIDI_NOTE_ON)
   let offEvents = filter(events, e => e.type === MIDI_NOTE_OFF)
-
+  
   return reduce(
     onEvents,
     (acc, onEvent) => {
@@ -167,11 +167,10 @@ const consolidateNotes = events => {
 
       const offEvent = first(pullAt(offEvents, idx))
 
-      return omit({
-        ...onEvent,
-        start: onEvent.time,
-        end: offEvent.time,
-      }, 'time')
+      return [
+        ...acc,
+        omit({...onEvent, start: onEvent.time, end: offEvent.time,}, ['time', 'type'])
+      ]
     },
     [],
   )
