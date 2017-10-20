@@ -132,7 +132,7 @@ export const processMaster = (master, overdub) =>
  * @param overdub
  */
 const overlay = (master, overdub) =>
-  sortBy([...master, ...overdub.events], e => e.time)
+      sortBy([...master, ...consolidatNotes(overdub.events)], e => e.time)
 
 /**
  * overwrite updates the master events array s.t. the overdub overwrites any
@@ -146,11 +146,36 @@ const overlay = (master, overdub) =>
  * @param master
  * @param overdub
  */
-const overwrite = (master, overdub) => ([
-    ...filterBefore(master, first(overdub.events).time),
-    ...overdub.events,
-    ...filterAfter(master, last(overdub.events).time),
-])
+const overwrite = (master, overdub) => {
+  const events = consolidateNotes(overdub.events)
+  
+  return [
+    ...filterBefore(master, first(events).time),
+    ...events,
+    ...filterAfter(master, last(events).time),
+  ]
+}
+
+const consolidateNotes = events => {
+  const onEvents = filter(events, e => e.type === MIDI_NOTE_ON)
+  let offEvents = filter(events, e => e.type === MIDI_NOTE_OFF)
+
+  return reduce(
+    onEvents,
+    (acc, onEvent) => {
+      const idx = findIndex(offEvents, offEvent => offEvent.note == onEvent.note)
+
+      const offEvent = first(pullAt(offEvents, idx))
+
+      return omit({
+        ...onEvent,
+        start: onEvent.time,
+        end: offEvent.time,
+      }, 'time')
+    },
+    [],
+  )
+}
 
 /**
  * filterBefore takes a master events array and removes all events which occur
@@ -163,7 +188,7 @@ const overwrite = (master, overdub) => ([
  */
 export const filterBefore = (master, startTime) =>
   filter(
-    filter(master, e => e.time < startTime), // get all events before startTime
+    filter(master, e => e.start < startTime), // get all events before startTime
     (e, idx) => {
       // if this is not a midi on event, do not filter out
       if (e.type !== MIDI_NOTE_ON) return true
@@ -190,7 +215,7 @@ export const filterBefore = (master, startTime) =>
  */
 export const filterAfter = (master, endTime) =>
   filter(
-    filter(master, e => e.time > endTime), // get all events after endTime
+    filter(master, e => e.end > endTime), // get all events after endTime
     (e, idx) => {
       // if this is not a midi off event, do not filter out
       if (e.type !== MIDI_NOTE_OFF) return true
