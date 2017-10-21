@@ -81,6 +81,7 @@ module.exports = function(config) {
         {type: 'text'},
       ],
       dir: 'coverage',
+      subdir: '.',
     },
     colors: true,
     logLevel: config.INFO,
