@@ -2,6 +2,7 @@
 freaky friend beats  :musical_score:
 
 [![Build Status](https://travis-ci.org/connorwalsh/loopchat-client.svg?branch=master)](https://travis-ci.org/connorwalsh/loopchat-client)
+[![Coverage Status](https://coveralls.io/repos/github/connorwalsh/loopchat-client/badge.svg?branch=midi-recording-ui)](https://coveralls.io/github/connorwalsh/loopchat-client?branch=midi-recording-ui)
 [![GitBook](https://img.shields.io/badge/docs-GitBook-blue.svg)](https://connorwalsh.gitbooks.io/loopchat/)
 [![Trello](https://img.shields.io/badge/kanban-Trello-green.svg)](https://trello.com/b/RbMlhUSk/loopchat)
 
