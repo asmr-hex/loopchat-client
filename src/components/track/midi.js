@@ -10,7 +10,7 @@ import {MidiNotes} from '../timeline/midi/notes'
 const actions = {}
 
 const mapStateToProps = (state, ownProps) => ({
-  recording: {}, // getMidiRecordingOf(ownProps.id), // TODO (cw|10.17.2017) put this back in!
+  recording: getMidiRecordingOf(state, ownProps.id), // TODO (cw|10.17.2017) put this back in!
 })
 
 @connect(mapStateToProps, actions)

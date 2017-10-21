@@ -9,5 +9,12 @@
   "plugins": [
   "transform-class-properties",
   "transform-decorators-legacy" 
- ]
+  ],
+  "env": {
+    "test" : {
+      "plugins": [
+        "istanbul"
+      ]
+    }
+  }
 }
