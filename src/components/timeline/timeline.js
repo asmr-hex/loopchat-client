@@ -67,7 +67,7 @@ export class Timeline extends Component {
 
     return {timeAxisView, tracksView}
   }
-  
+
   getTimelineStyles() {
     const {width, height, background} = this.props
     const top = (window.innerHeight - height)/2
