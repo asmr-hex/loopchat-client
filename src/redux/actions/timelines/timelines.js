@@ -1,3 +1,7 @@
+import uuidV4 from 'uuid/v4'
+import {createMidiTrack} from '../tracks/midi'
+
+
 export const TIMELINE_CREATED = 'TIMELINE_CREATED'
 export const TIMELINE_DELETED = 'TIMELINE_DELETED'
 export const TRACK_ADDED_TO_TIMELINE = 'TRACK_ADDED_TO_TIMELINE'
@@ -29,6 +33,16 @@ export const addTrackToTimeline = (trackId, timelineId) => dispatch =>
       timelineId,
     },
   })
+
+export const addNewTrackToTimeline = timelineId => dispatch => {
+  const trackId = uuidV4()
+  
+  // create new midi track
+  dispatch(createMidiTrack(trackId))
+
+  // add this new track to timeline
+  dispatch(addTrackToTimeline(trackId, timelineId))
+}
 
 export const startPlayback = timelineId => dispatch =>
   dispatch({

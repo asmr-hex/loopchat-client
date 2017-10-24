@@ -4,12 +4,14 @@ import {DropDownMenu, MenuItem} from 'material-ui'
 import { map, filter, get } from 'lodash'
 import uuidV4 from 'uuid/v4'
 import './timelineControls.css'
+import {addNewTrackToTimeline} from '../../redux/actions/timelines/timelines'
 import {activateMidiInputDevice, deactivateMidiInputDevice} from '../../redux/actions/midi/index'
 import {startNewMidiRecording, stopMidiOverdub} from '../../redux/actions/recordings/midi/midi'
 import {PlayButton} from './controls/playButton'
 
 
 const actions = {
+  addNewTrackToTimeline,
   activateMidiInputDevice,
   deactivateMidiInputDevice,
   startNewMidiRecording,
@@ -60,6 +62,9 @@ export class TimelineControls extends Component {
     return (
       <div className='timeline-controls' style={styles}>
         timeline
+        <button onClick={() => this.newTrack()}>
+          + Track
+        </button>
         <DropDownMenu value={this.state.value} onChange={this.handleChange}>
           {
             map(inputs, (input, idx) => <MenuItem value={input.id} key={idx} primaryText={input.name} />)
@@ -76,6 +81,12 @@ export class TimelineControls extends Component {
         />
       </div>
     )
+  }
+
+  newTrack() {
+    const {timelineId, addNewTrackToTimeline} = this.props
+
+    addNewTrackToTimeline(timelineId)
   }
   
   handleRecording(deviceId, isRecording, recordingId = uuidV4(), overdubId = uuidV4()) {

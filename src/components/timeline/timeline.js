@@ -7,6 +7,7 @@ import {TimelineControls} from '../timeline/timelineControls'
 import {TimeAxis} from './panels/time/axis'
 import {Scrubber} from './controls/scrubber'
 import {Track} from '../track/track'
+import {getTracksFromTimeline} from '../../redux/selectors/timelines'
 import {newTrack} from '../../types/track' // TODO (cw|10.17.2017) we don't need this! (ONLY FOR TESTING)
 
 
@@ -14,7 +15,8 @@ const actions = {}
 
 const mapStateToProps = (state, ownProps) => ({
   ...get(state, `timelines.${ownProps.id}`, {}),
-  ...get(state, `ui.timelines.${ownProps.id}`, {})
+  ...get(state, `ui.timelines.${ownProps.id}`, {}),
+  tracks: getTracksFromTimeline(state, ownProps.id),
 })
 
 @connect(mapStateToProps, actions)
@@ -116,9 +118,8 @@ export class Timeline extends Component {
   }
 
   renderTracks(notes) {
-    const {timeInterval} = this.props // TODO (cw|10.17.2017) get tracks array from here
+    const {timeInterval, tracks} = this.props // TODO (cw|10.17.2017) get tracks array from here
     const {tracksView} = this.state
-    const tracks = [newTrack()]
     
     return map(
       tracks,
