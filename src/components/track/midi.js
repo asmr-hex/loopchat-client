@@ -46,12 +46,14 @@ export class MidiTrack extends Component {
   }
 
   componentWillUpdate() {
-    // recompute this track's view
-    this.computeTrackView()
+    // // recompute this track's view
+    // this.computeTrackView()
     
-    // recompte scaling factors incase something has changed. TODO (cw|10.17.2017) further optimization
-    // is possible to only recompute when necessary.
-    this.computeScalingFactors()
+    // // recompte scaling factors incase something has changed. TODO (cw|10.17.2017) further optimization
+    // // is possible to only recompute when necessary.
+    // this.computeScalingFactors()
+
+    // console.log("RECOMPUTED SCALOING FACTORS FOR ", this.props.id)
   }
   
   computeScalingFactors() {
@@ -91,9 +93,18 @@ export class MidiTrack extends Component {
   }
 
   render() {
+    // recompute this track's view
+    this.computeTrackView()
+    
+    // recompte scaling factors incase something has changed. TODO (cw|10.17.2017) further optimization
+    // is possible to only recompute when necessary.
+    this.computeScalingFactors()
+
     const {id, timeInterval} = this.props
     const {scale, view, pitchInterval} = this
 
+    console.log("RENDERING ", this.props.id)
+    
     return (
       <g className={`track-${id}`}>
         <KeyboardUnderlay

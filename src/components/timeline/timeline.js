@@ -4,6 +4,7 @@ import {array, bool, number, object, string} from 'prop-types'
 import {get, map} from 'lodash'
 import './timeline.css'
 import {TimelineControls} from '../timeline/timelineControls'
+import {TrackControlPanel} from '../track/controls'
 import {TimeAxis} from './panels/time/axis'
 import {Scrubber} from './controls/scrubber'
 import {Track} from '../track/track'
@@ -49,7 +50,7 @@ export class Timeline extends Component {
   }
 
   computeInitialPanelViews() {
-    const {width, height} = this.props.styles
+    const {width, height} = this.props.styles    
     
     // timeAxis
     const timeAxisView = {
@@ -58,7 +59,7 @@ export class Timeline extends Component {
       width,
       height: 20,
     }
-
+    
     // tracksView
     const tracksView = {
       x: 0,
@@ -137,6 +138,20 @@ export class Timeline extends Component {
       )
     )
   }
+
+  renderTrackControls() {
+    const {tracks} = this.props
+    const {trackControlsView} = this.state
+
+    return map(
+      tracks,
+      (track, idx) => (
+        <TrackControl
+          key={idx}
+        />
+      )
+    )
+  }
   
   render() {
     const styles = this.getTimelineStyles()
@@ -149,6 +164,16 @@ export class Timeline extends Component {
     } = this.getSampleData()
 
     return (
+      <div className={`timeline-${this.props.id}`}>
+        <InputControlPanel/>
+        <PlaybackPanel/>
+        <OutputControlPanel/>
+        <TimelineControlPanel/>
+        <ProcessingControlPanel/>
+      </div>
+    )
+    
+    return (
       <div>
         <TimelineControls
           width={800}
@@ -157,7 +182,7 @@ export class Timeline extends Component {
           inputs={this.props.inputDevices}
           timelineId={this.props.id}
           playing={this.props.playing}
-        />
+          />
         <div className='timeline-container' style={styles}>
           <svg
             className='timeline'
