@@ -8,9 +8,10 @@ import {
   DEACTIVATE_MIDI_INPUT_DEVICE
 } from '../../redux/actions/midi/index'
 import {
-  MIDI_RECORDING_CREATED, MIDI_OVERDUB_RECORDING_STOPPED,
+  MIDI_OVERDUB_RECORDING_STOPPED,
   MIDI_OVERDUB_RECORDING_STARTED
 } from '../../redux/actions/recordings/midi/midi'
+
 
 export const midiMiddleware = (() => {
   // hide global midiEventBus using a closure

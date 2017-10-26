@@ -4,6 +4,7 @@ import {number, shape, string} from 'prop-types'
 import {addNewTrackToTimeline} from '../../../../../redux/actions/timelines/timelines'
 import {getTimelineProperty} from '../../../../../redux/selectors/timelines'
 import {PlayButton} from './playButton'
+import {RecordButton} from './recordButton'
 
 
 const actions = {
@@ -33,7 +34,7 @@ export class TimelineControlPanel extends Component {
   }
   
   render() {
-    const {id} = this.props
+    const {timelineId} = this.props
     const styles = {
       width: this.props.layout.width,
       height: this.props.layout.height,
@@ -43,7 +44,7 @@ export class TimelineControlPanel extends Component {
     }
 
     return (
-      <div className={`timeline-controls-${id}`} style={{...styles}}>
+      <div className={`timeline-controls-${timelineId}`} style={{...styles}}>
         timeline controls
         <button onClick={() => this.newTrack()}>
           + Track
@@ -51,13 +52,11 @@ export class TimelineControlPanel extends Component {
         <PlayButton
           timelineId={this.props.timelineId}
           playing={this.props.playing}
+          />
+        <RecordButton
+          timelineId={timelineId}
         />
-        <button onClick={() => this.handleRecording(selectedDeviceId, recording, recordingId, overdubId)}>
-          {
-            recording ? 'stop' : 'record'
-          }
-        </button>
       </div>
     )
   }
-}
+}  

@@ -4,6 +4,7 @@ import {
   TIMELINE_CREATED,
   TIMELINE_DELETED,
   TRACK_ADDED_TO_TIMELINE,
+  TIMELINE_RECORDING_STATUS_UPDATED,
   TIMELINE_PLAYBACK_STARTED,
   TIMELINE_PLAYBACK_STOPPED,
   TIMELINE_SCRUBBER_POSITION_UPDATED,
@@ -20,7 +21,9 @@ export const timelines = (state = {}, action) => {
     return addTrackToTimeline(state, action.payload.timelineId, action.payload.trackId)
   // case TRACK_REMOVED_FROM_TIMELINE:
   // case TIMELINE_TEMPO_UPDATED:
-  // case TIMELINE_TIME_SIGNATURE_UPDATED:
+    // case TIMELINE_TIME_SIGNATURE_UPDATED:
+  case TIMELINE_RECORDING_STATUS_UPDATED:
+    return updateRecordingStatusOf(state, action.payload.timelineId, action.payload.inProgress)
   case TIMELINE_PLAYBACK_STARTED:
     return updatePlaybackStatusOf(state, action.payload.timelineId, true)
   case TIMELINE_PLAYBACK_STOPPED:
@@ -69,6 +72,18 @@ export const addTrackToTimeline = (state, timelineId, trackId) => ({
     ...get(state, timelineId, {}),
     tracks: [...get(state, `${timelineId}.tracks`, []), trackId],
   },
+})
+
+/**
+ * updateRecordingStatusOf updates whether the timeline is recording or not. 
+ *
+ * @param state :: {}
+ * @param timelineId :: string
+ * @param inProgress : bool
+ */
+export const updateRecordingStatusOf = (state, timelineId, inProgress) => ({
+  ...state,
+  [timelineId]: {...get(state, timelineId, {}), recording: inProgress}
 })
 
 /**

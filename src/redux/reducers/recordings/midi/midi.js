@@ -1,4 +1,4 @@
-import {filter, first, findIndex, get, isUndefined, last, map, merge, omit, pullAt, reduce, reverse, set, slice, sortBy} from 'lodash'
+import {filter, first, findIndex, get, isUndefined, keys, last, map, merge, omit, pullAt, reduce, reverse, set, slice, sortBy} from 'lodash'
 import {
   MIDI_EVENT_RECORDED,
   MIDI_OVERDUB_RECORDING_STARTED,
@@ -6,6 +6,8 @@ import {
   MIDI_RECORDING_CREATED
 } from '../../../actions/recordings/midi/midi'
 import {MIDI_NOTE_OFF, MIDI_NOTE_ON} from '../../../../types/midiEvent'
+import {newOverdub} from '../../../../types/recording'
+
 
 /**
  * midi recording reducer
@@ -15,9 +17,9 @@ export const midi = (state = {}, action) => {
   case MIDI_RECORDING_CREATED:
     return createMidiRecording(state, action.payload.recording)
   case MIDI_OVERDUB_RECORDING_STARTED:
-    return createOverdub(state, action.payload.recordingId, action.payload.overdub)
+    return createOverdubs(state, action.payload)
   case MIDI_OVERDUB_RECORDING_STOPPED:
-    return processRecording(state, action.payload.recordingId, action.payload.overdubId)
+    return processRecordings(state, action.payload)
   case MIDI_EVENT_RECORDED:
     return recordEvent(state, action.payload.recordingId, action.payload.overdubId, action.payload.event)
   default:
@@ -36,6 +38,27 @@ export const createMidiRecording = (state, recording) => ({
   ...state,
   [recording.id]: recording,
 })
+
+
+/**
+ * createOverdubs bulk creates new overdubs. 
+ *
+ * @param state :: {}
+ * @param recordings :: [{id, inputDevice}]
+ */
+export const createOverdubs = (state, recordings) =>
+  reduce(
+    recordings,
+    (oldState, recording) => ({
+      ...oldState,
+      ...createOverdub(
+        state,
+        recording.id,
+        newOverdub(recording.overdubId, get(state, `${recording.id}.start`, 0)),
+      ),
+    }),
+    state,
+  )
 
 /**
  * createOverdub merges a new overdub into the 'currently recording' branch of the
@@ -68,6 +91,26 @@ export const recordEvent = (state, recordingId, overdubId, midiEvent) => {
 
   return set({...state}, `${recordingId}.overdubs.recording.${overdubId}.events`, [...events, midiEvent])
 }
+
+/**
+ * processRecordings bulk processes recording when recording is complete. 
+ *
+ * @param state :: {}
+ * @param recordings :: [{id, inputDevice}]
+ */
+export const processRecordings = (state, recordings) =>
+  reduce(
+    recordings,
+    (oldState, recording) => ({
+      ...oldState,
+      ...processRecording(
+        state,
+        recording.id,
+        first(keys(get(state, `${recording.id}.overdubs.recording`, {}))),
+      )
+    }),
+    state,
+  )
 
 /**
  * processRecording is called when an overdub is finished recording. This function

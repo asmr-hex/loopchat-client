@@ -5,6 +5,7 @@ import {createMidiTrack} from '../tracks/midi'
 export const TIMELINE_CREATED = 'TIMELINE_CREATED'
 export const TIMELINE_DELETED = 'TIMELINE_DELETED'
 export const TRACK_ADDED_TO_TIMELINE = 'TRACK_ADDED_TO_TIMELINE'
+export const TIMELINE_RECORDING_STATUS_UPDATED = 'TIMELINE_RECORDING_STATUS_UPDATED'
 export const TIMELINE_PLAYBACK_STARTED = 'TIMELINE_PLAYBACK_STARTED'
 export const TIMELINE_PLAYBACK_STOPPED = 'TIMELINE_PLAYBACK_STOPPED'
 export const TIMELINE_SCRUBBER_POSITION_UPDATED = 'TIMELINE_SCRUBBER_POSITION_UPDATED'
@@ -43,6 +44,15 @@ export const addNewTrackToTimeline = timelineId => dispatch => {
   // add this new track to timeline
   dispatch(addTrackToTimeline(trackId, timelineId))
 }
+
+export const updateRecordingStatus = (timelineId, inProgress) => dispatch =>
+  dispatch({
+    type: TIMELINE_RECORDING_STATUS_UPDATED,
+    payload: {
+      timelineId,
+      inProgress,
+    }
+  })
 
 export const startPlayback = timelineId => dispatch =>
   dispatch({

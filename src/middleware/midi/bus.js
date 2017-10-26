@@ -174,20 +174,28 @@ export class MidiEventBus {
     play(music)
   }
 
-  startRecording(payload) {
-    const {input, recordingId, overdub} = payload
-
-    // set the recording for this device
-    this.recording[input] = {
-      recordingId,
-      overdubId: overdub.id
-    }
+  // NOTE: the assumption here is that recording multiple tracks/overdubs with
+  // the same input device is not useful and thus only one will actually be recorded.
+  startRecording(recordings) {
+    forEach(
+      recordings,
+      recording => {
+        // set the recording for this device
+        this.recording[recording.inputDeviceId] = {
+          recordingId: recording.id,
+          overdubId: recording.overdubId,
+        }
+      }
+    )
   }
 
-  stopRecording(payload) {
-    const {input} = payload
-
-    this.recording[input] = null
+  stopRecording(recordings) {
+    forEach(
+      recordings,
+      recording => {
+        this.recording[recording.inputDeviceId] = null
+      }
+    )
   }
 
   record(deviceId, music) {

@@ -14,9 +14,9 @@ export const midi = (state = {}, action) => {
   
   switch (action.type) {
   case MIDI_TRACK_CREATED:
-    return {...state, [payload.id]: newMidiTrack(payload.id)}
+    return {...state, [payload.trackId]: newMidiTrack(payload.trackId, {recordingId: payload.recordingId})}
   case MIDI_TRACK_DELETED:
-    return omit(state, payload.id)
+    return omit(state, payload.trackId)
   case MIDI_TRACK_INPUT_DEVICE_ASSIGNED:
     return updateMidiTrackInputDevice(state, payload.trackId, payload.deviceId)
   case MIDI_TRACK_ACTIVATED:
@@ -44,7 +44,7 @@ export const updateMidiTrackInputDevice = (state, trackId, deviceId) => ({
   ...state,
   [trackId]: {
     ...get(state, trackId, {}),
-    inputDevice: deviceId,
+    inputDeviceId: deviceId,
   },
 })
 

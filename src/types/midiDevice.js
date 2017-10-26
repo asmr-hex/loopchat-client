@@ -1,5 +1,7 @@
+export const NULL_DEVICE = 'NULL_DEVICE'
+
 export const newMidiInputDevice = (name = 'No Input', overrides = {}) => ({
-  id: 0,
+  id: NULL_DEVICE,
   name,
   manufacturer: 'photosynthesizers inc.',
   type: 'input',

@@ -102,8 +102,6 @@ export class MidiTrack extends Component {
 
     const {id, timeInterval} = this.props
     const {scale, view, pitchInterval} = this
-
-    console.log("RENDERING ", this.props.id)
     
     return (
       <g className={`track-${id}`}>

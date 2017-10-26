@@ -7,6 +7,7 @@ export const newTimeline = (id = uuidV4()) => ({
   tempo: 120, // bpm
   timeSignature: '4/4',
   playing: false,
+  recording: false,
   scrubberTime: 0.0,
 })
 

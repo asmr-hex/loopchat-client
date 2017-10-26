@@ -1,55 +1,71 @@
 import React, {Component} from 'react'
-import {array} from 'prop-types'
+import {string} from 'prop-types'
 import {connect, bool} from 'react-redux'
 import uuidV4 from 'uuid/v4'
-import {startNewMidiRecording, stopMidiOverdub} from '../../../redux/actions/recordings/midi/midi'
+import {forEach, filter, map} from 'lodash'
+import {startMidiOverdubs, stopMidiOverdubs} from '../../../../../redux/actions/recordings/midi/midi'
+import {updateRecordingStatus} from '../../../../../redux/actions/timelines/timelines'
+import {NULL_DEVICE} from '../../../../../types/midiDevice'
+import {
+  getTimelineProperty,
+  getActiveTracksFromTimeline
+} from '../../../../../redux/selectors/timelines'
 
 
 const actions = {
-  startNewMidiRecording,
-  stopMidiOverdub,
+  startMidiOverdubs,
+  stopMidiOverdubs,
+  updateRecordingStatus,
 }
 
-@connect(state => ({}), actions)
+const mapStateToProps = (state, ownProps) => ({
+  activeTracks: getActiveTracksFromTimeline(state, ownProps.timelineId),
+  recordingInProgress: getTimelineProperty(state, ownProps.timelineId, 'recording')
+})
+  
+
+@connect(mapStateToProps, actions)
 export class RecordButton extends Component {
   static propTypes = {
-    trackId: string.isRequired,
-    inputDeviceId: string.isRequired,
-    recording: bool.isRequired,
-    recordingId: string.isRequired,
-    overdubId: string.isRequired,
+    timelineId: string.isRequired,
   }
 
-  static defaultProps = {
-    trackId: undefined,
-    inputDeviceId: undefined,
-    recording: false,
-    recordingId: uuidV4(),
-    overdubId: uuidV4(),
-  }
-  
-  constructor(props) {
-    super(props)
-  }
+  handleRecording() {
+    const {
+      activeTracks,
+      recordingInProgress,
+      startMidiOverdubs,
+      stopMidiOverdubs,
+      updateRecordingStatus,
+    } = this.props
 
-  handleRecording(deviceId, isRecording, recordingId = uuidV4(), overdubId = uuidV4()) {
-    const {startNewMidiRecording, stopMidiOverdub} = this.props
+    // filter out tracks which don't have an input device set
+    const tracks = filter(activeTracks, track => track.inputDeviceId !== NULL_DEVICE) // TODO (cw|10.25.2017) make the NULL device a constant
 
-    if (!deviceId) return
+    if (tracks.length === 0) return
 
-    if (!isRecording) {
-      startNewMidiRecording(deviceId, recordingId, overdubId)
+    const recordings = map(
+      tracks,
+      track => ({id: track.recordingId, inputDeviceId: track.inputDeviceId}),
+    )
+    
+    if (!recordingInProgress) {
+      startMidiOverdubs(recordings)
+      
     } else {
-      stopMidiOverdub(deviceId, recordingId, overdubId)
+      stopMidiOverdubs(recordings)
     }
+
+    updateRecordingStatus(this.props.timelineId, !recordingInProgress)
   }
 
   render() {
-    const {recording, inputDeviceId, recordingId, overdubId} = this.props
+    const {recordingInProgress} = this.props
+
     return (
-      <button onClick={() => this.handleRecording(selectedDeviceId, recording, recordingId, overdubId)}>
+      <button onClick={() => this.handleRecording()}>
         {
-          recording ? 'stop' : 'record'
+          recordingInProgress ? 'stop' : 'record'
         }
       </button>
     )

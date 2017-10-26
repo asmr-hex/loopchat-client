@@ -1,4 +1,4 @@
-import {get, map} from 'lodash'
+import {filter, get, map} from 'lodash'
 
 
 /**
@@ -21,4 +21,17 @@ export const getTracksFromTimeline = (state, timelineId) =>
   map(
     get(state, `timelines.${timelineId}.tracks`, []),
     trackId => get(state, `tracks.midi.${trackId}`), // TODO (cw|10.24.2017) we should rename this selector.
+  )
+
+
+/**
+ * getActiveTracksFromTimeline returns the tracks which are activated for recording.
+ *
+ * @param state :: {}
+ * @param timelineId :: string
+ */
+export const getActiveTracksFromTimeline = (state, timelineId) =>
+  filter(
+    getTracksFromTimeline(state, timelineId),
+    track => track.activated,
   )

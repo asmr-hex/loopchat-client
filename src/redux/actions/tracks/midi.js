@@ -1,19 +1,28 @@
 import uuidV4 from 'uuid/v4'
 import {activateMidiInputDevice, deactivateMidiInputDevice} from '../midi'
+import {createNewMidiRecording} from '../recordings/midi/midi'
 
 
 export const MIDI_TRACK_CREATED = 'MIDI_TRACK_CREATED'
-export const createMidiTrack = (id = uuidV4()) => dispatch =>
+export const createMidiTrack = (trackId = uuidV4(), recordingId = uuidV4()) => dispatch => {
+  // by default we create a new recording object for this midi track
+  dispatch(createNewMidiRecording(recordingId))
+  
+  // create a new midi track
   dispatch({
     type: MIDI_TRACK_CREATED,
-    payload: {id},
+    payload: {
+      trackId,
+      recordingId,
+    },
   })
+}
 
 export const MIDI_TRACK_DELETED = 'MIDI_TRACK_DELETED'
-export const deleteMidiTrack = id => dispatch =>
+export const deleteMidiTrack = trackId => dispatch =>
   dispatch({
     type: MIDI_TRACK_DELETED,
-    payload: {id},
+    payload: {trackId},
   })
 
 export const MIDI_TRACK_INPUT_DEVICE_ASSIGNED = 'MIDI_TRACK_INPUT_DEVICE_ASSIGNED'

@@ -4,6 +4,7 @@ import {number, shape, string} from 'prop-types'
 import {DropDownMenu, MenuItem} from 'material-ui'
 import {map} from 'lodash'
 import {getMidiInputDevices} from '../../../../redux/selectors/midi/input'
+import {NULL_DEVICE} from '../../../../types/midiDevice'
 import {
   assignInputDeviceToMidiTrack,
   activateMidiTrack,
@@ -36,21 +37,26 @@ export class TrackInput extends Component {
   constructor(props) {
     super(props)
 
-    this.state = {selectedDeviceId: 0}  // this device id corresponds to the 'No Input' device
+    this.state = {selectedDeviceId: NULL_DEVICE}  // this device id corresponds to the 'No Input' device
   }
 
-  updateSelectedInput = (event, index, newDeviceId) => {
-    const {trackId} = this.props
+  updateSelectedInput = (_, __, newDeviceId) => {
+    const {
+      trackId,
+      assignInputDeviceToMidiTrack,
+      activateMidiTrack,
+      deactivateMidiTrack
+    } = this.props
     const oldDeviceId = this.state.selectedDeviceId
 
     this.setState({selectedDeviceId: newDeviceId})
 
-    if (newDeviceId !== 0) {
+    if (newDeviceId !== NULL_DEVICE) {
       assignInputDeviceToMidiTrack(trackId, newDeviceId)
       activateMidiTrack(trackId, newDeviceId)
     }
 
-    if (oldDeviceId !== 0) deactivateMidiTrack(trackId, newDeviceId)
+    if (oldDeviceId !== NULL_DEVICE) deactivateMidiTrack(trackId, newDeviceId)
   }
   
   render() {
