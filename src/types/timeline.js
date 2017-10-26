@@ -25,7 +25,7 @@ export const newTimelineUI = () => ({
   },
   timeInterval: { // TODO (cw|10.17.2017) maybe this should be in React internal state...
     start: 0,
-    end: 45,
+    end: 10,
   },
 })
 

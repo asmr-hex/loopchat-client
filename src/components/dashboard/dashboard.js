@@ -6,7 +6,6 @@ import injectTapEventPlugin from 'react-tap-event-plugin'
 import uuidV4 from 'uuid/v4'
 import './dashboard.css'
 import {Editor} from '../editor'
-import {Timeline} from '../timeline/timeline'
 import {createTimeline} from '../../redux/actions/timelines/timelines'
 
 // we need this for this component to work with AppBar

@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import {map} from 'lodash'
 import {getTimelineProperty, getTracksFromTimeline} from '../../../../redux/selectors/timelines'
 import {getTimelineUIProperty} from '../../../../redux/selectors/ui/timelines'
-import {Track} from '../../../track/track'
+import {Track} from './track/track'
 import {TimeAxis} from './timeAxis'
 import {Scrubber} from './scrubber'
 
@@ -61,7 +61,6 @@ export class Timeline extends Component {
   renderTracks() {
     const {timeInterval, tracks} = this.props // TODO (cw|10.17.2017) get tracks array from here
     const {tracksView} = this.state
-    const notes = []
     
     return map(
       tracks,
@@ -74,7 +73,6 @@ export class Timeline extends Component {
           view={tracksView}
           timeInterval={timeInterval}
           trackCount={tracks.length}
-          notes={notes}
           />
       )
     )

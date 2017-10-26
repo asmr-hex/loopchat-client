@@ -1,16 +1,19 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {array, bool, number, object, string} from 'prop-types'
-import {getMidiRecordingOf} from '../../redux/selectors/tracks/recordings'
-import {KeyboardUnderlay} from '../timeline/underlays/keyboard' // TODO (cw|10.17.2017) move this underlay into this directory!
-import {TimeGrid} from '../timeline/underlays/timeGrid'
-import {MidiNotes} from '../timeline/midi/notes'
+import {map, reduce} from 'lodash'
+import {midi as toMidi} from 'tonal-note'
+import {getMidiMasterRecordingFromTrack} from '../../../../../redux/selectors/tracks/recordings'
+import {KeyboardUnderlay} from '../underlay/keyboard'
+import {TimeGrid} from '../underlay/timeGrid'
+import {MidiNotes} from '../midi/notes'
 
 
 const actions = {}
 
 const mapStateToProps = (state, ownProps) => ({
-  recording: getMidiRecordingOf(state, ownProps.id), // TODO (cw|10.17.2017) put this back in!
+  // include midi pitch representation in addition to scientific pitch notation
+  recording: getMidiMasterRecordingFromTrack(state, ownProps.id),
 })
 
 @connect(mapStateToProps, actions)
@@ -21,7 +24,6 @@ export class MidiTrack extends Component {
     view: object.isRequired, // the view dimensions for the entire tracks panel in this timeline
     timeInterval: object.isRequired, // supplied by the timeline component to which this belongs
     trackCount: number.isRequired, // number of tracks
-    // recording: object.isRequired, // TODO (cw|10.17.2017) a new midi track should auto make a new recording.
     notes: array, // get rid of this (only for quick testing)
   }
 
@@ -83,16 +85,26 @@ export class MidiTrack extends Component {
   }
 
   computeVisiblePitchInterval() {
-    // get range of all the notes within this track's recording
-    const pitchInterval = {
-      start: 0, // TODO (cw|10.17.2017) fix this :)
-      end: 16,
-    }
+    const {recording} = this.props
 
+    // get range of all the notes within this track's recording
+    const pitchInterval = recording.length === 0
+          ? {
+            start: 48,
+            end: 60,
+          }
+          : {
+            start: reduce(recording, (acc, note) => note.pitch < acc ? note.pitch : acc, 127),
+            end: reduce(recording, (acc, note) => note.pitch > acc ? note.pitch : acc, 0),
+          }
+    
     this.pitchInterval = pitchInterval
   }
 
   render() {
+    // recompute the visible pitch interval
+    this.computeVisiblePitchInterval()
+    
     // recompute this track's view
     this.computeTrackView()
     
@@ -121,7 +133,7 @@ export class MidiTrack extends Component {
           scale={scale}
           />
         <MidiNotes
-          notes={this.props.notes}
+          notes={this.props.recording}
           view={view}
           timeInterval={timeInterval}
           pitchInterval={pitchInterval}

@@ -1,4 +1,5 @@
 import { forEach, get, omit, has, noop } from 'lodash'
+import uuidV4 from 'uuid/v4'
 import tone from 'tone'
 import {fromMidi} from 'tonal-note'
 import {play} from '../../instruments/synth'
@@ -135,8 +136,8 @@ export class MidiEventBus {
     // MIDI_NOTE_ON/OFF events have slightly different formats than other events
     // related to parameter controls (e.g. MIDI_CONTROL_CHANGE, MIDI_PITCH_BEND)
     const processedEvent = type === MIDI_NOTE_ON || type === MIDI_NOTE_OFF
-      ? { type, channel, note: fromMidi(note), velocity, time }
-      : { type, channel, control: note, value: velocity, time }
+          ? { id: uuidV4(), type, channel, note: fromMidi(note), pitch: note, velocity, time }
+          : { id: uuidV4(), type, channel, control: note, value: velocity, time }
 
     // for debugging only...
     if (type === MIDI_NOTE_ON || type === MIDI_NOTE_OFF) {
