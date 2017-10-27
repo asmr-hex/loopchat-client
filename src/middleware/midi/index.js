@@ -11,6 +11,10 @@ import {
   MIDI_OVERDUB_RECORDING_STOPPED,
   MIDI_OVERDUB_RECORDING_STARTED
 } from '../../redux/actions/recordings/midi/midi'
+import {
+  TIMELINE_PLAYBACK_STARTED,
+  TIMELINE_PLAYBACK_STOPPED,
+} from '../../redux/actions/timelines/timelines'
 
 
 export const midiMiddleware = (() => {
@@ -19,6 +23,7 @@ export const midiMiddleware = (() => {
 
   // return middleware we can apply using thunk-middleware
   return store => next => action => {
+
     switch (action.type) {
 
     // MIDI DEVICE CONNECTION
@@ -55,6 +60,14 @@ export const midiMiddleware = (() => {
       midiEventBus.stopRecording(action.payload)
       return next(action)
 
+    case TIMELINE_PLAYBACK_STARTED:
+      midiEventBus.startPlayback(store.getState(), action.payload.timelineId)
+      return next(action)
+      
+    case TIMELINE_PLAYBACK_STOPPED:
+      midiEventBus.stopPlayback(store.getState(), action.payload.timelineId)
+      return next(action)
+      
     default:
       return next(action)
     }

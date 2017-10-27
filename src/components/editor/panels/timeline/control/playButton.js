@@ -16,15 +16,6 @@ export class PlayButton extends Component {
     playing: bool.isRequired,
   }
 
-  static defaultProps = {
-    timelineId: '',
-    playing: false,
-  }
-
-  constructor(props) {
-    super(props)
-  }
-
   handlePlayback() {
     const {timelineId, playing, startPlayback, stopPlayback} = this.props
     

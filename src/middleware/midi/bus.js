@@ -2,9 +2,11 @@ import { forEach, get, omit, has, noop } from 'lodash'
 import uuidV4 from 'uuid/v4'
 import tone from 'tone'
 import {fromMidi} from 'tonal-note'
-import {play} from '../../instruments/synth'
+import {play, playback} from '../../instruments/synth'
 import {getMidiEventTypeAndChannel, MIDI_NOTE_OFF, MIDI_NOTE_ON} from '../../types/midiEvent'
 import {recordMidiEvent} from '../../redux/actions/recordings/midi/midi'
+import {getUnmutedMasterRecordingsFromTimeline} from '../../redux/selectors/recordings/midi'
+
 
 // Since the MidiAccess object cannot change object reference
 // (i.e. we cannot process it through a reducer since it should
@@ -203,5 +205,16 @@ export class MidiEventBus {
     const {recordingId, overdubId} = this.recording[deviceId]
     
     this.dispatch(recordMidiEvent(recordingId, overdubId, music))
+  }
+
+  startPlayback(state, timelineId) {
+    const recordings = getUnmutedMasterRecordingsFromTimeline(state, timelineId)
+    
+    // send recordings to synth
+    playback(recordings)
+  }
+
+  stopPlayback(state, timelineId) {
+    
   }
 }
