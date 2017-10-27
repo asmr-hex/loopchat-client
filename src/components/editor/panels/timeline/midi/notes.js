@@ -186,8 +186,6 @@ export class MidiNotes extends Component {
       )
     )
 
-    console.log("TRANSFORMEDNOTES ", transformedNotes)
-
     return transformedNotes
   }
   
