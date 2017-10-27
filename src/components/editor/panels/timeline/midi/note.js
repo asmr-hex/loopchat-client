@@ -96,9 +96,13 @@ export class MidiNote extends Component {
   
   computeGeometry(scale) {
     const {view, timeInterval, pitchInterval, note} = this.props
+
+    // detect if note.end is -1 (which means it is an inprogress note)
+    // TODO (cw|10.27.2017) We should handle differently for in progress notes.
+    const noteEnd = note.end < 0 ? note.start : note.end
     
     // compute dimensions of this midi note
-    const width = (note.end - note.start) * scale.x
+    const width = (noteEnd - note.start) * scale.x
     const height = scale.y
     
     // compute position of this midi note
@@ -113,7 +117,7 @@ export class MidiNote extends Component {
   render() {
     const {scale, note} = this.props
     const {x1, y1, x2, y2, width, height} = this.computeGeometry(scale)
-    
+
     return (
       <g key={note.id}>
         {this.renderMidiNoteRect(x1, y1, width, height)}

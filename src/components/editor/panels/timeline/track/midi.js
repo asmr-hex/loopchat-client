@@ -3,7 +3,10 @@ import {connect} from 'react-redux'
 import {array, bool, number, object, string} from 'prop-types'
 import {map, reduce} from 'lodash'
 import {midi as toMidi} from 'tonal-note'
-import {getMidiMasterRecordingFromTrack} from '../../../../../redux/selectors/tracks/recordings'
+import {
+  getMidiMasterRecordingFromTrack,
+  getMidiInProgressRecordingsFromTrack,
+} from '../../../../../redux/selectors/tracks/recordings'
 import {KeyboardUnderlay} from '../underlay/keyboard'
 import {TimeGrid} from '../underlay/timeGrid'
 import {MidiNotes} from '../midi/notes'
@@ -14,6 +17,7 @@ const actions = {}
 const mapStateToProps = (state, ownProps) => ({
   // include midi pitch representation in addition to scientific pitch notation
   recording: getMidiMasterRecordingFromTrack(state, ownProps.id),
+  inProgressRecordings: getMidiInProgressRecordingsFromTrack(state, ownProps.id),
 })
 
 @connect(mapStateToProps, actions)
@@ -134,6 +138,7 @@ export class MidiTrack extends Component {
           />
         <MidiNotes
           notes={this.props.recording}
+          inProgressRecordings={this.props.inProgressRecordings}
           view={view}
           timeInterval={timeInterval}
           pitchInterval={pitchInterval}

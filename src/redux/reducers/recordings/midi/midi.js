@@ -17,9 +17,9 @@ export const midi = (state = {}, action) => {
   case MIDI_RECORDING_CREATED:
     return createMidiRecording(state, action.payload.recording)
   case MIDI_OVERDUB_RECORDING_STARTED:
-    return createOverdubs(state, action.payload)
+    return createOverdubs(state, action.payload.recordings)
   case MIDI_OVERDUB_RECORDING_STOPPED:
-    return processRecordings(state, action.payload)
+    return processRecordings(state, action.payload.recordings)
   case MIDI_EVENT_RECORDED:
     return recordEvent(state, action.payload.recordingId, action.payload.overdubId, action.payload.event)
   default:
@@ -89,7 +89,25 @@ export const recordEvent = (state, recordingId, overdubId, midiEvent) => {
   
   if (isUndefined(events)) return state // ignore this midiEvent if there is no overdub to record to!
 
-  return set({...state}, `${recordingId}.overdubs.recording.${overdubId}.events`, [...events, midiEvent])
+  // TODO (cw|10.27.2017) since this reducing is expensive and it will happen often when recording
+  // maybe we should move overdubs into a separate part of the store and only connect to it from
+  // one small component. If we don't do this, then the UI gets janky :/
+  return {
+    ...state,
+    [recordingId]: {
+      ...get(state, recordingId),
+      overdubs: {
+        ...get(state, `${recordingId}.overdubs`),
+        recording: {
+          ...get(state, `${recordingId}.overdubs.recording`),
+          [overdubId]: {
+            ...get(state, `${recordingId}.overdubs.recording.${overdubId}`),
+            events: [...events, midiEvent],
+          },
+        },
+      },
+    },
+  }
 }
 
 /**
@@ -208,7 +226,7 @@ export const consolidateNotes = events => {
     (acc, onEvent) => {
       const idx = findIndex(offEvents, offEvent => offEvent.note == onEvent.note)
 
-      const offEvent = first(pullAt(offEvents, idx))
+      const offEvent = idx < 0 ? {time: -1} : first(pullAt(offEvents, idx))
 
       return [
         ...acc,
@@ -282,9 +300,9 @@ export const normalizeOverdubTime = overdub => ({
   ...overdub,
   events: map(
     overdub.events,
-    event => {
-      event.time -= overdub.start
-      return event
-    },
+    event => ({
+      ...event,
+      time: event.time - overdub.start,
+    }),
   )
 })

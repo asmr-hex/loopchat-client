@@ -33,6 +33,7 @@ export class RecordButton extends Component {
   handleRecording() {
     const {
       activeTracks,
+      timelineId,
       recordingInProgress,
       startMidiOverdubs,
       stopMidiOverdubs,
@@ -50,10 +51,10 @@ export class RecordButton extends Component {
     )
     
     if (!recordingInProgress) {
-      startMidiOverdubs(recordings)
+      startMidiOverdubs(recordings, timelineId)
       
     } else {
-      stopMidiOverdubs(recordings)
+      stopMidiOverdubs(recordings, timelineId)
     }
 
     updateRecordingStatus(this.props.timelineId, !recordingInProgress)

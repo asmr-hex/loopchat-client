@@ -1,6 +1,8 @@
 import uuidV4 from  'uuid/v4'
-import {newRecording} from '../../../../types/recording'
 import {map} from 'lodash'
+import {newRecording} from '../../../../types/recording'
+import {startPlayback, stopPlayback} from '../../timelines/timelines'
+
 
 
 export const MIDI_OVERDUB_RECORDING_STARTED = 'MIDI_OVERDUB_RECORDING_STARTED'
@@ -30,6 +32,7 @@ export const createNewMidiRecording = (recordingId = uuidV4()) => dispatch =>
  * @param recordingId: the id of the recording for which this is an overdub.
  * @param overdubId (optional)
  */
+// TODO (cw|2017.2017) get rid of this garbage, its not used anymore -____-
 export const startMidiOverdub = (deviceId, recordingId, overdubId = uuidV4(), timeOffset = 0) => dispatch => {
   dispatch({
     type: MIDI_OVERDUB_RECORDING_STARTED,
@@ -41,17 +44,32 @@ export const startMidiOverdub = (deviceId, recordingId, overdubId = uuidV4(), ti
   })
 }
 
-export const startMidiOverdubs = recordings => dispatch =>
+export const startMidiOverdubs = (recordings, timelineId) => dispatch => {
+  // start overdub recording
   dispatch({
     type: MIDI_OVERDUB_RECORDING_STARTED,
-    payload: map(recordings, recording => ({...recording, overdubId: uuidV4()})),
+    payload: {
+      recordings: map(recordings, recording => ({...recording, overdubId: uuidV4()})),
+      timelineId,
+    },
   })
 
-export const stopMidiOverdubs = recordings => dispatch => {
+  // also start playback
+  dispatch(startPlayback(timelineId))
+}
+
+export const stopMidiOverdubs = (recordings, timelineId) => dispatch => {
+  // stop overdub recording
   dispatch({
     type: MIDI_OVERDUB_RECORDING_STOPPED,
-    payload: recordings,
+    payload: {
+      recordings,
+      timelineId,
+    },
   })
+
+  // also stop playback
+  dispatch(stopPlayback(timelineId))
 }
 
 /**

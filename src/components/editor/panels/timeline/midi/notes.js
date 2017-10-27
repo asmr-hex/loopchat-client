@@ -1,21 +1,28 @@
 import React, {Component} from 'react'
 import {object, array} from 'prop-types'
-import {filter, map} from 'lodash'
+import {filter, flatMap, map, values} from 'lodash'
 import {select, selectAll, event as currentEvent} from 'd3-selection'
 import {drag} from 'd3-drag'
 import {DEFAULT_NOTE_PIXELS_PER_HEIGHT_PIXELS} from '../constants'
 import {MidiNote} from './note'
+import {
+  consolidateNotes,
+  normalizeOverdubTime,
+} from '../../../../../redux/reducers/recordings/midi/midi'
 
 
 export class MidiNotes extends Component {
   static propTypes = {
     notes: array.isRequired,
+    inProgressRecordings: object.isRequired,
     view: object.isRequired,
     timeInterval: object.isRequired,
     pitchInterval: object.isRequired,
     scale: object.isRequired,
   }
 
+  // TODO (cw|1027.2017) get rid of defaultProps and just describe the
+  // shape of the props within propTypes.
   static defaultProps = {
     notes: [],
     view: {
@@ -167,12 +174,32 @@ export class MidiNotes extends Component {
       element.call(f(element))
     }) 
   }
+
+  transformInProgressRecordings() {
+    const {inProgressRecordings} = this.props
+
+    const transformedNotes = flatMap(
+      values(inProgressRecordings),
+      inProgressRecording => map(
+        consolidateNotes(normalizeOverdubTime(inProgressRecording).events),
+        note => ({...note, inProgress: true, overdubId: inProgressRecording.id})
+      )
+    )
+
+    console.log("TRANSFORMEDNOTES ", transformedNotes)
+
+    return transformedNotes
+  }
   
   render() {
     const {notes, view, timeInterval, pitchInterval, scale} = this.props
     
     // filter out non-visible notes
-    const visibleNotes = this.filterVisibleNotes(notes, timeInterval, pitchInterval)
+    const visibleNotes = [
+      ...map(this.filterVisibleNotes(notes, timeInterval, pitchInterval), n => ({...n, inProgress: false})),
+      ...this.transformInProgressRecordings(),
+    ]
+    
     
     // transform midiNotes?
 
