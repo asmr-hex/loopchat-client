@@ -1,4 +1,4 @@
-import {merge, omit, reduce} from 'lodash'
+import {get, keys, merge, omit, reduce} from 'lodash'
 import {
   MIDI_OVERDUB_RECORDING_STARTED,
   MIDI_OVERDUB_RECORDING_STOPPED,
@@ -30,7 +30,7 @@ export const createOverdubs = (state, recordingContexts) =>
   reduce(
     recordingContexts,
     (oldState, recordingContext) => ({
-      ...OldState,
+      ...oldState,
       [recordingContext.overdub.id]: recordingContext.overdub,
     }),
     state,
@@ -54,8 +54,6 @@ export const annihilateOverdubs = (state, recordingContexts) =>
  */
 export const recordEvent = (state, overdubId, midiEvent) => {
   const events = get(state, `${overdubId}.events`)
-
-  if (isUndefined(events)) return state
 
   return {
     ...state,

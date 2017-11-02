@@ -1,16 +1,25 @@
 import { expect } from 'chai'
 import {each, first, last, omit} from 'lodash'
-import {getSampleOverdub} from '../../../../support/data/overdub'
+import {getSampleOverdub} from '../../../../../support/data/overdub'
+import {getSampleRecording} from '../../../../../support/data/recording'
+import {getSampleMidiOnOffSequence} from '../../../../../support/data/midiEvent'
+import {newRecording, newRecordingContext} from '../../../../../../src/types/recording'
 import {
+  MIDI_RECORDING_CREATED,
+  MIDI_OVERDUB_RECORDING_STARTED,
+  MIDI_OVERDUB_RECORDING_STOPPED,
+} from '../../../../../../src/redux/actions/recordings/midi/midi'
+import {
+  masters,
   consolidateNotes,
   filterBefore,
   processMaster,
   normalizeOverdubTime
-} from '../../../../../src/redux/reducers/recordings/midi/masters'
-import {getSampleRecording} from '../../../../support/data/recording'
-import {getSampleMidiOnOffSequence} from '../../../../support/data/midiEvent'
+} from '../../../../../../src/redux/reducers/recordings/midi/masters'
 
-describe('midi recording reducer', () => {
+
+// TODO (cw|11.2.2017) still need to implement and test overlay vs overwrite logic!
+describe('midi recording masters reducer', () => {
 
   const sampleOverdubs = [
     getSampleOverdub({start: 0, events: getSampleMidiOnOffSequence(2, 0, false)}), // event times -> 0.080181405895692 0.990181405895692 1.080181405895692 1.990181405895692
@@ -27,30 +36,51 @@ describe('midi recording reducer', () => {
     }
   })
 
-  describe('createMidiRecording', () => {
+  describe('#masters', () => {
 
-    it('removes completed overdub from recording overdubs', () => {
+    it('creates a new midi recording on MIDI_RECORDING_CREATED', () => {
+      const action = {
+        type: MIDI_RECORDING_CREATED,
+        payload: {
+          recording: newRecording(),
+        },
+      }
+      const state = {}
 
+      expect(masters(state, action)).to.eql({
+        [action.payload.recording.id]: action.payload.recording,
+      })
     })
 
-    it('adds completed overdub to recorded overdubs', () => {
+    it('adds a new overdubId to a recording on MIDI_OVERDUB_RECORDING_STARTED given a recording context', () => {
+      const recording = newRecording()
+      const action = {
+        type: MIDI_OVERDUB_RECORDING_STARTED,
+        payload: {
+          recordingContexts: [newRecordingContext(recording.id), newRecordingContext(recording.id)],
+        }
+      }
+      const state = {
+        [recording.id]: recording,
+      }
 
+      expect(masters(state, action)).to.eql({
+        [recording.id]: {
+          ...recording,
+          overdubs: {
+            [action.payload.recordingContexts[0].overdub.id]: true,
+            [action.payload.recordingContexts[1].overdub.id]: true,
+          }
+        }
+      })
     })
 
-    it('processes master given newly completed overdub', () => {
-
+    it('removes the overdub and processes it into master on MIDI_OVERDUB_RECORDING_STOPPED given a recording context', () => {
+      // TODO
     })
   })
-
-  describe('createOverdub', () => {
-
-  })
-
-  describe('recordEvent', () => {
-
-  })
-
-  describe('processRecording', () => {
+  
+  describe('processRecordings', () => {
 
   })
 

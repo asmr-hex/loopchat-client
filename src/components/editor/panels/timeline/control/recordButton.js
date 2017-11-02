@@ -2,14 +2,15 @@ import React, {Component} from 'react'
 import {string} from 'prop-types'
 import {connect, bool} from 'react-redux'
 import uuidV4 from 'uuid/v4'
-import {forEach, filter, map} from 'lodash'
+import {forEach, filter, map, reduce} from 'lodash'
 import {startMidiOverdubs, stopMidiOverdubs} from '../../../../../redux/actions/recordings/midi/midi'
 import {updateRecordingStatus} from '../../../../../redux/actions/timelines/timelines'
 import {NULL_DEVICE} from '../../../../../types/midiDevice'
 import {
   getTimelineProperty,
-  getActiveTracksFromTimeline
+  getActiveTracksFromTimeline,
 } from '../../../../../redux/selectors/timelines'
+import {getUserMidiOverdubFromTrack} from '../../../../../redux/selectors/tracks/recordings'
 
 
 const actions = {
@@ -18,11 +19,21 @@ const actions = {
   updateRecordingStatus,
 }
 
-const mapStateToProps = (state, ownProps) => ({
-  activeTracks: getActiveTracksFromTimeline(state, ownProps.timelineId),
-  recordingInProgress: getTimelineProperty(state, ownProps.timelineId, 'recording')
-})
-  
+const mapStateToProps = (state, ownProps) => {
+  const userId = 'Dr. Temporary' // TODO (cw|11.2.2017) CHANGE THIS TO USE THE REAL USER ID ONCE USER DATA IS BUILT OUT FOR REAL
+  const activeTracks = getActiveTracksFromTimeline(state, ownProps.timelineId)
+  const trackOverdubsByThisUser = reduce(
+    activeTracks,
+    (acc, track) => ({...acc, [track.id]: getUserMidiOverdubFromTrack(state, track.id, userId)}),
+    {},
+  )
+
+  return {
+    activeTracks,
+    trackOverdubsByThisUser,
+    recordingInProgress: getTimelineProperty(state, ownProps.timelineId, 'recording'),  
+  }
+}
 
 @connect(mapStateToProps, actions)
 export class RecordButton extends Component {
@@ -33,6 +44,7 @@ export class RecordButton extends Component {
   handleRecording() {
     const {
       activeTracks,
+      trackOverdubsByThisUser,
       timelineId,
       recordingInProgress,
       startMidiOverdubs,
@@ -45,16 +57,20 @@ export class RecordButton extends Component {
 
     if (tracks.length === 0) return
 
-    const recordings = map(
+    const recordingContexts = map(
       tracks,
-      track => ({id: track.recordingId, inputDeviceId: track.inputDeviceId}),
+      track => ({
+        recordingId: track.recordingId,
+        inputDeviceId: track.inputDeviceId,
+        overdub: trackOverdubsByThisUser[track.id] // TODO (cw|11.2.2017) this is undefined sometimes, debug this.
+      }),
     )
     
     if (!recordingInProgress) {
-      startMidiOverdubs(recordings, timelineId)
+      startMidiOverdubs(recordingContexts, timelineId)
       
     } else {
-      stopMidiOverdubs(recordings, timelineId)
+      stopMidiOverdubs(recordingContexts, timelineId)
     }
 
     updateRecordingStatus(this.props.timelineId, !recordingInProgress)

@@ -3,14 +3,17 @@ import {getDefaultState} from '../../../../support/state'
 import {newMidiTrack} from '../../../../../src/types/track'
 import {newRecording, newOverdub} from '../../../../../src/types/recording'
 import {
+  getMidiRecordingFromTrack,
   getMidiMasterRecordingFromTrack,
-  getMidiInProgressRecordingsFromTrack,
+  getMidiInProgressOverdubsFromTrack,
+  getUserMidiOverdubFromTrack,
 } from '../../../../../src/redux/selectors/tracks/recordings'
 
 
 describe('tracks recordings selectors', () => {
 
-  const sampleMidiOverdubs = [newOverdub(), newOverdub(), newOverdub()]
+  const userId = 'Dr. Temporary' // TODO (cw|11.2.2017) change this once build out user data
+  const sampleMidiOverdubs = [{...newOverdub(), creator: 'destroyer'}, newOverdub(), newOverdub()]
   const sampleMidiRecording = newRecording()
   const sampleTrack = newMidiTrack('myTestTrackId', {recordingId: sampleMidiRecording.id})
   
@@ -39,25 +42,40 @@ describe('tracks recordings selectors', () => {
       },
     },
   })
+
+  describe('#getMidiRecordingFromTrack', () => {
+    it('gets a midi recording object associated with a track', () => {
+      expect(getMidiRecordingFromTrack(state, sampleTrack.id)).to.eql({
+        ...sampleMidiRecording,
+        overdubs: {
+          [sampleMidiOverdubs[0].id]: true,
+          [sampleMidiOverdubs[1].id]: true,          
+        }
+      })
+    })
+  })
   
   describe('#getMidiMasterRecordingFromTrack', () => {
 
     it('gets the master recording sequence from a track recording', () => {
       expect(getMidiMasterRecordingFromTrack(state, sampleTrack.id)).eql(sampleMidiRecording.master)
     })
-
-    it('returns an empty array if the track or recording doesn\'t exist', () => {
-      expect(getMidiMasterRecordingFromTrack(state, 'fakeTrackId')).eql([])
-    })
   })
 
-  describe('#getMidiInProgressRecordingsFromTrack', () => {
+  describe('#getMidiInProgressOverdubsFromTrack', () => {
 
     it('returns a map of in-progress overdubs for a given track', () => {
-      expect(getMidiInProgressRecordingsFromTrack(state, sampleTrack.id)).eql({
+      expect(getMidiInProgressOverdubsFromTrack(state, sampleTrack.id)).eql({
         [sampleMidiOverdubs[0].id]: sampleMidiOverdubs[0],
         [sampleMidiOverdubs[1].id]: sampleMidiOverdubs[1],        
       })
+    })
+  })
+
+  describe('#getUserMidiOverdubFromTrack', () => {
+
+    it('returns an overdub for the specified track and user', () => {
+      expect(getUserMidiOverdubFromTrack(state, sampleTrack.id, userId)).eql(sampleMidiOverdubs[1])
     })
   })
 })

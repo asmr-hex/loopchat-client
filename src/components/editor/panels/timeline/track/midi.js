@@ -5,7 +5,7 @@ import {map, reduce} from 'lodash'
 import {midi as toMidi} from 'tonal-note'
 import {
   getMidiMasterRecordingFromTrack,
-  getMidiInProgressRecordingsFromTrack,
+  getMidiInProgressOverdubsFromTrack,
 } from '../../../../../redux/selectors/tracks/recordings'
 import {KeyboardUnderlay} from '../underlay/keyboard'
 import {TimeGrid} from '../underlay/timeGrid'
@@ -17,7 +17,7 @@ const actions = {}
 const mapStateToProps = (state, ownProps) => ({
   // include midi pitch representation in addition to scientific pitch notation
   recording: getMidiMasterRecordingFromTrack(state, ownProps.id),
-  inProgressRecordings: getMidiInProgressRecordingsFromTrack(state, ownProps.id),
+  inProgressRecordings: getMidiInProgressOverdubsFromTrack(state, ownProps.id),
 })
 
 @connect(mapStateToProps, actions)

@@ -62,8 +62,8 @@ export const createOverdubs = (state, recordingContexts) =>
  * @param recordingId
  * @param overdub
  */
-export const createOverdub = (state, recordingId, overdub) =>
-  merge(state, {[recordingId]: {overdubs: {[overdub.id]: true }}})
+export const createOverdub = (state, recordingId, overdubId) =>
+  merge(state, {[recordingId]: {overdubs: {[overdubId]: true }}})
 
 /**
  * processRecordings bulk processes recording when recording is complete. 
