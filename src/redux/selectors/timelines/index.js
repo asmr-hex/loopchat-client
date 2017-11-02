@@ -2,36 +2,52 @@ import {filter, get, map} from 'lodash'
 
 
 /**
- * getTimeline returns a timeline property from the redux store .
- *
- * @param state :: {}
- * @param timelineId :: string
+ * gets a timeline property from the redux store .
+ * @param {Object} state - full Redux state tree.
+ * @param {string} timelineId - id of the timeline we wish to get the property of.
+ * @returns {*} - the value of any property
  */
 export const getTimelineProperty = (state, timelineId, property) =>
   get(state, `timelines.${timelineId}.${property}`)
 
 /**
- * getTracksFromTimeline returns an array of track objects which are members
- * of the given timeline. 
- *
- * @param state :: {}
- * @param timelineId :: string
+ * gets an array of member track objects of the given timeline. 
+ * @param {Object} state - full Redux state tree.
+ * @param {string} timelineId - id of the timeline of interest.
+ * @returns {[Object]} - array of track objects
  */
 export const getTracksFromTimeline = (state, timelineId) =>
   map(
     get(state, `timelines.${timelineId}.tracks`, []),
-    trackId => get(state, `tracks.midi.${trackId}`), // TODO (cw|10.24.2017) we should rename this selector.
+    trackId => get(state, `tracks.midi.${trackId}`),
   )
 
-
 /**
- * getActiveTracksFromTimeline returns the tracks which are activated for recording.
- *
- * @param state :: {}
- * @param timelineId :: string
+ * gets the tracks which are activated for recording.
+ * @param {Object} state - full Redux state tree.
+ * @param {string} timelineId - id of the timeline.
+ * @returns {[Object]} - array of track objects which are active
  */
 export const getActiveTracksFromTimeline = (state, timelineId) =>
   filter(
     getTracksFromTimeline(state, timelineId),
     track => track.activated,
+  )
+
+/**
+ * gets all unmuted master midi recordings from a timeline
+ * @param {Object} state - full Redux state tree
+ * @param {string} timelineId - id of timeline
+ * @returns {[Object]} - array of unmuted midi master tracks
+ */
+export const getUnmutedMasterRecordingsFromTimeline = (state, timelineId) =>
+  map(
+    filter(
+      map(
+        get(state, `timelines.${timelineId}.tracks`, []),
+        trackId => get(state, `tracks.midi.${trackId}`),
+      ),
+      track => !track.mute,
+    ),
+    unmutedTrack => get(state, `recordings.midi.masters.${unmutedTrack.recordingId}.master`),
   )

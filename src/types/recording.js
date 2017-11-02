@@ -1,4 +1,6 @@
 import tone from 'tone'
+import uuidV4 from 'uuid/v4'
+
 
 export const recordingStatus = {
   IN_PROGRESS: 'IN_PROGRESS',
@@ -10,10 +12,7 @@ export const newRecording = (recordingId = uuidV4(), startTime = tone.now()) => 
   start: startTime,
   status: recordingStatus.IN_PROGRESS,
   master: [],
-  overdubs: {
-    recording: {},
-    recorded: {},
-  },
+  overdubs: {},
 })
 
 export const newOverdub = (overdubId = uuidV4(), timeOffset = 0, startTime = tone.now(), overwrite=true) => ({

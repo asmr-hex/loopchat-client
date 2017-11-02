@@ -1,14 +1,36 @@
-import {get} from 'lodash'
+import {get, keys, reduce} from 'lodash'
 
 
+/**
+ * Gets the master midi track of a track's recording given the trackId. 
+ * @param {Object} state - full Redux state tree.
+ * @param {string} trackId - the id of the track we want the master recording of.
+ * @returns {array} - the master midi track which is an array (sequence) of midi notes.
+ */
 export const getMidiMasterRecordingFromTrack = (state, trackId) => {
   const recordingId = get(state, `tracks.midi.${trackId}.recordingId`, '')
 
-  return get(state, `recordings.midi.${recordingId}.master`)
+  return get(state, `recordings.midi.masters.${recordingId}.master`, [])
 }
 
+/**
+ * Gets the in-progress overdubs which are currently being recorded to a track's recording.
+ * @param {Object} state - full Redux state tree
+ * @param {string} trackId - the id of the track we want the in-progress recordings of.
+ * @returns {Object} - id-keyed map of overdubs currently being recorded to a track.
+ */
 export const getMidiInProgressRecordingsFromTrack = (state, trackId) => {
   const recordingId = get(state, `tracks.midi.${trackId}.recordingId`, '')
 
-  return get(state, `recordings.midi.${recordingId}.overdubs.recording`, {})
+  const overdubIds = keys(get(state, `recordings.midi.masters.${recordingId}.overdubs`))
+
+  return reduce(
+    overdubIds,
+    (acc, overdubId) => ({
+      ...acc,
+      [overdubId]: get(state, `recordings.midi.overdubs.${overdubId}`),
+    }),
+    {},
+  )
 }
+

@@ -1,6 +1,6 @@
 import uuidV4 from 'uuid/v4'
 
-export const newTimeline = (id = uuidV4()) => ({
+export const newTimeline = (id = uuidV4(), overrides = {}) => ({
   id,
   tracks: [],
   selections: {},
@@ -9,6 +9,7 @@ export const newTimeline = (id = uuidV4()) => ({
   playing: false,
   recording: false,
   scrubberTime: 0.0,
+  ...overrides,
 })
 
 const TIMELINE_WIDTH_DEFAULT = 800

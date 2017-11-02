@@ -5,7 +5,7 @@ import {fromMidi} from 'tonal-note'
 import {play, playback} from '../../instruments/synth'
 import {getMidiEventTypeAndChannel, MIDI_NOTE_OFF, MIDI_NOTE_ON} from '../../types/midiEvent'
 import {recordMidiEvent} from '../../redux/actions/recordings/midi/midi'
-import {getUnmutedMasterRecordingsFromTimeline} from '../../redux/selectors/recordings/midi'
+import {getUnmutedMasterRecordingsFromTimeline} from '../../redux/selectors/timelines'
 
 
 // Since the MidiAccess object cannot change object reference
@@ -202,9 +202,9 @@ export class MidiEventBus {
   }
 
   record(deviceId, music) {
-    const {recordingId, overdubId} = this.recording[deviceId]
+    const {overdubId} = this.recording[deviceId]
     
-    this.dispatch(recordMidiEvent(recordingId, overdubId, music))
+    this.dispatch(recordMidiEvent(overdubId, music))
   }
 
   startPlayback(state, timelineId) {

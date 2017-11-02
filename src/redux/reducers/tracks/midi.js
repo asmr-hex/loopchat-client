@@ -1,4 +1,4 @@
-import {get} from 'lodash'
+import {get, omit} from 'lodash'
 import {newMidiTrack} from '../../../types/track'
 import {
   MIDI_TRACK_CREATED,

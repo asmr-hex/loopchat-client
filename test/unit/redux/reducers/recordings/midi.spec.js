@@ -6,7 +6,7 @@ import {
   filterBefore,
   processMaster,
   normalizeOverdubTime
-} from '../../../../../src/redux/reducers/recordings/midi/midi'
+} from '../../../../../src/redux/reducers/recordings/midi/masters'
 import {getSampleRecording} from '../../../../support/data/recording'
 import {getSampleMidiOnOffSequence} from '../../../../support/data/midiEvent'
 

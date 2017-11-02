@@ -8,7 +8,7 @@ import {MidiNote} from './note'
 import {
   consolidateNotes,
   normalizeOverdubTime,
-} from '../../../../../redux/reducers/recordings/midi/midi'
+} from '../../../../../redux/reducers/recordings/midi/masters'
 
 
 export class MidiNotes extends Component {
@@ -177,7 +177,7 @@ export class MidiNotes extends Component {
 
   transformInProgressRecordings() {
     const {inProgressRecordings} = this.props
-
+    
     const transformedNotes = flatMap(
       values(inProgressRecordings),
       inProgressRecording => map(

@@ -12,16 +12,14 @@ import {newOverdub} from '../../../../types/recording'
 /**
  * midi recording reducer
  */
-export const midi = (state = {}, action) => {
+export const masters = (state = {}, action) => {
   switch (action.type) {
   case MIDI_RECORDING_CREATED:
     return createMidiRecording(state, action.payload.recording)
   case MIDI_OVERDUB_RECORDING_STARTED:
-    return createOverdubs(state, action.payload.recordings)
+    return createOverdubs(state, action.payload.recordingContexts)
   case MIDI_OVERDUB_RECORDING_STOPPED:
-    return processRecordings(state, action.payload.recordings)
-  case MIDI_EVENT_RECORDED:
-    return recordEvent(state, action.payload.recordingId, action.payload.overdubId, action.payload.event)
+    return processRecordings(state, action.payload.recordingContexts)
   default:
     return state
   }
@@ -39,23 +37,18 @@ export const createMidiRecording = (state, recording) => ({
   [recording.id]: recording,
 })
 
-
 /**
  * createOverdubs bulk creates new overdubs. 
  *
  * @param state :: {}
- * @param recordings :: [{id, inputDevice}]
+ * @param recordingContexts :: [{recordingId, inputDevice, overdub}]
  */
-export const createOverdubs = (state, recordings) =>
+export const createOverdubs = (state, recordingContexts) =>
   reduce(
-    recordings,
-    (oldState, recording) => ({
+    recordingContexts,
+    (oldState, recordingContext) => ({
       ...oldState,
-      ...createOverdub(
-        state,
-        recording.id,
-        newOverdub(recording.overdubId, get(state, `${recording.id}.start`, 0)),
-      ),
+      ...createOverdub(state, recordingContext.recordingId, recordingContext.overdub.id),
     }),
     state,
   )
@@ -70,61 +63,23 @@ export const createOverdubs = (state, recordings) =>
  * @param overdub
  */
 export const createOverdub = (state, recordingId, overdub) =>
-  merge(state, {[recordingId]: {overdubs: {recording: {[overdub.id]: overdub }}}})
-
-/**
- * recordEvent takes a recordingId, an overdubId, and a midiEvent and appends the new
- * midi event into the array of events within the overdub. When this function is called,
- * we assume that this overdub is currently recording, if this is not true, the event is
- * ignored.
- *
- * @param state
- * @param recordingId
- * @param overdubId
- * @param midiEvent
- * @returns {*}
- */
-export const recordEvent = (state, recordingId, overdubId, midiEvent) => {
-  const events = get(state, `${recordingId}.overdubs.recording.${overdubId}.events`)
-  
-  if (isUndefined(events)) return state // ignore this midiEvent if there is no overdub to record to!
-
-  // TODO (cw|10.27.2017) since this reducing is expensive and it will happen often when recording
-  // maybe we should move overdubs into a separate part of the store and only connect to it from
-  // one small component. If we don't do this, then the UI gets janky :/
-  return {
-    ...state,
-    [recordingId]: {
-      ...get(state, recordingId),
-      overdubs: {
-        ...get(state, `${recordingId}.overdubs`),
-        recording: {
-          ...get(state, `${recordingId}.overdubs.recording`),
-          [overdubId]: {
-            ...get(state, `${recordingId}.overdubs.recording.${overdubId}`),
-            events: [...events, midiEvent],
-          },
-        },
-      },
-    },
-  }
-}
+  merge(state, {[recordingId]: {overdubs: {[overdub.id]: true }}})
 
 /**
  * processRecordings bulk processes recording when recording is complete. 
  *
  * @param state :: {}
- * @param recordings :: [{id, inputDevice}]
+ * @param recordingContexts :: [{id, inputDevice, overdub}]
  */
-export const processRecordings = (state, recordings) =>
+export const processRecordings = (state, recordingContexts) =>
   reduce(
-    recordings,
-    (oldState, recording) => ({
+    recordingContexts,
+    (oldState, recordingContext) => ({
       ...oldState,
       ...processRecording(
         state,
-        recording.id,
-        first(keys(get(state, `${recording.id}.overdubs.recording`, {}))),
+        recordingContext.recordingId,
+        recordingContext.overdub,
       )
     }),
     state,
@@ -142,24 +97,12 @@ export const processRecordings = (state, recordings) =>
  * @param overdubId
  * @returns {{}}
  */
-export const processRecording = (state, recordingId, overdubId) => {
+export const processRecording = (state, recordingId, unprocessedOverdub) => {
   const unprocessedRecording = get(state, `${recordingId}`)
-  const unprocessedOverdub = get(unprocessedRecording, `overdubs.recording.${overdubId}`)
-  const recordedOverdubs = get(unprocessedRecording, `overdubs.recorded`)
-  const recordingOverdubs = get(unprocessedRecording, `overdubs.recording`)
   const unprocessedMaster = get(unprocessedRecording, `master`)
   
   // process overdub times
   const overdub = normalizeOverdubTime(unprocessedOverdub)
-
-  // new overdubs with overdub omitted from recording and added to recorded
-  const overdubs = {
-    recording: omit(recordingOverdubs, overdubId),
-    recorded: {
-      ...recordedOverdubs,
-      [overdubId]: overdub,
-    }
-  }
 
   // process master timeline and completed overdub
   const master = processMaster(unprocessedMaster, overdub)
@@ -169,7 +112,7 @@ export const processRecording = (state, recordingId, overdubId) => {
     [recordingId]: {
       ...unprocessedRecording,
       master,
-      overdubs,
+      overdubs: omit(get(state, `${recordingId}.overdubs`, overdub.id)),
     }
   }
 }

@@ -16,7 +16,7 @@ export const timelines = (state = {}, action) => {
   case TIMELINE_CREATED:
     return createNewTimeline(state, action.payload.timelineId)
   case TIMELINE_DELETED:
-    return deleteTimeline(action.payload.timelineId)
+    return deleteTimeline(state, action.payload.timelineId)
   case TRACK_ADDED_TO_TIMELINE:
     return addTrackToTimeline(state, action.payload.timelineId, action.payload.trackId)
   // case TRACK_REMOVED_FROM_TIMELINE:
@@ -56,7 +56,7 @@ export const createNewTimeline = (state, id) => ({
  * @param state :: {}
  * @param id :: string
  */
-export const deleteNewTimeline = (state, id) => omit(state, id)
+export const deleteTimeline = (state, id) => omit(state, id)
 
 /**
  * addTrackToTimeline adds the id of a track to the timeline. Note that by default
@@ -70,7 +70,7 @@ export const addTrackToTimeline = (state, timelineId, trackId) => ({
   ...state,
   [timelineId]: {
     ...get(state, timelineId, {}),
-    tracks: [...get(state, `${timelineId}.tracks`, []), trackId],
+    tracks: [...get(state, `${timelineId}.tracks`), trackId],
   },
 })
 
@@ -83,7 +83,7 @@ export const addTrackToTimeline = (state, timelineId, trackId) => ({
  */
 export const updateRecordingStatusOf = (state, timelineId, inProgress) => ({
   ...state,
-  [timelineId]: {...get(state, timelineId, {}), recording: inProgress}
+  [timelineId]: {...get(state, timelineId), recording: inProgress}
 })
 
 /**
@@ -95,7 +95,7 @@ export const updateRecordingStatusOf = (state, timelineId, inProgress) => ({
  */
 export const updatePlaybackStatusOf = (state, timelineId, playing) => ({
   ...state,
-  [timelineId]: {...get(state, timelineId, {}), playing},
+  [timelineId]: {...get(state, timelineId), playing},
 })
 
 /**
@@ -109,7 +109,7 @@ export const updatePlaybackStatusOf = (state, timelineId, playing) => ({
 export const updateScrubberPosition = (state, timelineId, time) => ({
   ...state,
   [timelineId]: {
-    ...get(state, timelineId, {}),
-    time,
+    ...get(state, timelineId),
+    scrubberTime: time,
   },  
 })

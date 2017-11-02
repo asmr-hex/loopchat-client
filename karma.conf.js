@@ -9,11 +9,19 @@ module.exports = function(config) {
   var configuration = {
     port: 9876,
     basePath: '.',
+    // NOTE (cw|11.2.2017) we are bundling all tests into a single bundle because
+    // for some reason, importing ToneJS within each test breaks stuff when we are
+    // importing it more than 7 times (???). This must have something to do with using
+    // the WebAudio API and instantiating it too many times or something.
+    // The consequence is that there is no straightforward way to run individual tests
+    // other than overwrit
     files: [
-      {pattern: testPath + '**/*.js', included: true},
+      'test/index.js',
+      // {pattern: testPath + '**/*.js', included: true},
     ],
     preprocessors: {
-      [testPath + '**/*.js']: ['webpack'],
+      'test/index.js': ['webpack', 'sourcemap'],
+      // [testPath + '**/*.js']: ['webpack', 'sourcemap'],
     },
     webpack: webpackConfig,
     webpackServer: {
@@ -32,6 +40,7 @@ module.exports = function(config) {
     plugins: [
       'karma-webpack',
       'karma-coverage',
+      'karma-sourcemap-loader',
       'karma-mocha',
       'karma-mocha-reporter',
       'karma-chai',

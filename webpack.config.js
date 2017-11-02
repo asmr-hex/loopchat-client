@@ -2,7 +2,7 @@ var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
-  devtool: 'eval',
+  devtool: 'inline-source-map',
   resolve: {
     modulesDirectories: ['node_modules', 'src'],
     extensions: ['', '.js', '.jsx']
