@@ -182,14 +182,14 @@ export class MidiEventBus {
   startRecording(recordings) {
     forEach(
       recordings,
-      recording => {
+      recording => {   
         // set the recording for this device
         this.recording[recording.inputDeviceId] = {
-          recordingId: recording.id,
-          overdubId: recording.overdubId,
+          recordingId: recording.recordingId,
+          overdub: recording.overdub,
         }
       }
-    )
+    )    
   }
 
   stopRecording(recordings) {
@@ -202,9 +202,9 @@ export class MidiEventBus {
   }
 
   record(deviceId, music) {
-    const {overdubId} = this.recording[deviceId]
-    
-    this.dispatch(recordMidiEvent(overdubId, music))
+    const {overdub} = this.recording[deviceId]
+
+    this.dispatch(recordMidiEvent(overdub.id, music))
   }
 
   startPlayback(state, timelineId) {

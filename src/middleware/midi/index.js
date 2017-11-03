@@ -53,11 +53,11 @@ export const midiMiddleware = (() => {
 
     // MIDI RECORDINGS
     case MIDI_OVERDUB_RECORDING_STARTED:
-      midiEventBus.startRecording(action.payload.recordings)
+      midiEventBus.startRecording(action.payload.recordingContexts)
       return next(action)
 
     case MIDI_OVERDUB_RECORDING_STOPPED:
-      midiEventBus.stopRecording(action.payload.recordings)
+      midiEventBus.stopRecording(action.payload.recordingContexts)
       return next(action)
 
     case TIMELINE_PLAYBACK_STARTED:

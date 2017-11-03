@@ -54,7 +54,7 @@ export const annihilateOverdubs = (state, recordingContexts) =>
  */
 export const recordEvent = (state, overdubId, midiEvent) => {
   const events = get(state, `${overdubId}.events`)
-
+  
   return {
     ...state,
     [overdubId]: {

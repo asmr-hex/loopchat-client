@@ -112,7 +112,7 @@ export const processRecording = (state, recordingId, unprocessedOverdub) => {
     [recordingId]: {
       ...unprocessedRecording,
       master,
-      overdubs: omit(get(state, `${recordingId}.overdubs`, overdub.id)),
+      overdubs: omit(get(state, `${recordingId}.overdubs`), overdub.id),
     }
   }
 }
@@ -152,6 +152,8 @@ const overlay = (master, overdub) =>
  */
 const overwrite = (master, overdub) => {
   const events = consolidateNotes(overdub.events)
+
+  if (overdub.events.length === 0) return master
   
   return [
     ...filterBefore(master, first(events).time),
