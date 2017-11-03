@@ -1,6 +1,6 @@
 import Enzyme from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
-
+import {throwErrorOnReactPropTypeWarnings} from './support/setup'
 
 // setup enzyme for React component tests
 Enzyme.configure({adapter: new Adapter()})
