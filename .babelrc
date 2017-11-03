@@ -1,5 +1,6 @@
 {
   "presets": [
+    "airbnb",
     "latest",
     "react",
     "es2017",
