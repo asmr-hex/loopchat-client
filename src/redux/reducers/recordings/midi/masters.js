@@ -1,9 +1,11 @@
 import {filter, first, findIndex, get, isUndefined, keys, last, map, merge, omit, pullAt, reduce, reverse, set, slice, sortBy} from 'lodash'
 import {
-  MIDI_EVENT_RECORDED,
   MIDI_OVERDUB_RECORDING_STARTED,
+  MIDI_OVERDUB_RECORDING_STARTED_BY_PEER,
   MIDI_OVERDUB_RECORDING_STOPPED,
-  MIDI_RECORDING_CREATED
+  MIDI_OVERDUB_RECORDING_STOPPED_BY_PEER,
+  MIDI_RECORDING_CREATED,
+  MIDI_RECORDING_CREATED_BY_PEER,
 } from '../../../actions/recordings/midi/midi'
 import {MIDI_NOTE_OFF, MIDI_NOTE_ON} from '../../../../types/midiEvent'
 import {newOverdub} from '../../../../types/recording'
@@ -14,10 +16,13 @@ import {newOverdub} from '../../../../types/recording'
  */
 export const masters = (state = {}, action) => {
   switch (action.type) {
+  case MIDI_RECORDING_CREATED_BY_PEER:
   case MIDI_RECORDING_CREATED:
     return createMidiRecording(state, action.payload.recording)
+  case MIDI_OVERDUB_RECORDING_STARTED_BY_PEER:
   case MIDI_OVERDUB_RECORDING_STARTED:
     return createOverdubs(state, action.payload.recordingContexts)
+  case MIDI_OVERDUB_RECORDING_STOPPED_BY_PEER:
   case MIDI_OVERDUB_RECORDING_STOPPED:
     return processRecordings(state, action.payload.recordingContexts)
   default:

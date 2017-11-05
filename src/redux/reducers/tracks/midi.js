@@ -2,7 +2,9 @@ import {get, omit} from 'lodash'
 import {newMidiTrack} from '../../../types/track'
 import {
   MIDI_TRACK_CREATED,
+  MIDI_TRACK_CREATED_BY_PEER,
   MIDI_TRACK_DELETED,
+  MIDI_TRACK_DELETED_BY_PEER,
   MIDI_TRACK_INPUT_DEVICE_ASSIGNED,
   MIDI_TRACK_ACTIVATED,
   MIDI_TRACK_DEACTIVATED,
@@ -13,8 +15,10 @@ export const midi = (state = {}, action) => {
   const {payload} = action
   
   switch (action.type) {
+  case MIDI_TRACK_CREATED_BY_PEER:
   case MIDI_TRACK_CREATED:
     return {...state, [payload.trackId]: newMidiTrack(payload.trackId, {recordingId: payload.recordingId})}
+  case MIDI_TRACK_DELETED_BY_PEER:
   case MIDI_TRACK_DELETED:
     return omit(state, payload.trackId)
   case MIDI_TRACK_INPUT_DEVICE_ASSIGNED:

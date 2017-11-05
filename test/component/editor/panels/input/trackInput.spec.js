@@ -10,7 +10,7 @@ import {TrackInput} from '../../../../../src/components/editor/panels/input/trac
 import {NULL_DEVICE} from '../../../../../src/types/midiDevice'
 
 
-describe.only('<TrackInput />', () => {
+describe('<TrackInput />', () => {
 
   const sampleTrackId = 'gloom-n-doom'
   const sampleLayout = {

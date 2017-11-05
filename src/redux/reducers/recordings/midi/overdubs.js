@@ -1,18 +1,24 @@
 import {get, keys, merge, omit, reduce} from 'lodash'
 import {
   MIDI_OVERDUB_RECORDING_STARTED,
+  MIDI_OVERDUB_RECORDING_STARTED_BY_PEER,
   MIDI_OVERDUB_RECORDING_STOPPED,
+  MIDI_OVERDUB_RECORDING_STOPPED_BY_PEER,
   MIDI_EVENT_RECORDED,
+  MIDI_EVENT_RECORDED_BY_PEER,
 } from '../../../actions/recordings/midi/midi'
 import {newOverdub} from '../../../../types/recording'
 
 
 export const overdubs = (state = {}, action) => {
   switch (action.type) {
+  case MIDI_OVERDUB_RECORDING_STARTED_BY_PEER:
   case MIDI_OVERDUB_RECORDING_STARTED:
     return createOverdubs(state, action.payload.recordingContexts)
+  case MIDI_OVERDUB_RECORDING_STOPPED_BY_PEER:
   case MIDI_OVERDUB_RECORDING_STOPPED:
     return annihilateOverdubs(state, action.payload.recordingContexts)
+  case MIDI_EVENT_RECORDED_BY_PEER:
   case MIDI_EVENT_RECORDED:
     return recordEvent(state, action.payload.overdubId, action.payload.event)
   default:

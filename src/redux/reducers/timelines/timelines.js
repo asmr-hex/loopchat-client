@@ -2,8 +2,11 @@ import {get, omit} from 'lodash'
 import {newTimeline} from '../../../types/timeline'
 import {
   TIMELINE_CREATED,
+  TIMELINE_CREATED_BY_PEER,
   TIMELINE_DELETED,
+  TIMELINE_DELETED_BY_PEER,
   TRACK_ADDED_TO_TIMELINE,
+  TRACK_ADDED_TO_TIMELINE_BY_PEER,
   TIMELINE_RECORDING_STATUS_UPDATED,
   TIMELINE_PLAYBACK_STARTED,
   TIMELINE_PLAYBACK_STOPPED,
@@ -13,10 +16,13 @@ import {
 
 export const timelines = (state = {}, action) => {
   switch (action.type) {
+  case TIMELINE_CREATED_BY_PEER:
   case TIMELINE_CREATED:
     return createNewTimeline(state, action.payload.timelineId)
+  case TIMELINE_DELETED_BY_PEER:
   case TIMELINE_DELETED:
     return deleteTimeline(state, action.payload.timelineId)
+  case TRACK_ADDED_TO_TIMELINE_BY_PEER:
   case TRACK_ADDED_TO_TIMELINE:
     return addTrackToTimeline(state, action.payload.timelineId, action.payload.trackId)
   // case TRACK_REMOVED_FROM_TIMELINE:

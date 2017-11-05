@@ -5,6 +5,7 @@ import uuidV4 from 'uuid/v4'
 import {forEach, filter, map, reduce} from 'lodash'
 import {startMidiOverdubs, stopMidiOverdubs} from '../../../../../redux/actions/recordings/midi/midi'
 import {updateRecordingStatus} from '../../../../../redux/actions/timelines/timelines'
+import {sendMessage} from '../../../../../redux/actions/messages'
 import {NULL_DEVICE} from '../../../../../types/midiDevice'
 import {
   getTimelineProperty,
@@ -17,6 +18,7 @@ const actions = {
   startMidiOverdubs,
   stopMidiOverdubs,
   updateRecordingStatus,
+  sendMessage,
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -43,6 +45,7 @@ export class RecordButton extends Component {
 
   handleRecording() {
     const {
+      sendMessage,
       activeTracks,
       trackOverdubsByThisUser,
       timelineId,
@@ -65,6 +68,8 @@ export class RecordButton extends Component {
         overdub: trackOverdubsByThisUser[track.id] // TODO (cw|11.2.2017) this is undefined sometimes, debug this.
       }),
     )
+
+    sendMessage("YOOOOOOOOOOOOO TESTING")
     
     if (!recordingInProgress) {
       startMidiOverdubs(recordingContexts, timelineId)
