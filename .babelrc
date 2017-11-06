@@ -1,10 +1,12 @@
 {
   "presets": [
+    "airbnb",
     "latest",
     "react",
     "es2017",
     "stage-0",
-    "stage-1"
+    "stage-1",
+    "flow"
   ],
   "plugins": [
   "transform-class-properties",

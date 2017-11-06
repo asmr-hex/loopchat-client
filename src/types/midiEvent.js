@@ -1,3 +1,7 @@
+import uuidV4 from 'uuid/v4'
+import {fromMidi} from 'tonal-note'
+
+
 // midi command codes
 export const MIDI_CONTROL_CHANGE = 'MIDI_CONTROL_CHANGE'
 export const MIDI_CONTROL_CHANGE_MIN = 176 // channel 1
@@ -28,3 +32,18 @@ export const getMidiEventTypeAndChannel = code => {
     // TODO (cw|5.29.2017) return an error here: "unknown midi command"
   }
 }
+
+/**
+ * create a new processed midi event
+ * @param {Object} overrides
+ * @returns {ProcessedMidiEvent}
+ */
+export const newProcessedMidiEvent = (overrides = {}) => ({
+  id: uuidV4(),
+  type: MIDI_NOTE_ON,
+  channel: 0,
+  note: fromMidi(44),
+  pitch: 44,
+  velocity: 1,
+  time: 13.333,
+})

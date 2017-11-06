@@ -2,8 +2,12 @@ import {get, omit} from 'lodash'
 import {newTimeline} from '../../../types/timeline'
 import {
   TIMELINE_CREATED,
+  TIMELINE_CREATED_BY_PEER,
   TIMELINE_DELETED,
+  TIMELINE_DELETED_BY_PEER,
   TRACK_ADDED_TO_TIMELINE,
+  TRACK_ADDED_TO_TIMELINE_BY_PEER,
+  TIMELINE_RECORDING_STATUS_UPDATED,
   TIMELINE_PLAYBACK_STARTED,
   TIMELINE_PLAYBACK_STOPPED,
   TIMELINE_SCRUBBER_POSITION_UPDATED,
@@ -12,15 +16,20 @@ import {
 
 export const timelines = (state = {}, action) => {
   switch (action.type) {
+  case TIMELINE_CREATED_BY_PEER:
   case TIMELINE_CREATED:
     return createNewTimeline(state, action.payload.timelineId)
+  case TIMELINE_DELETED_BY_PEER:
   case TIMELINE_DELETED:
-    return deleteTimeline(action.payload.timelineId)
+    return deleteTimeline(state, action.payload.timelineId)
+  case TRACK_ADDED_TO_TIMELINE_BY_PEER:
   case TRACK_ADDED_TO_TIMELINE:
     return addTrackToTimeline(state, action.payload.timelineId, action.payload.trackId)
   // case TRACK_REMOVED_FROM_TIMELINE:
   // case TIMELINE_TEMPO_UPDATED:
-  // case TIMELINE_TIME_SIGNATURE_UPDATED:
+    // case TIMELINE_TIME_SIGNATURE_UPDATED:
+  case TIMELINE_RECORDING_STATUS_UPDATED:
+    return updateRecordingStatusOf(state, action.payload.timelineId, action.payload.inProgress)
   case TIMELINE_PLAYBACK_STARTED:
     return updatePlaybackStatusOf(state, action.payload.timelineId, true)
   case TIMELINE_PLAYBACK_STOPPED:
@@ -53,7 +62,7 @@ export const createNewTimeline = (state, id) => ({
  * @param state :: {}
  * @param id :: string
  */
-export const deleteNewTimeline = (state, id) => omit(state, id)
+export const deleteTimeline = (state, id) => omit(state, id)
 
 /**
  * addTrackToTimeline adds the id of a track to the timeline. Note that by default
@@ -67,8 +76,20 @@ export const addTrackToTimeline = (state, timelineId, trackId) => ({
   ...state,
   [timelineId]: {
     ...get(state, timelineId, {}),
-    tracks: [...get(state, `${timelineId}.tracks`, []), trackId],
+    tracks: [...get(state, `${timelineId}.tracks`), trackId],
   },
+})
+
+/**
+ * updateRecordingStatusOf updates whether the timeline is recording or not. 
+ *
+ * @param state :: {}
+ * @param timelineId :: string
+ * @param inProgress : bool
+ */
+export const updateRecordingStatusOf = (state, timelineId, inProgress) => ({
+  ...state,
+  [timelineId]: {...get(state, timelineId), recording: inProgress}
 })
 
 /**
@@ -80,7 +101,7 @@ export const addTrackToTimeline = (state, timelineId, trackId) => ({
  */
 export const updatePlaybackStatusOf = (state, timelineId, playing) => ({
   ...state,
-  [timelineId]: {...get(state, timelineId, {}), playing},
+  [timelineId]: {...get(state, timelineId), playing},
 })
 
 /**
@@ -94,7 +115,7 @@ export const updatePlaybackStatusOf = (state, timelineId, playing) => ({
 export const updateScrubberPosition = (state, timelineId, time) => ({
   ...state,
   [timelineId]: {
-    ...get(state, timelineId, {}),
-    time,
+    ...get(state, timelineId),
+    scrubberTime: time,
   },  
 })

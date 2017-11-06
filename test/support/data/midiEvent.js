@@ -2,6 +2,7 @@ import {map, flatMap, times} from 'lodash'
 import {fromMidi} from 'tonal-note'
 import {MIDI_CONTROL_CHANGE, MIDI_NOTE_OFF, MIDI_NOTE_ON, MIDI_PITCH_BEND} from '../../../src/types/midiEvent'
 
+// TODO (cw|10.22.2017) move this to types!
 const defaultMidiNoteOnEvent = {
   type: MIDI_NOTE_ON,
   channel: 1, // 1-16,
@@ -70,3 +71,4 @@ export const getSampleMidiOnOffSequence = (n=10, timeOffset=0, randomNotes=true)
         : e.note
     })
   )
+

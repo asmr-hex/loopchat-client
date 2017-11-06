@@ -21,8 +21,15 @@ export const addMidiEventHandler = (handler, deviceId) => dispatch => {
   })
 }
 
+// TODO (cw|10.24.2017) why is this not within the input/ dir?
 // the ACTIVATE_MIDI_INPUT_DEVICE action is handled in *both* the midiMiddleware
 // as well as in the input midi reducer to track the activation status of a device.
+//
+// Also note that there are two actions which result in the ACTIVATE_MIDI_INPUT_DEVICE
+// action being dispatched: (1) this action-creator and (2) the activateMidiTrack in
+// actions/tracks/midi. This is because, in the future, when we are designing virtual
+// synths, we may want to activate a midi input to control our virtual synth outside of
+// the context of a track (i.e. we aren't interested in recording, only hearing our synth).
 export const ACTIVATE_MIDI_INPUT_DEVICE = 'ACTIVATE_MIDI_INPUT_DEVICE'
 export const activateMidiInputDevice = deviceId => dispatch => {
   dispatch({
@@ -31,8 +38,12 @@ export const activateMidiInputDevice = deviceId => dispatch => {
   })
 }
 
+// TODO (cw|10.24.2017) why is this not within the input/ dir?
 // the DEACTIVATE_MIDI_INPUT_DEVICE action is handled in *both* the midiMiddleware
 // as well as in the input midi reducer to track the activation status of a device.
+//
+// Again, similar to activateMidiInputDevice, the DEACTIVATE_MIDI_INPUT_DEVICE action
+// is dispatched in two places. See the description above.
 export const DEACTIVATE_MIDI_INPUT_DEVICE = 'DEACTIVATE_MIDI_INPUT_DEVICE'
 export const deactivateMidiInputDevice = deviceId => dispatch => {
   dispatch({

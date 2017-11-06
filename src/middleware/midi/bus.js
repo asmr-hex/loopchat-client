@@ -1,9 +1,12 @@
 import { forEach, get, omit, has, noop } from 'lodash'
+import uuidV4 from 'uuid/v4'
 import tone from 'tone'
 import {fromMidi} from 'tonal-note'
-import {play} from '../../instruments/synth'
+import {play, playback} from '../../instruments/synth'
 import {getMidiEventTypeAndChannel, MIDI_NOTE_OFF, MIDI_NOTE_ON} from '../../types/midiEvent'
 import {recordMidiEvent} from '../../redux/actions/recordings/midi/midi'
+import {getUnmutedMasterRecordingsFromTimeline} from '../../redux/selectors/timelines'
+
 
 // Since the MidiAccess object cannot change object reference
 // (i.e. we cannot process it through a reducer since it should
@@ -135,8 +138,8 @@ export class MidiEventBus {
     // MIDI_NOTE_ON/OFF events have slightly different formats than other events
     // related to parameter controls (e.g. MIDI_CONTROL_CHANGE, MIDI_PITCH_BEND)
     const processedEvent = type === MIDI_NOTE_ON || type === MIDI_NOTE_OFF
-      ? { type, channel, note: fromMidi(note), velocity, time }
-      : { type, channel, control: note, value: velocity, time }
+          ? { id: uuidV4(), type, channel, note: fromMidi(note), pitch: note, velocity, time }
+          : { id: uuidV4(), type, channel, control: note, value: velocity, time }
 
     // for debugging only...
     if (type === MIDI_NOTE_ON || type === MIDI_NOTE_OFF) {
@@ -174,25 +177,44 @@ export class MidiEventBus {
     play(music)
   }
 
-  startRecording(payload) {
-    const {input, recordingId, overdub} = payload
-
-    // set the recording for this device
-    this.recording[input] = {
-      recordingId,
-      overdubId: overdub.id
-    }
+  // NOTE: the assumption here is that recording multiple tracks/overdubs with
+  // the same input device is not useful and thus only one will actually be recorded.
+  startRecording(recordings) {
+    forEach(
+      recordings,
+      recording => {   
+        // set the recording for this device
+        this.recording[recording.inputDeviceId] = {
+          recordingId: recording.recordingId,
+          overdub: recording.overdub,
+        }
+      }
+    )    
   }
 
-  stopRecording(payload) {
-    const {input} = payload
-
-    this.recording[input] = null
+  stopRecording(recordings) {
+    forEach(
+      recordings,
+      recording => {
+        this.recording[recording.inputDeviceId] = null
+      }
+    )
   }
 
   record(deviceId, music) {
-    const {recordingId, overdubId} = this.recording[deviceId]
+    const {overdub} = this.recording[deviceId]
+
+    this.dispatch(recordMidiEvent(overdub.id, music))
+  }
+
+  startPlayback(state, timelineId) {
+    const recordings = getUnmutedMasterRecordingsFromTimeline(state, timelineId)
     
-    this.dispatch(recordMidiEvent(recordingId, overdubId, music))
+    // send recordings to synth
+    playback(recordings)
+  }
+
+  stopPlayback(state, timelineId) {
+    
   }
 }

@@ -1,8 +1,10 @@
 var path = require('path');
 var webpack = require('webpack');
 
+// TODO (cw|11.3.2017) migrate from webpack 1.x.x -> 2.0.0
+
 module.exports = {
-  devtool: 'eval',
+  devtool: 'inline-source-map',
   resolve: {
     modulesDirectories: ['node_modules', 'src'],
     extensions: ['', '.js', '.jsx']
@@ -30,6 +32,10 @@ module.exports = {
       {
         test: /\.css$/,
         loader: 'style-loader!css-loader'
+      },
+      {
+        test: /\.json$/,
+        loader: 'json-loader',
       },
     ]
   }

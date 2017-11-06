@@ -12,6 +12,7 @@ import {
 } from '../../../../../src/redux/actions/midi/output/output'
 import {ACTIVATE_MIDI_INPUT_DEVICE, DEACTIVATE_MIDI_INPUT_DEVICE} from '../../../../../src/redux/actions/midi/index'
 
+
 describe('midi reducer', () => {
 
   const sampleMidiDevices = getSampleMidiDevices(2)

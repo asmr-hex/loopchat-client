@@ -6,7 +6,7 @@ import { midi } from './midi/index'
 import { peers } from './peers/index'
 import {recordings} from './recordings/index'
 import {timelines} from './timelines/timelines'
-import {tracks} from './tracks/tracks'
+import {tracks} from './tracks'
 import {ui} from './ui'
 
 

@@ -1,11 +1,11 @@
 import React, {Component} from 'react'
 import {object} from 'prop-types'
 import {connect} from 'react-redux'
-import {map, values} from 'lodash'
+import {keys, map, values} from 'lodash'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 import uuidV4 from 'uuid/v4'
 import './dashboard.css'
-import {Timeline} from '../timeline/timeline'
+import {Editor} from '../editor'
 import {createTimeline} from '../../redux/actions/timelines/timelines'
 
 // we need this for this component to work with AppBar
@@ -52,7 +52,18 @@ export class Dashboard extends Component {
       )
     )
   }
-  
+
+  renderTimelineEditor() {
+    const {timelines} = this.props
+    const ids = keys(timelines)
+    
+    if (ids.length === 0) return
+
+    return (
+      <Editor snippetId={ids[0]}/>
+    )
+  }
+
   render() {
     const iconStyles = {
       width: 40,
@@ -63,9 +74,9 @@ export class Dashboard extends Component {
     return(
       <div className='dashboard'>
         <button onClick={() => this.createTimeline()}>
-          {'+ timeline'}
+          {'Edit New Timeline'}
         </button>
-        {this.renderTimelines()}
+        {this.renderTimelineEditor()}
       </div>
     )
   }

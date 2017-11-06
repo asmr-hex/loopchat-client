@@ -8,9 +8,14 @@ import {
   DEACTIVATE_MIDI_INPUT_DEVICE
 } from '../../redux/actions/midi/index'
 import {
-  MIDI_RECORDING_CREATED, MIDI_OVERDUB_RECORDING_STOPPED,
+  MIDI_OVERDUB_RECORDING_STOPPED,
   MIDI_OVERDUB_RECORDING_STARTED
 } from '../../redux/actions/recordings/midi/midi'
+import {
+  TIMELINE_PLAYBACK_STARTED,
+  TIMELINE_PLAYBACK_STOPPED,
+} from '../../redux/actions/timelines/timelines'
+
 
 export const midiMiddleware = (() => {
   // hide global midiEventBus using a closure
@@ -18,6 +23,7 @@ export const midiMiddleware = (() => {
 
   // return middleware we can apply using thunk-middleware
   return store => next => action => {
+
     switch (action.type) {
 
     // MIDI DEVICE CONNECTION
@@ -47,13 +53,21 @@ export const midiMiddleware = (() => {
 
     // MIDI RECORDINGS
     case MIDI_OVERDUB_RECORDING_STARTED:
-      midiEventBus.startRecording(action.payload)
+      midiEventBus.startRecording(action.payload.recordingContexts)
       return next(action)
 
     case MIDI_OVERDUB_RECORDING_STOPPED:
-      midiEventBus.stopRecording(action.payload)
+      midiEventBus.stopRecording(action.payload.recordingContexts)
       return next(action)
 
+    case TIMELINE_PLAYBACK_STARTED:
+      midiEventBus.startPlayback(store.getState(), action.payload.timelineId)
+      return next(action)
+      
+    case TIMELINE_PLAYBACK_STOPPED:
+      midiEventBus.stopPlayback(store.getState(), action.payload.timelineId)
+      return next(action)
+      
     default:
       return next(action)
     }

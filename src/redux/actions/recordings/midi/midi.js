@@ -1,74 +1,60 @@
 import uuidV4 from  'uuid/v4'
-import {newOverdub, newRecording} from '../../../../types/recording'
+import {map} from 'lodash'
+import {newRecording, newOverdub} from '../../../../types/recording'
+import {startPlayback, stopPlayback} from '../../timelines/timelines'
+
 
 export const MIDI_RECORDING_CREATED = 'MIDI_RECORDING_CREATED'
+export const MIDI_RECORDING_CREATED_BY_PEER = 'MIDI_RECORDING_CREATED_BY_PEER'
 export const MIDI_OVERDUB_RECORDING_STARTED = 'MIDI_OVERDUB_RECORDING_STARTED'
+export const MIDI_OVERDUB_RECORDING_STARTED_BY_PEER = 'MIDI_OVERDUB_RECORDING_STARTED_BY_PEER'
 export const MIDI_OVERDUB_RECORDING_STOPPED = 'MIDI_OVERDUB_RECORDING_STOPPED'
+export const MIDI_OVERDUB_RECORDING_STOPPED_BY_PEER = 'MIDI_OVERDUB_RECORDING_STOPPED_BY_PEER'
 export const MIDI_EVENT_RECORDED = 'MIDI_EVENT_RECORDED'
+export const MIDI_EVENT_RECORDED_BY_PEER = 'MIDI_EVENT_RECORDED_BY_PEER'
 
 /**
- * startNewMidiRecording creates a new midi recording and automatically
- * begins a new overdub recording.
- *
- * @param deviceId: the id of the input midi device being recorded. This is not
- *                  stored in the redux store, but rather intercepted by the midi
- *                  middleware.
- * @param recordingId
- * @param overdubId
- */
-export const startNewMidiRecording = (
-  deviceId,
-  recordingId = uuidV4(),
-  overdubId = uuidV4(),
-) => dispatch => {
-  // start a new recording
+ * createNewMidiRecording create a new midi recording.
+ * 
+ * @param recordingId :: string
+*/
+export const createNewMidiRecording = (recordingId = uuidV4()) => dispatch =>
   dispatch({
     type: MIDI_RECORDING_CREATED,
     payload: {
-      input: deviceId,
       recording: newRecording(recordingId),
     }
   })
-  // start a new initial overdub for this recording
-  dispatch(startMidiOverdub(deviceId, recordingId, overdubId))
-}
 
-/**
- * startMidiOverdub creates a new overdub recording within a given recording.
- *
- * @param deviceId: the id of the input midi device being recorded. This is not
- *                  stored in the redux store, but rather intercepted by the midi
- *                  middleware.
- * @param recordingId: the id of the recording for which this is an overdub.
- * @param overdubId (optional)
- */
-export const startMidiOverdub = (deviceId, recordingId, overdubId = uuidV4(), timeOffset = 0) => dispatch => {
+export const startMidiOverdubs = (recordingContexts, timelineId) => dispatch => {
+  // start overdub recording
   dispatch({
     type: MIDI_OVERDUB_RECORDING_STARTED,
     payload: {
-      input: deviceId,
-      recordingId,
-      overdub: newOverdub(overdubId, timeOffset)
-    }
+      recordingContexts: map(
+        recordingContexts,
+        recordingContext => ({...recordingContext, overdub: newOverdub(uuidV4(), 0)}), // TODO (cw|10.29.2017) parameterize timeOffset
+      ),
+      timelineId,
+    },
   })
+
+  // also start playback
+  dispatch(startPlayback(timelineId))
 }
 
-/**
- * stopMidiOverdub stops recording an overdub.
- *
- * @param deviceId
- * @param recordingId
- * @param overdubId
- */
-export const stopMidiOverdub = (deviceId, recordingId, overdubId) => dispatch => {
+export const stopMidiOverdubs = (recordingContexts, timelineId) => dispatch => {
+  // stop overdub recording
   dispatch({
     type: MIDI_OVERDUB_RECORDING_STOPPED,
     payload: {
-      input: deviceId,
-      recordingId,
-      overdubId,
-    }
+      recordingContexts,
+      timelineId,
+    },
   })
+
+  // also stop playback
+  dispatch(stopPlayback(timelineId))
 }
 
 /**
@@ -79,11 +65,10 @@ export const stopMidiOverdub = (deviceId, recordingId, overdubId) => dispatch =>
  * @param overdubId
  * @param midiEvent
  */
-export const recordMidiEvent = (recordingId, overdubId, midiEvent) => dispatch => {
+export const recordMidiEvent = (overdubId, midiEvent) => dispatch => {
   dispatch({
     type: MIDI_EVENT_RECORDED,
     payload: {
-      recordingId,
       overdubId,
       event: midiEvent,
     }
