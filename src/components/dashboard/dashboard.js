@@ -19,6 +19,7 @@ const actions = {
 const mapStateToProps = (state, { params }) => ({
   inputs: values(state.midi.input),
   timelines: state.timelines,
+  visibleTimelines: state.ui.timelines,
 })
 
 @connect(mapStateToProps, actions)
@@ -39,11 +40,11 @@ export class Dashboard extends Component {
     const {timelines} = this.props
 
     return map(
-      this.props.timelines,
+      this.props.visibleTimelines,
       (value, id, key) => (
         <Timeline
           key={key}
-          {...value}
+          {...timelines[value.id]} // DEBUGGING THIS
           width={800}
           height={200}
           background={'#ffbf75'}

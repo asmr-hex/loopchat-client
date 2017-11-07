@@ -4,10 +4,12 @@ import uuidV4 from 'uuid/v4'
 import {map, truncate} from 'lodash'
 import {getTimelines} from '../../../../redux/selectors/timelines'
 import {createTimeline} from '../../../../redux/actions/timelines/timelines'
+import {openTimelineInEditor} from '../../../../redux/actions/ui/timelines'
 
 
 const actions = {
   createTimeline,
+  openTimelineInEditor,
 }
 
 const mapStateToProps = (state, ownProps) => ({
@@ -23,6 +25,8 @@ export class TimelineSelector extends Component {
 
   openTimeline(id) {
     console.log('OPENING TIMELINE ', id)
+
+    this.props.openTimelineInEditor(id)
   }
   
   generateTimelineLinks() {
