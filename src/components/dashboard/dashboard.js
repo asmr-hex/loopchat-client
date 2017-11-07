@@ -6,6 +6,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin'
 import uuidV4 from 'uuid/v4'
 import './dashboard.css'
 import {Editor} from '../editor'
+import {ProjectBar} from './projectBar'
 import {createTimeline} from '../../redux/actions/timelines/timelines'
 
 // we need this for this component to work with AppBar
@@ -73,6 +74,7 @@ export class Dashboard extends Component {
 
     return(
       <div className='dashboard'>
+        <ProjectBar/>
         <button onClick={() => this.createTimeline()}>
           {'Edit New Timeline'}
         </button>

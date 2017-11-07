@@ -1,5 +1,12 @@
-import {filter, get, map} from 'lodash'
+import {filter, get, map, values} from 'lodash'
 
+/**
+ * gets an array of all timelines.
+ * @param {Object} state - full Redux state tree
+ * @returns {[Object]} - array of timeline objects
+ */
+export const getTimelines = state =>
+  values(get(state, `timelines`, {}))
 
 /**
  * gets a timeline property from the redux store .
