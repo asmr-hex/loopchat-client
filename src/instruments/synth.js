@@ -23,3 +23,13 @@ export const playback = tracks =>
     )
   )
 
+
+// const synthFactory = (synthType) => {
+
+//   const myNewSynth = tone.PolySynth().toMaster()
+
+//   return (notes) => {
+//     myNewSynth.triggerAttackRelease(note,...)
+    
+//   }
+// }

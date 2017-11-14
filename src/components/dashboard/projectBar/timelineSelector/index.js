@@ -33,10 +33,10 @@ export class TimelineSelector extends Component {
     return map(
       this.props.timelines,
       (timeline, idx) => (
-        <span>
+        <span key={idx}>
           <br/>
           |- 
-          <span onClick={() => this.openTimeline(timeline.id)} key={idx}>{truncate(timeline.id, {length: 20})}</span>
+          <span onClick={() => this.openTimeline(timeline.id)}>{truncate(timeline.id, {length: 20})}</span>
         </span>
       )
     )

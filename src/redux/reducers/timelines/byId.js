@@ -14,7 +14,7 @@ import {
 } from '../../actions/timelines/timelines'
 
 
-export const timelines = (state = {}, action) => {
+export const byId = (state = {}, action) => {
   switch (action.type) {
   case TIMELINE_CREATED_BY_PEER:
   case TIMELINE_CREATED:

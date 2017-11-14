@@ -18,8 +18,7 @@ const actions = {
 
 const mapStateToProps = (state, { params }) => ({
   inputs: values(state.midi.input),
-  timelines: state.timelines,
-  visibleTimelines: state.ui.timelines,
+  visibleTimelines: state.timelines.visible,
 })
 
 @connect(mapStateToProps, actions)
@@ -32,32 +31,33 @@ export class Dashboard extends Component {
     super(props)
   }
 
-  createTimeline() {
-    this.props.createTimeline(uuidV4())
-  }
+  // createTimeline() {
+  //   this.props.createTimeline(uuidV4())
+  // }
 
-  renderTimelines() {
-    const {timelines} = this.props
+  // renderTimelines() {
+  //   const {timelines} = this.props
 
-    return map(
-      this.props.visibleTimelines,
-      (value, id, key) => (
-        <Timeline
-          key={key}
-          {...timelines[value.id]} // DEBUGGING THIS
-          width={800}
-          height={200}
-          background={'#ffbf75'}
-          inputDevices={this.props.inputs}
-          timeInterval={{start: 0, end: 60}}
-        />       
-      )
-    )
-  }
+    
+  //   return map(
+  //     this.props.visibleTimelines,
+  //     (value, id, key) => (
+  //       <Timeline
+  //         key={key}
+  //         {...timelines[value.id]} // DEBUGGING THIS
+  //         width={800}
+  //         height={200}
+  //         background={'#ffbf75'}
+  //         inputDevices={this.props.inputs}
+  //         timeInterval={{start: 0, end: 60}}
+  //       />       
+  //     )
+  //   )
+  // }
 
   renderTimelineEditor() {
-    const {timelines} = this.props
-    const ids = keys(timelines)
+    const {visibleTimelines} = this.props
+    const ids = visibleTimelines
     
     if (ids.length === 0) return
 
