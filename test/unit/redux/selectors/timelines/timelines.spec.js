@@ -26,8 +26,11 @@ describe('timeline selectors', () => {
   
   const state = getDefaultState({
     timelines: {
-      [sampleTimeline.id]: sampleTimeline,
-      [sampleTimelineNoTracks.id]: sampleTimelineNoTracks,
+      byId:{
+        [sampleTimeline.id]: sampleTimeline,
+        [sampleTimelineNoTracks.id]: sampleTimelineNoTracks,
+      },
+      visible: {},
     },
     tracks: {
       midi: {
