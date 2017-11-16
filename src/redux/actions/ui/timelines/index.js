@@ -7,5 +7,5 @@ export const openTimelineInEditor = timelineId => dispatch =>
     type: TIMELINE_OPENED_IN_EDITOR,
     payload: {
       timelineId,
-    }
+    },
   })

@@ -6,8 +6,17 @@ import injectTapEventPlugin from 'react-tap-event-plugin'
 import uuidV4 from 'uuid/v4'
 import './dashboard.css'
 import {Editor} from '../editor'
+import {Workshop} from '../workshop'
 import {ProjectBar} from './projectBar'
 import {createTimeline} from '../../redux/actions/timelines/timelines'
+import {getActiveWorkspace} from '../../redux/selectors/workspaces'
+import {getOpenInstruments} from '../../redux/selectors/instruments'
+import {
+  INSTRUMENT_WORKSPACE,
+  EDITOR_WORKSPACE,
+  HOME_WORKSPACE,
+} from '../../types/workspace'
+
 
 // we need this for this component to work with AppBar
 injectTapEventPlugin()
@@ -19,6 +28,8 @@ const actions = {
 const mapStateToProps = (state, { params }) => ({
   inputs: values(state.midi.input),
   visibleTimelines: state.timelines.visible,
+  activeWorkspace: getActiveWorkspace(state),
+  openInstruments: getOpenInstruments(state),
 })
 
 @connect(mapStateToProps, actions)
@@ -66,6 +77,31 @@ export class Dashboard extends Component {
     )
   }
 
+  renderInstrumentWorkshop() {
+    const {openInstruments} = this.props
+
+    console.log(openInstruments)
+    
+    if (keys(openInstruments).length === 0) return
+
+    return (
+      <Workshop instrumentId={openInstruments[0]}/>
+    )
+  }
+
+  renderCurrentWorkspace() {
+    const {activeWorkspace} = this.props
+    
+    switch(activeWorkspace) {
+    case INSTRUMENT_WORKSPACE:
+      return this.renderInstrumentWorkshop()
+    case EDITOR_WORKSPACE:
+      return this.renderTimelineEditor()
+    default:
+      return
+    }
+  }
+  
   render() {
     const iconStyles = {
       width: 40,
@@ -79,7 +115,7 @@ export class Dashboard extends Component {
         <button onClick={() => this.createTimeline()}>
           {'Edit New Timeline'}
         </button>
-        {this.renderTimelineEditor()}
+        {this.renderCurrentWorkspace()}
       </div>
     )
   }
