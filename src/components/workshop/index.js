@@ -29,7 +29,7 @@ export class Workshop extends Component {
     }
   }
 
-  render() {
+  render() { 
     const {width, height, background} = this.props.layout
     const styles = {
       position: 'absolute',

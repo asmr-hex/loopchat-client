@@ -34,9 +34,3 @@ render(
 
 // TODO (cw|1.22.2017) possibly use CSS Modules as opposed to inline styling
 
-
-
-
-
-
-
