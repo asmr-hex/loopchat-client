@@ -2,7 +2,7 @@ import { forEach, get, omit, has, noop } from 'lodash'
 import uuidV4 from 'uuid/v4'
 import tone from 'tone'
 import {fromMidi} from 'tonal-note'
-import {Instruments} from '../../instruments'
+import {InstrumentLibrary} from '../../instruments'
 import {play, playback} from '../../instruments/synth'
 import {getMidiEventTypeAndChannel, MIDI_NOTE_OFF, MIDI_NOTE_ON} from '../../types/midiEvent'
 import {recordMidiEvent} from '../../redux/actions/recordings/midi/midi'
@@ -21,7 +21,7 @@ export class MidiEventBus {
     // instruments is a collection of all current instruments and modules
     // available to assign to a controller or a track's output.
     // TODO (cw|11.17.2017) should this be in a separate module?
-    this.instruments = new Instruments()
+    this.instruments = new InstrumentLibrary()
     
     // dispatch should be the same dispatch function used in the Redux
     // store. Initially it is set to nop, but once the middleware has
