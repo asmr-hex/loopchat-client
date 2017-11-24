@@ -1,8 +1,9 @@
-import React, {Component } from 'react'
-import './header.css'
+import React, {Component} from 'react'
+import styles from './header.css'
 import {IconButton, IconMenu, MenuItem} from 'material-ui'
 import Menu from 'material-ui/svg-icons/navigation/menu'
 import Share from 'material-ui/svg-icons/social/share'
+import {Logo} from '../graphics/logo'
 import Peers from '../peers/peers'
 
 export const Header = props => {
@@ -11,18 +12,12 @@ export const Header = props => {
     height: 40,
     color: '#ffffff'
   }
+
   return (
-    <div className="header">
-      {/*<IconMenu className='header-icon'*/}
-                {/*iconButtonElement={*/}
-                  {/*<IconButton iconStyle={iconStyles}>*/}
-                    {/*<Menu/>*/}
-                  {/*</IconButton>*/}
-                {/*}*/}
-                {/*anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}*/}
-                {/*targetOrigin={{horizontal: 'left', vertical: 'top'}}*/}
-      {/*/>*/}
-      <IconMenu className='header-icon'
+    <div className={styles.header}>
+      <Logo width={100} height={100}/>
+      <Peers/>
+      <IconMenu className={styles.headerIcon}
                 iconButtonElement={
                   <IconButton iconStyle={iconStyles}>
                     <Menu/>

@@ -1,11 +1,18 @@
+@value grey from '../../styles/palette.css';
+
+
 .header {
     display: flex;
+    justify-content: flex-end;
     width: 100%;
     height: 5em;
-    background: #3e9eba;
+    background: grey;
 }
 
 .header-icon {
-    top: 0.5em;
-    left: 95%;
+    /* justify-content: flex-end; */
+    /* top: 0.5em; */
+    /* left: 95%; */
 }
+
+

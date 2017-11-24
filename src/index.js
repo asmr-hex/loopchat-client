@@ -11,7 +11,8 @@ import socketMiddleware from './middleware/websocket/websocket'
 import { setupMIDI } from './middleware/midi'
 import {midiMiddleware} from './middleware/midi/index'
 import {composeWithDevTools} from 'redux-devtools-extension'
-import './index.css'
+import './styles/main.css'
+
 
 // setup redux store
 let store = createStore(
