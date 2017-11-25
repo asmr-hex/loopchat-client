@@ -15,7 +15,7 @@ export const Header = props => {
 
   return (
     <div className={styles.header}>
-      <Logo width={100} height={100}/>
+      <Logo width={40} height={40}/>
       <Peers/>
       <IconMenu className={styles.headerIcon}
                 iconButtonElement={

@@ -24,7 +24,7 @@ export class Logo extends Component {
 
   render() {
     const {width, height} = this.props
-    const backgroundColor = '#ffffff'
+    const backgroundColor = grey
     
     return (
       <canvas id={this.id} style={{backgroundColor}} width={width} height={height}>
