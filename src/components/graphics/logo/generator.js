@@ -3,6 +3,10 @@ import {blue, purple} from '../../../styles/palette.css'
 
 
 // generate signal shape
+//
+// TODO (cw|11.25.2017) these functions are not very well organized w.r.t.
+// parameters being in radians and amplitudes being normalized. It would be
+// to refactor s.t. it is more intuitive to use these functions.
 
 export const makeLogo = (ctx) => {
   const width = ctx.canvas.clientWidth
@@ -10,15 +14,9 @@ export const makeLogo = (ctx) => {
   const x = range(0, width, width / 100)
   const maxAmplitude = height / 2.2
 
-  console.log(width)
-  console.log(height)
-  
   const signalDrawer = drawSignal(ctx, width, height, maxAmplitude)
   const s1 = signal([sine(1, 2.08)])
   const s2 = signal([cosine(1, 2.88, 0.43), cosine(1, 3.88, 0.43)])
-  
-  // const s1 = signal([sine(1, 2.1)])
-  // const s2 = signal([cosine(1, 3), cosine(1, 4)])
   
   signalDrawer(x, s1, c => {c.lineWidth = 2; c.strokeStyle = blue})
   signalDrawer(x, s2, c => {c.strokeStyle = purple})

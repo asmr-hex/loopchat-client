@@ -42,30 +42,6 @@ export class Dashboard extends Component {
     super(props)
   }
 
-  // createTimeline() {
-  //   this.props.createTimeline(uuidV4())
-  // }
-
-  // renderTimelines() {
-  //   const {timelines} = this.props
-
-    
-  //   return map(
-  //     this.props.visibleTimelines,
-  //     (value, id, key) => (
-  //       <Timeline
-  //         key={key}
-  //         {...timelines[value.id]} // DEBUGGING THIS
-  //         width={800}
-  //         height={200}
-  //         background={'#ffbf75'}
-  //         inputDevices={this.props.inputs}
-  //         timeInterval={{start: 0, end: 60}}
-  //       />       
-  //     )
-  //   )
-  // }
-
   renderTimelineEditor() {
     const {visibleTimelines} = this.props
     const ids = visibleTimelines
@@ -112,9 +88,6 @@ export class Dashboard extends Component {
     return(
       <div className='dashboard'>
         <ProjectBar/>
-        <button onClick={() => this.createTimeline()}>
-          {'Edit New Timeline'}
-        </button>
         {this.renderCurrentWorkspace()}
       </div>
     )

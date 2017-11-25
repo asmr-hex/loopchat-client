@@ -19,3 +19,10 @@ export const openInstrumentWorkspace = () => dispatch =>
 
 export const openEditorWorkspace = () => dispatch =>
   dispatch(updateWorkspace(EDITOR_WORKSPACE))
+
+export const PROJECT_DRAWER_TOGGLED = 'PROJECT_DRAWER_TOGGLED'
+
+export const toggleProjectDrawer = () => dispatch =>
+  dispatch({
+    type: PROJECT_DRAWER_TOGGLED,
+  })

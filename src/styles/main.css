@@ -1,4 +1,5 @@
-@value grey from './palette.css';
+@value grey, lightGrey from './palette.css';
+
 
 html {
     margin: 0;
@@ -7,4 +8,7 @@ html {
 body {
     margin: 0;
     background-color: grey;
+    color: white;
+    font-family: 'Roboto', sans-serif;
 }
+

@@ -6,6 +6,7 @@ import {connectMidiDevices} from '../../redux/actions/midi/index'
 import {connectionStatus} from '../../types/connectionStatus'
 import {Header} from '../header/header'
 import {Dashboard} from '../dashboard/dashboard'
+import {grey, orange} from '../../styles/palette.css'
 
 const host = '127.0.0.1'
 const port = '3145'
@@ -44,22 +45,27 @@ export default class Session extends Component {
   }
 
   render() {
-    const loading = this.props.connectionStatus === connectionStatus.CONNECTING
+    const isLoading = this.props.connectionStatus === connectionStatus.CONNECTING
+    const loading = isLoading
           ? 'loading'
           : 'hide'
 
     return (
       <div>
-        <Header session={this.props.session}/>
+        {
+          isLoading ? [] : <Header session={this.props.session}/>
+        }
         <RefreshIndicator
           top={(window.innerHeight-100)/2}
           left={(window.innerWidth-100)/2}
-          style={{backgroundColor:'#ffffffff'}}
+          style={{backgroundColor:grey}}
           status={loading}
           size={100}
-          loadingColor={'#80DEEA'}
+          loadingColor={orange}
           zDepth={0}/>
-        <Dashboard session={this.props.session}/>
+        {
+            isLoading ? [] : <Dashboard session={this.props.session}/>
+        }
       </div>
     )
   }
