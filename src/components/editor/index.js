@@ -31,7 +31,7 @@ export class Editor extends Component {
 
   static defaultProps = {
     layout: {
-      width: 1400,
+      width: 900,//1400,
       height: 300,
       background: '#ffbf75',
     }
@@ -75,6 +75,8 @@ export class Editor extends Component {
       flexFlow: 'row wrap',
       left: (window.innerWidth - width)/2,
       top: (window.innerHeight - height)/2,
+      width,
+      height,
     }
     const layout = this.getPanelLayouts()
 
