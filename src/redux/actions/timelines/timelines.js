@@ -1,5 +1,7 @@
 import uuidV4 from 'uuid/v4'
 import {createMidiTrack} from '../tracks/midi'
+import {openEditorWorkspace} from '../workspaces'
+import {openTimelineInEditor} from '../ui/timelines'
 
 
 export const TIMELINE_CREATED = 'TIMELINE_CREATED'
@@ -13,13 +15,21 @@ export const TIMELINE_PLAYBACK_STARTED = 'TIMELINE_PLAYBACK_STARTED'
 export const TIMELINE_PLAYBACK_STOPPED = 'TIMELINE_PLAYBACK_STOPPED'
 export const TIMELINE_SCRUBBER_POSITION_UPDATED = 'TIMELINE_SCRUBBER_POSITION_UPDATED'
 
-export const createTimeline = timelineId => dispatch =>
+export const createTimeline = timelineId => dispatch => {
+  // create new timeline
   dispatch({
     type: TIMELINE_CREATED,
     payload: {
       timelineId,
     },
   })
+
+  // open timeline in editor
+  dispatch(openTimelineInEditor(timelineId))
+
+  // open editor workspace
+  dispatch(openEditorWorkspace())
+}
 
 export const deleteTimeline = timelineId => dispatch =>
   dispatch({

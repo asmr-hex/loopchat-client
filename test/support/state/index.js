@@ -19,7 +19,10 @@ export const getDefaultState = (overrides = {}) => ({
     output: {},
   },
   peers: [],
-  timelines: {},
+  timelines: {
+    byId: {},
+    visible: [],
+  },
   tracks: {
     midi: {},
   },

@@ -1,11 +1,23 @@
+@value grey from '../../styles/palette.css';
+
+/* define sizes for header elements */
+@value header-height: 80px;
+@value header-item-width: 48px;
+@value header-item-height: 48px;
+
+
 .header {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
-    height: 5em;
-    background: #3e9eba;
+    height: header-height;
+    background: grey;
 }
 
 .header-icon {
-    top: 0.5em;
-    left: 95%;
+    width: header-item-width;
+    height: header-item-height;
 }
+
+

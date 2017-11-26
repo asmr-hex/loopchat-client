@@ -6,7 +6,17 @@ import injectTapEventPlugin from 'react-tap-event-plugin'
 import uuidV4 from 'uuid/v4'
 import './dashboard.css'
 import {Editor} from '../editor'
+import {Workshop} from '../workshop'
+import {ProjectBar} from './projectBar'
 import {createTimeline} from '../../redux/actions/timelines/timelines'
+import {getActiveWorkspace} from '../../redux/selectors/workspaces'
+import {getOpenInstruments} from '../../redux/selectors/instruments'
+import {
+  INSTRUMENT_WORKSPACE,
+  EDITOR_WORKSPACE,
+  HOME_WORKSPACE,
+} from '../../types/workspace'
+
 
 // we need this for this component to work with AppBar
 injectTapEventPlugin()
@@ -17,7 +27,9 @@ const actions = {
 
 const mapStateToProps = (state, { params }) => ({
   inputs: values(state.midi.input),
-  timelines: state.timelines,
+  visibleTimelines: state.timelines.visible,
+  activeWorkspace: getActiveWorkspace(state),
+  openInstruments: getOpenInstruments(state),
 })
 
 @connect(mapStateToProps, actions)
@@ -30,32 +42,9 @@ export class Dashboard extends Component {
     super(props)
   }
 
-  createTimeline() {
-    this.props.createTimeline(uuidV4())
-  }
-
-  renderTimelines() {
-    const {timelines} = this.props
-
-    return map(
-      this.props.timelines,
-      (value, id, key) => (
-        <Timeline
-          key={key}
-          {...value}
-          width={800}
-          height={200}
-          background={'#ffbf75'}
-          inputDevices={this.props.inputs}
-          timeInterval={{start: 0, end: 60}}
-        />       
-      )
-    )
-  }
-
   renderTimelineEditor() {
-    const {timelines} = this.props
-    const ids = keys(timelines)
+    const {visibleTimelines} = this.props
+    const ids = visibleTimelines
     
     if (ids.length === 0) return
 
@@ -64,6 +53,31 @@ export class Dashboard extends Component {
     )
   }
 
+  renderInstrumentWorkshop() {
+    const {openInstruments} = this.props
+
+    console.log(openInstruments)
+    
+    if (keys(openInstruments).length === 0) return
+
+    return (
+      <Workshop instrumentId={openInstruments[0]}/>
+    )
+  }
+
+  renderCurrentWorkspace() {
+    const {activeWorkspace} = this.props
+    
+    switch(activeWorkspace) {
+    case INSTRUMENT_WORKSPACE:
+      return this.renderInstrumentWorkshop()
+    case EDITOR_WORKSPACE:
+      return this.renderTimelineEditor()
+    default:
+      return
+    }
+  }
+  
   render() {
     const iconStyles = {
       width: 40,
@@ -73,10 +87,8 @@ export class Dashboard extends Component {
 
     return(
       <div className='dashboard'>
-        <button onClick={() => this.createTimeline()}>
-          {'Edit New Timeline'}
-        </button>
-        {this.renderTimelineEditor()}
+        <ProjectBar/>
+        {this.renderCurrentWorkspace()}
       </div>
     )
   }

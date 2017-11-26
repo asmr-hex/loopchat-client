@@ -11,7 +11,9 @@ import socketMiddleware from './middleware/websocket/websocket'
 import { setupMIDI } from './middleware/midi'
 import {midiMiddleware} from './middleware/midi/index'
 import {composeWithDevTools} from 'redux-devtools-extension'
-import './index.css'
+import './styles/main.css'
+import {wwvvMuiTheme} from './styles/muiTheme'
+
 
 // setup redux store
 let store = createStore(
@@ -22,7 +24,7 @@ let store = createStore(
 )
 
 render(
-  <MuiThemeProvider>
+  <MuiThemeProvider muiTheme={wwvvMuiTheme}>
     <Provider store={store}>
       <Router history={browserHistory}>
         <Route path="/(:sessionID)" component={Session}/>
@@ -33,10 +35,4 @@ render(
 )
 
 // TODO (cw|1.22.2017) possibly use CSS Modules as opposed to inline styling
-
-
-
-
-
-
 

@@ -9,18 +9,18 @@ import {
   TIMELINE_PLAYBACK_STOPPED,
   TIMELINE_SCRUBBER_POSITION_UPDATED,
 } from '../../../../../src/redux/actions/timelines/timelines'
-import {timelines} from '../../../../../src/redux/reducers/timelines/timelines'
+import {byId} from '../../../../../src/redux/reducers/timelines/byId'
 
 
 describe('timelines reducer', () => {
 
-  describe('#timelines', () => {
+  describe('byId subreducer', () => {
 
     it('adds a new timeline on TIMELINE_CREATED given an id', () => {
       const action = {type: TIMELINE_CREATED, payload: {timelineId: 'slow-decline'}}
       const state = {}
 
-      expect(timelines(state, action)).to.eql({
+      expect(byId(state, action)).to.eql({
         [action.payload.timelineId]: newTimeline(action.payload.timelineId)
       })
     })
@@ -31,7 +31,7 @@ describe('timelines reducer', () => {
         [action.payload.timelineId]: newTimeline(action.payload.timelineId)
       }
 
-      expect(timelines(state, action)).to.eql({})      
+      expect(byId(state, action)).to.eql({})      
     })
 
     it('adds a trackId to a timeline on TRACK_ADDED_TO_TIMELINE given a trackId and timelineId', () => {
@@ -46,7 +46,7 @@ describe('timelines reducer', () => {
         [action.payload.timelineId]: newTimeline(action.payload.timelineId)
       }
 
-      expect(timelines(state, action)).to.eql({
+      expect(byId(state, action)).to.eql({
         [action.payload.timelineId]: newTimeline(
           action.payload.timelineId,
           {
@@ -68,7 +68,7 @@ describe('timelines reducer', () => {
         [action.payload.timelineId]: newTimeline(action.payload.timelineId),
       }
 
-      expect(timelines(state, action)).to.eql({
+      expect(byId(state, action)).to.eql({
         [action.payload.timelineId]: newTimeline(
           action.payload.timelineId,
           {
@@ -84,7 +84,7 @@ describe('timelines reducer', () => {
         [action.payload.timelineId]: newTimeline(action.payload.timelineId),
       }
 
-      expect(timelines(state, action)).to.eql({
+      expect(byId(state, action)).to.eql({
         [action.payload.timelineId]: newTimeline(
           action.payload.timelineId,
           {
@@ -105,7 +105,7 @@ describe('timelines reducer', () => {
         ),
       }
 
-      expect(timelines(state, action)).to.eql({
+      expect(byId(state, action)).to.eql({
         [action.payload.timelineId]: newTimeline(
           action.payload.timelineId,
           {
@@ -127,7 +127,7 @@ describe('timelines reducer', () => {
         [action.payload.timelineId]: newTimeline(action.payload.timelineId),
       }
 
-      expect(timelines(state, action)).to.eql({
+      expect(byId(state, action)).to.eql({
         [action.payload.timelineId]: newTimeline(
           action.payload.timelineId,
           {

@@ -2,9 +2,11 @@ import { forEach, get, omit, has, noop } from 'lodash'
 import uuidV4 from 'uuid/v4'
 import tone from 'tone'
 import {fromMidi} from 'tonal-note'
+import {InstrumentLibrary} from '../../instruments'
 import {play, playback} from '../../instruments/synth'
 import {getMidiEventTypeAndChannel, MIDI_NOTE_OFF, MIDI_NOTE_ON} from '../../types/midiEvent'
 import {recordMidiEvent} from '../../redux/actions/recordings/midi/midi'
+import {loadInstruments} from '../../redux/actions/instruments'
 import {getUnmutedMasterRecordingsFromTimeline} from '../../redux/selectors/timelines'
 
 
@@ -16,6 +18,11 @@ import {getUnmutedMasterRecordingsFromTimeline} from '../../redux/selectors/time
 // midi state.
 export class MidiEventBus {
   constructor() {
+    // instruments is a collection of all current instruments and modules
+    // available to assign to a controller or a track's output.
+    // TODO (cw|11.17.2017) should this be in a separate module?
+    this.instruments = new InstrumentLibrary()
+    
     // dispatch should be the same dispatch function used in the Redux
     // store. Initially it is set to nop, but once the middleware has
     // access to the redux dispatcher, it must be provided to the bus.
@@ -47,6 +54,11 @@ export class MidiEventBus {
    */
   setDispatcher(dispatch) {
     this.dispatch = dispatch
+
+    // register all loaded instruments with the redux store.
+    // TODO (cw| 11.17.2017) maybe this should be elsewhere...
+    console.log(this.instruments)
+    this.dispatch(loadInstruments(this.instruments))
   }
 
   /**
@@ -86,7 +98,7 @@ export class MidiEventBus {
   /**
    * activateDevice sets the activated status of a midi input device
    * to true.
-   *
+   *63ba4484-561c-46c9-8889-0a024f7b270
    * @param deviceId
    */
   activateDevice(deviceId) {
