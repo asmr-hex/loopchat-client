@@ -89,7 +89,7 @@ export class Timeline extends Component {
     
     return (
       <div className={`timeline-container-${this.props.id}`} style={{...styles}}>
-        <svg className={`timeline-${this.props.id}`} ref={element => this.element = element} width={styles.width} height={styles.height}>
+        <svg viewBox={`0 0 ${styles.width} ${styles.height}`} className={`timeline-${this.props.id}`} ref={element => this.element = element}>
           {this.renderTracks()}
           <TimeAxis
             show={true}

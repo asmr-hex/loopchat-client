@@ -50,7 +50,9 @@ export class Editor extends Component {
     const processingHeightPercent = 0.2
     const timeAxisHeightPercent = 0.1 // TODO (cw|10.25.2017) this needs to be consistent with the value used within TimeAxis
     
-    const {width, height} = this.props.layout
+    const width = window.innerWidth * (parseFloat(styles.width) / 100)
+    const height = parseFloat(styles.height)
+    
     const inputControlPanel = {x:0, y:0, width: width * inputWidthPercent, height: height * (1 - (processingHeightPercent + timelineControlHeightPercent)), yOffset: height * timeAxisHeightPercent * (1 - (processingHeightPercent + timelineControlHeightPercent))}
     const outputControlPanel = {x:width * 0.85, y:0, width: width * outputWidthPercent, height: height * (1 - (processingHeightPercent + timelineControlHeightPercent))}
     const timeline = {x: inputControlPanel.width, y:0, width: width * 0.70, height: height * (1 - (processingHeightPercent + timelineControlHeightPercent))}
@@ -69,28 +71,20 @@ export class Editor extends Component {
   render() {
     const {width, height} = this.props.layout
     const {snippetId} = this.props
-    // const styles = {
-    //   position: 'absolute',
-    //   display: 'flex',
-    //   flexFlow: 'row wrap',
-    //   left: (window.innerWidth - width)/2,
-    //   top: (window.innerHeight - height)/2,
-    //   width,
-    //   height,
-    // }
     const layout = this.getPanelLayouts()
 
+    console.log(styles)
+    
     return (
       <div className={styles.timelineEditor}>
+        <InputControlPanel layout={layout.inputControlPanel} id={snippetId}/>
+        <Timeline layout={layout.timeline} id={snippetId}/>
+        <OutputControlPanel layout={layout.outputControlPanel} id={snippetId}/>
+        <TimelineControlPanel layout={layout.timelineControlPanel} timelineId={snippetId}/>
+        <ProcessingControlPanel layout={layout.processingControlPanel} id={snippetId}/>
       </div>
     )
   }
 }
-
-  // <InputControlPanel layout={layout.inputControlPanel} id={snippetId}/>
-  // <Timeline layout={layout.timeline} id={snippetId}/>
-  // <OutputControlPanel layout={layout.outputControlPanel} id={snippetId}/>
-  // <TimelineControlPanel layout={layout.timelineControlPanel} timelineId={snippetId}/>
-  // <ProcessingControlPanel layout={layout.processingControlPanel} id={snippetId}/>
 
 // <div className={`timeline-editor`} style={{...styles}}>

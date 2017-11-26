@@ -11,7 +11,6 @@ import socketMiddleware from './middleware/websocket/websocket'
 import { setupMIDI } from './middleware/midi'
 import {midiMiddleware} from './middleware/midi/index'
 import {composeWithDevTools} from 'redux-devtools-extension'
-import './styles/main.css'
 import {wwvvMuiTheme} from './styles/muiTheme'
 import {container} from './styles/main.css'
 
@@ -24,6 +23,7 @@ let store = createStore(
   )
 )
 
+// get the root element and add the container class to it.
 let root = document.getElementById('root')
 root.classList.add(container)
 

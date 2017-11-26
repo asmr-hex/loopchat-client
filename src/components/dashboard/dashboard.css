@@ -1,9 +1,23 @@
 
-.dashboard {
-    composes: container from '../../styles/main.css';
-    position: relative;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
+/* small viewport */
+@media all and (max-width: 1023px) {
+    .dashboard {
+        composes: container from '../../styles/main.css';
+        position: relative;
+        justify-content: center;
+        align-items: flex-end;
+        overflow: hidden;
+    }    
+}
+
+/* large viewport */
+@media all and (min-width: 1024px) {
+    .dashboard {
+        composes: container from '../../styles/main.css';
+        position: relative;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }    
 }
 
