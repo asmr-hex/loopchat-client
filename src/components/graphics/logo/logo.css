@@ -1,11 +1,20 @@
+@value lightGrey from '../../../styles/palette.css';
 
 .container {
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
 }
 
 .logo {
+    display: flex;
     align-items: center;
+}
+
+.txt {
+    display: flex;
+    align-items: center;
+    font-family: 'Share Tech Mono', monospace;
+    color: lightGrey;
 }
 
 

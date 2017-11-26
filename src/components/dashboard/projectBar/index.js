@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import Drawer from 'material-ui/Drawer'
 import {TimelineSelector} from './timelineSelector'
 import {InstrumentSelector} from './instrumentSelector'
+import {SearchBar} from './search'
 import {headerHeight} from '../../header/header.css'
 import {midGrey, lightGrey} from '../../../styles/palette.css'
 import {isProjectDrawerOpen} from '../../../redux/selectors/workspaces'
@@ -26,6 +27,7 @@ export class ProjectBar extends Component {
     
     return (
       <Drawer open={this.props.open} containerStyle={containerStyle}>
+        <SearchBar/>
         <TimelineSelector/>
         <InstrumentSelector/>
       </Drawer>

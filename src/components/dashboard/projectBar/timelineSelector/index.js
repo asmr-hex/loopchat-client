@@ -5,6 +5,7 @@ import {map, truncate} from 'lodash'
 import {getTimelines} from '../../../../redux/selectors/timelines'
 import {createTimeline} from '../../../../redux/actions/timelines/timelines'
 import {openTimelineInEditor} from '../../../../redux/actions/ui/timelines'
+import styles from '../drawer.css'
 
 
 const actions = {
@@ -34,9 +35,9 @@ export class TimelineSelector extends Component {
       this.props.timelines,
       (timeline, idx) => (
         <span key={idx}>
-          <br/>
           |- 
           <span onClick={() => this.openTimeline(timeline.id)}>{truncate(timeline.id, {length: 20})}</span>
+          <br/>
         </span>
       )
     )
@@ -46,10 +47,10 @@ export class TimelineSelector extends Component {
 
     return (
       <div>
-        timelines
-        <button onClick={() => this.createTimeline()}>
-          {'+'}
-        </button>
+        <div className={styles.drawerHeading}>
+          <span className={styles.drawerHeadingName}>timelines</span>
+          <span className={styles.drawerHeadingAdd} onClick={() => this.createTimeline()}>+</span>
+        </div>
         {this.generateTimelineLinks()}
       </div>
     )

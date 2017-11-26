@@ -49,6 +49,7 @@ export class Logo extends Component {
       <div className={styles.container} style={containerStyle}>
         <canvas className={styles.logo} id={this.id} style={{backgroundColor}} width={width} height={height} onClick={() => this.props.onClick()}>
         </canvas>
+        <div className={styles.txt}>wwvv</div>
       </div>
     )
   }

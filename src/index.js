@@ -12,6 +12,7 @@ import { setupMIDI } from './middleware/midi'
 import {midiMiddleware} from './middleware/midi/index'
 import {composeWithDevTools} from 'redux-devtools-extension'
 import './styles/main.css'
+import {wwvvMuiTheme} from './styles/muiTheme'
 
 
 // setup redux store
@@ -23,7 +24,7 @@ let store = createStore(
 )
 
 render(
-  <MuiThemeProvider>
+  <MuiThemeProvider muiTheme={wwvvMuiTheme}>
     <Provider store={store}>
       <Router history={browserHistory}>
         <Route path="/(:sessionID)" component={Session}/>

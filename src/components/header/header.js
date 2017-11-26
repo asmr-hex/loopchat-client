@@ -26,7 +26,7 @@ export class Header extends Component {
 
     return (
       <div className={styles.header}>
-        <Logo width={64} height={48} containerWidth={100} onClick={this.props.toggleProjectDrawer}/>
+        <Logo width={64} height={48} containerWidth={140} onClick={this.props.toggleProjectDrawer}/>
         <Peers/>
         <IconMenu className={styles.headerIcon}
                   style={{width: 100, display: 'flex', justifyContent: 'center'}}

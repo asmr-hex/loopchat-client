@@ -1,0 +1,29 @@
+@value green from '../../../styles/palette.css';
+
+
+.drawer-heading {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    margin-right: 5px;
+}
+
+.drawer-heading-name {
+    composes: nonSelectableText from '../../../styles/main.css';
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.drawer-heading-add {
+    composes: nonSelectableText from '../../../styles/main.css';
+    cursor: pointer;
+    display: flex;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.drawer-heading-add:hover {
+    color: green;
+}

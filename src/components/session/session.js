@@ -6,7 +6,7 @@ import {connectMidiDevices} from '../../redux/actions/midi/index'
 import {connectionStatus} from '../../types/connectionStatus'
 import {Header} from '../header/header'
 import {Dashboard} from '../dashboard/dashboard'
-import {grey, orange} from '../../styles/palette.css'
+import {grey, purple} from '../../styles/palette.css'
 
 const host = '127.0.0.1'
 const port = '3145'
@@ -61,7 +61,7 @@ export default class Session extends Component {
           style={{backgroundColor:grey}}
           status={loading}
           size={100}
-          loadingColor={orange}
+          loadingColor={purple}
           zDepth={0}/>
         {
             isLoading ? [] : <Dashboard session={this.props.session}/>

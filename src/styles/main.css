@@ -9,6 +9,12 @@ body {
     margin: 0;
     background-color: grey;
     color: white;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Share Techno Mono', monospace;
 }
 
+.non-selectable-text {
+    -webkit-user-select: none; /* Safari */        
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+}
