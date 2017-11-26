@@ -2,12 +2,12 @@ import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import {array, bool, number, object, shape, string} from 'prop-types'
 import {get, map} from 'lodash'
-
 import {InputControlPanel} from './panels/input/control'
 import {OutputControlPanel} from './panels/output/control'
 import {Timeline} from './panels/timeline'
 import {TimelineControlPanel} from './panels/timeline/control'
 import {ProcessingControlPanel} from './panels/processing'
+import styles from './index.css'
 
 
 // const actions = {}
@@ -69,25 +69,28 @@ export class Editor extends Component {
   render() {
     const {width, height} = this.props.layout
     const {snippetId} = this.props
-    const styles = {
-      position: 'absolute',
-      display: 'flex',
-      flexFlow: 'row wrap',
-      left: (window.innerWidth - width)/2,
-      top: (window.innerHeight - height)/2,
-      width,
-      height,
-    }
+    // const styles = {
+    //   position: 'absolute',
+    //   display: 'flex',
+    //   flexFlow: 'row wrap',
+    //   left: (window.innerWidth - width)/2,
+    //   top: (window.innerHeight - height)/2,
+    //   width,
+    //   height,
+    // }
     const layout = this.getPanelLayouts()
 
     return (
-      <div className={`timeline-editor-${snippetId}`} style={{...styles}}>
-        <InputControlPanel layout={layout.inputControlPanel} id={snippetId}/>
-        <Timeline layout={layout.timeline} id={snippetId}/>
-        <OutputControlPanel layout={layout.outputControlPanel} id={snippetId}/>
-        <TimelineControlPanel layout={layout.timelineControlPanel} timelineId={snippetId}/>
-        <ProcessingControlPanel layout={layout.processingControlPanel} id={snippetId}/>
+      <div className={styles.timelineEditor}>
       </div>
     )
   }
 }
+
+  // <InputControlPanel layout={layout.inputControlPanel} id={snippetId}/>
+  // <Timeline layout={layout.timeline} id={snippetId}/>
+  // <OutputControlPanel layout={layout.outputControlPanel} id={snippetId}/>
+  // <TimelineControlPanel layout={layout.timelineControlPanel} timelineId={snippetId}/>
+  // <ProcessingControlPanel layout={layout.processingControlPanel} id={snippetId}/>
+
+// <div className={`timeline-editor`} style={{...styles}}>

@@ -7,6 +7,7 @@ import {connectionStatus} from '../../types/connectionStatus'
 import {Header} from '../header/header'
 import {Dashboard} from '../dashboard/dashboard'
 import {grey, purple} from '../../styles/palette.css'
+import {container} from '../../styles/main.css'
 
 const host = '127.0.0.1'
 const port = '3145'
@@ -51,7 +52,7 @@ export default class Session extends Component {
           : 'hide'
 
     return (
-      <div>
+      <div className={container}>
         {
           isLoading ? [] : <Header session={this.props.session}/>
         }

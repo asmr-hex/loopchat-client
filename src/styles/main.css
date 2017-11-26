@@ -2,14 +2,25 @@
 
 
 html {
+    height: 100%;
     margin: 0;
 }
 
 body {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    height: 100%;
     margin: 0;
     background-color: grey;
     color: white;
     font-family: 'Share Techno Mono', monospace;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 .non-selectable-text {

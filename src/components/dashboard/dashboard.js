@@ -16,6 +16,8 @@ import {
   EDITOR_WORKSPACE,
   HOME_WORKSPACE,
 } from '../../types/workspace'
+import globalStyles from '../../styles/main.css'
+import styles from './dashboard.css'
 
 
 // we need this for this component to work with AppBar
@@ -86,9 +88,11 @@ export class Dashboard extends Component {
     }
 
     return(
-      <div className='dashboard'>
+      <div className={globalStyles.container}>
         <ProjectBar/>
-        {this.renderCurrentWorkspace()}
+        <div className={styles.dashboard}>
+          {this.renderCurrentWorkspace()}
+        </div>
       </div>
     )
   }

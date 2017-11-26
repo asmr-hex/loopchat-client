@@ -1,0 +1,9 @@
+
+.timeline-editor {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    width: 40%;
+    height: 200px;
+    background-color: green;
+}

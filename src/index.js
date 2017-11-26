@@ -13,6 +13,7 @@ import {midiMiddleware} from './middleware/midi/index'
 import {composeWithDevTools} from 'redux-devtools-extension'
 import './styles/main.css'
 import {wwvvMuiTheme} from './styles/muiTheme'
+import {container} from './styles/main.css'
 
 
 // setup redux store
@@ -23,6 +24,9 @@ let store = createStore(
   )
 )
 
+let root = document.getElementById('root')
+root.classList.add(container)
+
 render(
   <MuiThemeProvider muiTheme={wwvvMuiTheme}>
     <Provider store={store}>
@@ -31,7 +35,7 @@ render(
       </Router>
     </Provider>
   </MuiThemeProvider>,
-  document.getElementById('root')
+  root,
 )
 
 // TODO (cw|1.22.2017) possibly use CSS Modules as opposed to inline styling
