@@ -73,8 +73,6 @@ export class Editor extends Component {
     const {snippetId} = this.props
     const layout = this.getPanelLayouts()
 
-    console.log(styles)
-    
     return (
       <div className={styles.timelineEditor}>
         <TrackPanels id={snippetId} styles={{background: 'green'}}/>

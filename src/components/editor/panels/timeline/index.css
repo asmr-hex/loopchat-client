@@ -11,7 +11,6 @@
     display: flex;
     flex-direction: row;
     height: timeAxisHeight;
-    background-color: blue;
 }
 
 .timeline-axis {
