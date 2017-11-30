@@ -1,0 +1,39 @@
+@value midGrey from '../../../../styles/palette.css';
+
+
+@value timeAxisHeight: 32px;
+
+.input-control-panel {
+    display: flex;
+    flex-direction: column;
+    /* align-items: flex-start; */
+    flex-basis: 20%;
+    min-width: 200px;
+    max-width: 400px;
+}
+
+.input-control-menu {
+    display: flex;
+    flex-basis: timeAxisHeight;
+    min-height: timeAxisHeight;
+    background-color: black;
+}
+
+.track-input-panel-container {
+    composes: container from '../../../../styles/main.css';
+    flex-direction: column;
+    overflow: hidden;
+}
+
+@value trackHeightBasis: 128px;
+@value trackMinHeight: 128px;
+@value trackMaxHeight: 128px;
+
+.track-input-panel {
+    display: flex;
+    flex-basis: trackHeightBasis;
+    min-height: trackMinHeight;
+    max-height: trackMaxHeight;
+    background-color: red;
+    border-bottom: 1px solid midGrey;
+}

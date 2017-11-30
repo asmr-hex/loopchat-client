@@ -1,14 +1,28 @@
 @value midGrey from '../../styles/palette.css';
 
+/* timeline editor variables */
+/* TODO (cw|11.29.2017) rename with scope */
 @value width: 70%;
 @value height: 700px;
 
 .timeline-editor {
     display: flex;
-    flex-flow: row wrap;
-    align-items: center;
+    flex-direction: column;
     width: width;
     height: height;
     background-color: midGrey;
     box-shadow: 1px 2px 15px rgba(0, 0, 0, 0.16);
+}
+
+/* track panel variables */
+@value trackPanelHeight: 60%;
+
+.track-panels {
+    display: flex;
+    flex-direction: row;
+    height: trackPanelHeight;
+}
+
+.playback-processing-panels {
+    display: flex;
 }

@@ -10,6 +10,7 @@ import {
   activateMidiTrack,
   deactivateMidiTrack
 } from '../../../../redux/actions/tracks/midi'
+import styles from './index.css'
 
 
 const actions = {
@@ -26,12 +27,6 @@ const mapStateToProps = (state, ownProps) => ({
 export class TrackInput extends Component {
   static propTypes = {
     trackId: string.isRequired,
-    layout: shape({
-      x: number.isRequired,
-      y: number.isRequired,
-      width: number.isRequired,
-      height: number.isRequired,
-    }).isRequired
   }
 
   constructor(props) {
@@ -61,17 +56,9 @@ export class TrackInput extends Component {
   
   render() {
     const {trackId, inputs} = this.props
-    const styles = {
-      width: this.props.layout.width,
-      height: this.props.layout.height,
-      left: this.props.layout.x,
-      top: this.props.layout.y,
-      backgroundColor: 'tomato',
-      border: '1px solid black',
-    }
 
     return (
-      <div className={`input-control-panel-${trackId}`} style={{...styles}}>
+      <div className={styles.trackInputPanel}>
         <DropDownMenu value={this.state.value} onChange={this.updateSelectedInput}>
           {
             map(inputs, (input, idx) => <MenuItem value={input.id} key={idx} primaryText={input.name} />)

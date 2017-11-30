@@ -77,14 +77,32 @@ export class Editor extends Component {
     
     return (
       <div className={styles.timelineEditor}>
-        <InputControlPanel layout={layout.inputControlPanel} id={snippetId}/>
-        <Timeline layout={layout.timeline} id={snippetId}/>
-        <OutputControlPanel layout={layout.outputControlPanel} id={snippetId}/>
-        <TimelineControlPanel layout={layout.timelineControlPanel} timelineId={snippetId}/>
-        <ProcessingControlPanel layout={layout.processingControlPanel} id={snippetId}/>
+        <TrackPanels id={snippetId} styles={{background: 'green'}}/>
+        <PlaceHolderPanel styles={{background: 'red'}}/>
+        <PlaceHolderPanel styles={{background: 'blue'}}/>
       </div>
     )
   }
 }
 
-// <div className={`timeline-editor`} style={{...styles}}>
+export const TrackPanels = props => {
+
+  return (
+    <div className={styles.trackPanels} style={props.styles}>
+      <InputControlPanel timelineId={props.id}/>
+      <Timeline id={props.id}/>
+    </div>
+  )
+}
+  // <OutputControlPanel id={props.id}/>
+
+export const PlaceHolderPanel = props => {
+
+  return (
+    <div className={styles.playbackProcessingPanels} style={props.styles}>
+    </div>
+  )
+}
+
+  // <TimelineControlPanel layout={layout.timelineControlPanel} timelineId={snippetId}/>
+  // <ProcessingControlPanel layout={layout.processingControlPanel} id={snippetId}/>

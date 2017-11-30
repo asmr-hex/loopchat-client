@@ -1,17 +1,17 @@
 
 /* small viewport */
-@media all and (max-width: 1023px) {
+@media all and (max-width: 1499px) {
     .dashboard {
         composes: container from '../../styles/main.css';
         position: relative;
-        justify-content: center;
+        justify-content: space-around;
         align-items: flex-end;
         overflow: hidden;
     }    
 }
 
 /* large viewport */
-@media all and (min-width: 1024px) {
+@media all and (min-width: 1500px) {
     .dashboard {
         composes: container from '../../styles/main.css';
         position: relative;

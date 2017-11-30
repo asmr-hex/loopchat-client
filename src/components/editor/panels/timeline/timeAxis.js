@@ -1,11 +1,12 @@
 import React, {Component} from 'react'
 import {object, bool} from 'prop-types'
 import {ceil, floor, map, range} from 'lodash'
+import css from './index.css'
 
 
 export class TimeAxis extends Component {
   static propTypes = {
-    view: object.isRequired,
+    view: object,
     timeInterval: object.isRequired,
     show: bool,
     style: object,
@@ -15,8 +16,8 @@ export class TimeAxis extends Component {
     view: {
       x: 0,
       y: 0,
-      width: 300,
-      height: 50,
+      width: 1075.2,
+      height: 32,
     },
     timeInterval: {
       start: 0,
@@ -33,6 +34,9 @@ export class TimeAxis extends Component {
 
     // compute the x scaling factor for this component (only depends on time units)
     this.computeScalingFactor()
+
+    this.translation = 0
+    this.xScale = 1
   }
 
   componentWillUpdate() {
@@ -58,7 +62,7 @@ export class TimeAxis extends Component {
     // how many seconds are contained
     const duration = timeInterval.end - timeInterval.start
     const firstTick = ceil(timeInterval.start)
-    const nTicks = floor(duration)
+    const nTicks = floor(duration) + 100
 
     // compute tick coordinates
     const tickHeightRatio = 0.30
@@ -93,22 +97,57 @@ export class TimeAxis extends Component {
     )
     
   }
+
+  handleWheel(e) {
+    this.translate(e)
+    this.scaleX(e)
+
+    const {view} = this.props
+    
+    if (this.translate(e) || this.scaleX(e)) {
+      this.timeAxisElem.setAttribute('transform', `translate(${this.translation}, 0), scale(${this.xScale}, 1)`)
+    }
+  }
+  
+  translate({deltaX}) {
+    if (deltaX !== 0 && this.translation <= 0) {
+      // truncate deltaX if it causes translation to be greater than 0
+      const dX = this.translation + deltaX > 0 ? deltaX - (this.translation + deltaX) : deltaX      
+      this.translation += dX
+
+      return true
+    }
+  }
+
+  scaleX({deltaY}) {
+    if (Math.abs(deltaY) > 15) {
+      this.xScale *= 1 + (deltaY / 1000)
+
+      return true
+    }
+  }
   
   render() {
     const {view, style} = this.props
+
+    // viewBox={`0 0 ${20} ${32}`}
     
     return (
-      <g>
-        <rect
-          className='time-axis'
-          x={view.x}
-          y={view.y}
-          width={view.width}
-          height={view.height}
-          style={style}
-        />
-        {this.renderTicks()}
-      </g>
+      <div className={css.timelineAxisContainer}>
+        <svg className={css.timelineAxis} width={'100%'} height={'100%'} onWheel={(e) => this.handleWheel(e)} ref={(elem) => {this.svgElem = elem}}>
+          <g ref={(elem) => {this.timeAxisElem = elem}}>
+            <rect
+              className='time-axis'
+              x={0}
+              y={0}
+              width={view.width + 300} // this width should be the total timeline width
+              height={view.height}
+              fill={'pink'}
+              />
+            {this.renderTicks()}
+          </g>
+        </svg>
+      </div>
     )
   }
 }

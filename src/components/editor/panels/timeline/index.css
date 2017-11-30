@@ -1,0 +1,22 @@
+@value timeAxisHeight from '../input/index.css';
+
+.timeline-container {
+    composes: container from '../../../../styles/main.css';
+    flex-direction: column;
+    min-width: 300px;
+    background-color: fuchsia;
+}
+
+.timeline-axis-container {
+    display: flex;
+    flex-direction: row;
+    height: timeAxisHeight;
+    background-color: blue;
+}
+
+.timeline-axis {
+    /* width: 100%; */
+    /* display: flex; */
+    /* flex-grow: 1; */
+    /* align-items: flex-start; */
+}

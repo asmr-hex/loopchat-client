@@ -7,6 +7,7 @@ import {getTimelineUIProperty} from '../../../../redux/selectors/ui/timelines'
 import {Track} from './track/track'
 import {TimeAxis} from './timeAxis'
 import {Scrubber} from './scrubber'
+import css from './index.css'
 
 
 const actions = {}
@@ -22,18 +23,18 @@ const mapStateToProps = (state, ownProps) => ({
 export class Timeline extends Component {
   static propTypes = {
     id: string.isRequired,
-    layout: shape({
-      x: number.isRequired,
-      y: number.isRequired,
-      width: number.isRequired,
-      height: number.isRequired,
-    }).isRequired
+    // layout: shape({
+    //   x: number.isRequired,
+    //   y: number.isRequired,
+    //   width: number.isRequired,
+    //   height: number.isRequired,
+    // }).isRequired
   }
 
   constructor(props) {
     super(props)
 
-    this.state = this.computeInitialSubPanelLayouts()
+    // this.state = this.computeInitialSubPanelLayouts()
   }
 
   computeInitialSubPanelLayouts() {
@@ -80,31 +81,40 @@ export class Timeline extends Component {
   
   render() {
     const styles = {
-      width: this.props.layout.width,
-      height: this.props.layout.height,
-      left: this.props.layout.x,
-      top: this.props.layout.y,
-      backgroundColor: 'green',
+      // width: this.props.layout.width,
+      // height: this.props.layout.height,
+      // left: this.props.layout.x,
+      // top: this.props.layout.y,
+      // backgroundColor: 'green',
     }
-    
+
+    // NOTE (cw|11.29.2017) wrap stuff in AutoSizer HOC? https://github.com/bvaughn/react-virtualized/blob/master/docs/usingAutoSizer.md
     return (
-      <div className={`timeline-container-${this.props.id}`} style={{...styles}}>
-        <svg viewBox={`0 0 ${styles.width} ${styles.height}`} className={`timeline-${this.props.id}`} ref={element => this.element = element}>
-          {this.renderTracks()}
-          <TimeAxis
-            show={true}
-            view={this.state.timeAxisView}
-            timeInterval={this.props.timeInterval}
-            />
-          <Scrubber
-            view={this.props.layout}
-            time={this.props.scrubberTime}
-            timeInterval={this.props.timeInterval}
-            playing={this.props.playing}
-            timelineId={this.props.id}
-            />
-        </svg>
+      <div className={css.timelineContainer}>
+          <TimeAxis timeInterval={{start: 0, end: 24}}/>
       </div>
     )
   }
 }
+
+//   <TimeAxis
+// show={true}
+// view={this.state.timeAxisView}
+// timeInterval={this.props.timeInterval}
+//   />
+//   </svg>
+//   </div>
+
+
+//   <div className={`timeline-container-${this.props.id}`} style={{...styles}}>
+//   <svg viewBox={`0 0 ${styles.width} ${styles.height}`} className={`timeline-${this.props.id}`} ref={element => this.element = element}>
+//   {this.renderTracks()}
+//   <Scrubber
+// view={this.props.layout}
+// time={this.props.scrubberTime}
+// timeInterval={this.props.timeInterval}
+// playing={this.props.playing}
+// timelineId={this.props.id}
+//   />
+//   </svg>
+//   </div>
