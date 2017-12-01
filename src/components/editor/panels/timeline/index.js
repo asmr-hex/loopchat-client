@@ -61,7 +61,7 @@ export class Timeline extends Component {
 
   renderTracks() {
     const {timeInterval, tracks} = this.props // TODO (cw|10.17.2017) get tracks array from here
-    const {tracksView} = this.state
+    const tracksView = {}//const {tracksView} = this.state
     
     return map(
       tracks,
@@ -91,7 +91,10 @@ export class Timeline extends Component {
     // NOTE (cw|11.29.2017) wrap stuff in AutoSizer HOC? https://github.com/bvaughn/react-virtualized/blob/master/docs/usingAutoSizer.md
     return (
       <div className={css.timelineContainer}>
-          <TimeAxis timeInterval={{start: 0, end: 24}}/>
+        <TimeAxis/>
+        <div className={css.tracksContainer}>
+          {this.renderTracks()}
+        </div>
       </div>
     )
   }

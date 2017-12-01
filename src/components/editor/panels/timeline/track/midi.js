@@ -10,6 +10,7 @@ import {
 import {KeyboardUnderlay} from '../underlay/keyboard'
 import {TimeGrid} from '../underlay/timeGrid'
 import {MidiNotes} from '../midi/notes'
+import css from './index.css'
 
 
 const actions = {}
@@ -120,31 +121,36 @@ export class MidiTrack extends Component {
     const {scale, view, pitchInterval} = this
     
     return (
-      <g className={`track-${id}`}>
-        <KeyboardUnderlay
-          show={true}
-          x={view.x}
-          y={view.y}
-          width={view.width}
-          height={view.height}
-          pitchStart={pitchInterval.start}
-          pitchEnd={pitchInterval.end}
-          />
-        <TimeGrid
-          show={true}
-          view={view}
-          timeInterval={timeInterval}
-          scale={scale}
-          />
-        <MidiNotes
-          notes={this.props.recording}
-          inProgressRecordings={this.props.inProgressRecordings}
-          view={view}
-          timeInterval={timeInterval}
-          pitchInterval={pitchInterval}
-          scale={scale}
-          />
-      </g>
+      <div className={css.timelineTrackContainer}>
+        <svg width={'100%'} height={'100%'} onWheel={(e) => console.log('scrolling!')}>
+          <g id={`track-${id}`}>
+          </g>
+        </svg>
+      </div>
     )
   }
 }
+
+//   <KeyboardUnderlay
+// show={true}
+// x={view.x}
+// y={view.y}
+// width={view.width}
+// height={view.height}
+// pitchStart={pitchInterval.start}
+// pitchEnd={pitchInterval.end}
+//   />
+//   <TimeGrid
+// show={true}
+// view={view}
+// timeInterval={timeInterval}
+// scale={scale}
+//   />
+//   <MidiNotes
+// notes={this.props.recording}
+// inProgressRecordings={this.props.inProgressRecordings}
+// view={view}
+// timeInterval={timeInterval}
+// pitchInterval={pitchInterval}
+// scale={scale}
+//   />

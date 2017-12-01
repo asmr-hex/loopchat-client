@@ -5,11 +5,11 @@
     flex-direction: column;
     min-width: 300px;
     background-color: fuchsia;
+    overflow: hidden;
 }
 
 .timeline-axis-container {
-    display: flex;
-    flex-direction: row;
+    width: 100%;
     height: timeAxisHeight;
 }
 
@@ -18,4 +18,10 @@
     /* display: flex; */
     /* flex-grow: 1; */
     /* align-items: flex-start; */
+}
+
+.tracksContainer {
+    composes: container from '../../../../styles/main.css';
+    flex-direction: column;
+    overflow: hidden;
 }

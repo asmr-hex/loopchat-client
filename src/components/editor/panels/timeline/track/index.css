@@ -1,0 +1,8 @@
+@value trackHeightBasis from '../../input/index.css';
+
+.timeline-track-container {
+    width: 100%;
+    height: trackHeightBasis;
+    background-color: lime;
+    border-bottom: 1px solid black;
+}
