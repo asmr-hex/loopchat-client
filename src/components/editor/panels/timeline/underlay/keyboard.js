@@ -1,6 +1,11 @@
 import React, {Component} from 'react'
 import {map, range} from 'lodash'
-import {DEFAULT_NOTE_PIXELS_PER_HEIGHT_PIXELS} from '../constants'
+import {
+  DEFAULT_NOTE_PIXELS_PER_HEIGHT_PIXELS,
+  DEFAULT_TIMELINE_LENGTH,
+  DEFAULT_UNIT_HEIGHT_PER_KBD_NOTE,
+  MIDI_NOTE_MAX,
+} from '../constants'
 
 
 export class KeyboardUnderlay extends Component {
@@ -14,20 +19,17 @@ export class KeyboardUnderlay extends Component {
     // return nothing if keyboard underlay is disabled
     if (!show) return []
 
-    const pitchRange = pitchEnd - pitchStart + 1 // must be inclusive of start and end
-    const yScalingFactor = height / pitchRange
-
     return map(
-      range(pitchRange),
+      range(MIDI_NOTE_MAX),
       offset => {
-        const currentPitch = pitchEnd - offset
-        const pitchY = (pitchEnd - currentPitch) * yScalingFactor
+        const currentPitch = MIDI_NOTE_MAX - offset
+        const pitchY = (MIDI_NOTE_MAX - currentPitch) * DEFAULT_UNIT_HEIGHT_PER_KBD_NOTE
         
         return this.renderKeyRect(
           x,
-          y + pitchY,
+          pitchY,
           width,
-          yScalingFactor,
+          0, // get rid of this
           this.isBlackKey(currentPitch),
           offset,
         )
@@ -42,10 +44,10 @@ export class KeyboardUnderlay extends Component {
 
     return (
       <rect
-        x={x}
+        x={0}
         y={y}
-        width={width}
-        height={height}
+        width={DEFAULT_TIMELINE_LENGTH}
+        height={DEFAULT_UNIT_HEIGHT_PER_KBD_NOTE}
         style={style}
         key={id}
       />

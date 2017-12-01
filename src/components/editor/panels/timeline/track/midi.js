@@ -11,6 +11,11 @@ import {KeyboardUnderlay} from '../underlay/keyboard'
 import {TimeGrid} from '../underlay/timeGrid'
 import {MidiNotes} from '../midi/notes'
 import css from './index.css'
+import {trackHeightBasis} from '../../input/index.css'
+import {
+  MIDI_NOTE_MAX,
+  DEFAULT_UNIT_HEIGHT_PER_KBD_NOTE,
+} from '../constants'
 
 
 const actions = {}
@@ -50,6 +55,8 @@ export class MidiTrack extends Component {
     
     // initialize scaling factors
     this.computeScalingFactors()
+
+    this.yTranslation = 0
   }
 
   componentWillUpdate() {
@@ -106,6 +113,49 @@ export class MidiTrack extends Component {
     this.pitchInterval = pitchInterval
   }
 
+  handleWheel(e) {
+    if (this.scrollKbd(e)) {
+      this.trackElement.setAttribute('transform', `translate(0, ${this.yTranslation})`) 
+    }
+  }
+
+  scrollTime({deltaX}) {
+    const minBound = -DEFAULT_TIMELINE_LENGTH
+    const xTranslation = parseFloat(this.trackElement.getAttribute('transform').match(/translate\(\s*(-?[\d.]*)\s*[,]\s*(-?[\d.]*)\s*/)[1])
+    
+    if (deltaX !== 0 && xTranslation <= 0 && xTranslation >= minBound) {
+      const transl = xTranslation + deltaX
+      const hitMaxBound = transl > 0
+      const hitMinBound = transl < minBound
+      const outOfBounds = hitMaxBound || hitMinBound
+
+      const dx = outOfBounds ? hitMaxBound ? deltaX - transl : deltaX + (minBound - transl) : deltaX
+
+      return true
+    }
+
+    return false
+  }
+  
+  scrollKbd({deltaY}) {
+    const minBound = parseFloat(trackHeightBasis) - (MIDI_NOTE_MAX * DEFAULT_UNIT_HEIGHT_PER_KBD_NOTE)
+    
+    if (deltaY !== 0 && this.yTranslation <= 0 && this.yTranslation >= minBound) {
+      const transl = this.yTranslation + deltaY
+      const hitMaxBound = transl > 0
+      const hitMinBound = transl < minBound
+      const outOfBounds = hitMaxBound || hitMinBound
+      
+      const dy = outOfBounds ? hitMaxBound ? deltaY - transl : deltaY + (minBound - transl) : deltaY
+            
+      this.yTranslation += dy
+
+      return true
+    }
+
+    return false
+  }
+  
   render() {
     // recompute the visible pitch interval
     this.computeVisiblePitchInterval()
@@ -122,8 +172,17 @@ export class MidiTrack extends Component {
     
     return (
       <div className={css.timelineTrackContainer}>
-        <svg width={'100%'} height={'100%'} onWheel={(e) => console.log('scrolling!')}>
-          <g id={`track-${id}`}>
+        <svg width={'100%'} height={'100%'} onWheel={(e) => this.handleWheel(e)}>
+          <g className={'track'} id={`track-${id}`} ref={(elem) => {this.trackElement = elem}}>
+            <KeyboardUnderlay
+              show={true}
+              x={view.x}
+              y={view.y}
+              width={view.width}
+              height={view.height}
+              pitchStart={pitchInterval.start}
+              pitchEnd={pitchInterval.end}
+              />
           </g>
         </svg>
       </div>
@@ -131,15 +190,7 @@ export class MidiTrack extends Component {
   }
 }
 
-//   <KeyboardUnderlay
-// show={true}
-// x={view.x}
-// y={view.y}
-// width={view.width}
-// height={view.height}
-// pitchStart={pitchInterval.start}
-// pitchEnd={pitchInterval.end}
-//   />
+
 //   <TimeGrid
 // show={true}
 // view={view}

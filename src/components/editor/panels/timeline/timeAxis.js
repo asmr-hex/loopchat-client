@@ -29,7 +29,7 @@ export class TimeAxis extends Component {
     this.translation = 0
     this.scale = 1
   }
-
+  
   renderTicks() {
     // compute tick coordinates
     const tickHeightRatio = 0.30
@@ -71,6 +71,12 @@ export class TimeAxis extends Component {
         'transform',
         `translate(${this.translation}, 0), scale(${this.scale}, 1)`,
       )
+
+      // get list of tracks so we can transform them in conjunction with
+      // the scaling of the time axis
+      this.trackElems = Array.from(document.getElementsByClassName('track'))
+      // translate (and eventually scale all tracks too)
+      this.trackElems.forEach(elem => elem.setAttribute('transform', `translate(${this.translation}, 0)`))
     }
   }
   
@@ -92,6 +98,11 @@ export class TimeAxis extends Component {
     }
   }
   
+  componentDidMount() {
+
+    console.log(this.trackElems)
+  }
+
   render() {
 
     return (
