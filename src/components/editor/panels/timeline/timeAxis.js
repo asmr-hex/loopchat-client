@@ -8,6 +8,7 @@ import {
   DEFAULT_UNIT_LENGTH_PER_SECOND,
   DEFAULT_N_SECONDS,
 } from './constants.js'
+import {newTransform, scale, translate} from './transforms'
 
 
 export class TimeAxis extends Component {
@@ -26,10 +27,15 @@ export class TimeAxis extends Component {
   constructor(props) {
     super(props)
 
+    this.onWheel = newTransform([
+      scale('x', event => Math.abs(event.deltaY) < 15 ? 0 : event.deltaY / 1000),
+      translate('x', event => event.deltaX, {min: -30000, max: 0}),
+    ])(['.time-axis', '.track'])
+    
     this.translation = 0
     this.scale = 1
   }
-  
+
   renderTicks() {
     // compute tick coordinates
     const tickHeightRatio = 0.30
@@ -65,19 +71,20 @@ export class TimeAxis extends Component {
   }
 
   handleWheel(e) {
+    this.onWheel(e)
+    
+    // if (this.translate(e) || this.scaleX(e)) {
+    //   this.timeAxisElem.setAttribute(
+    //     'transform',
+    //     `translate(${this.translation}, 0), scale(${this.scale}, 1)`,
+    //   )
 
-    if (this.translate(e) || this.scaleX(e)) {
-      this.timeAxisElem.setAttribute(
-        'transform',
-        `translate(${this.translation}, 0), scale(${this.scale}, 1)`,
-      )
-
-      // get list of tracks so we can transform them in conjunction with
-      // the scaling of the time axis
-      this.trackElems = Array.from(document.getElementsByClassName('track'))
-      // translate (and eventually scale all tracks too)
-      this.trackElems.forEach(elem => elem.setAttribute('transform', `translate(${this.translation}, 0)`))
-    }
+    //   // get list of tracks so we can transform them in conjunction with
+    //   // the scaling of the time axis
+    //   this.trackElems = Array.from(document.getElementsByClassName('track'))
+    //   // translate (and eventually scale all tracks too)
+    //   this.trackElems.forEach(elem => elem.setAttribute('transform', `translate(${this.translation}, 0)`))
+    // }
   }
   
   translate({deltaX}) {

@@ -16,6 +16,7 @@ import {
   MIDI_NOTE_MAX,
   DEFAULT_UNIT_HEIGHT_PER_KBD_NOTE,
 } from '../constants'
+import {newTransform, translate} from '../transforms'
 
 
 const actions = {}
@@ -40,6 +41,10 @@ export class MidiTrack extends Component {
   constructor(props) {
     super(props)
 
+    this.makeOnVerticalWheelFor = newTransform(
+      [translate('y', event => event.deltaY, {min: parseFloat(trackHeightBasis) - (MIDI_NOTE_MAX * DEFAULT_UNIT_HEIGHT_PER_KBD_NOTE), max: 0})],
+    )
+    
     // NOTE: we aren't using React's internal state to store the following
     // parameters because their values are derivatives of the props passed
     // into the component. And, since we want to update these parameters
@@ -60,6 +65,9 @@ export class MidiTrack extends Component {
   }
 
   componentWillUpdate() {
+
+    this.onVerticalWheel = this.makeOnVerticalWheelFor([`#track-${this.props.id}`])
+    
     // // recompute this track's view
     // this.computeTrackView()
     
@@ -114,9 +122,10 @@ export class MidiTrack extends Component {
   }
 
   handleWheel(e) {
-    if (this.scrollKbd(e)) {
-      this.trackElement.setAttribute('transform', `translate(0, ${this.yTranslation})`) 
-    }
+    this.onVerticalWheel(e)
+    // if (this.scrollKbd(e)) {
+    //   this.trackElement.setAttribute('transform', `translate(0, ${this.yTranslation})`) 
+    // }
   }
 
   scrollTime({deltaX}) {
