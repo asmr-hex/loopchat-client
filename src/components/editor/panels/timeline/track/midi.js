@@ -41,9 +41,13 @@ export class MidiTrack extends Component {
   constructor(props) {
     super(props)
 
-    this.makeOnVerticalWheelFor = newTransform(
+    this.onVerticalWheel = newTransform(
       [translate('y', event => event.deltaY, {min: parseFloat(trackHeightBasis) - (MIDI_NOTE_MAX * DEFAULT_UNIT_HEIGHT_PER_KBD_NOTE), max: 0})],
-    )
+    )([`#track-${this.props.id}`])
+
+    this.onHorizontalWheel = newTransform([
+      translate('x', event => event.deltaX, {min: -30000, max: 0}),
+    ])(['.track', '.time-axis'])
     
     // NOTE: we aren't using React's internal state to store the following
     // parameters because their values are derivatives of the props passed
@@ -66,8 +70,6 @@ export class MidiTrack extends Component {
 
   componentWillUpdate() {
 
-    this.onVerticalWheel = this.makeOnVerticalWheelFor([`#track-${this.props.id}`])
-    
     // // recompute this track's view
     // this.computeTrackView()
     

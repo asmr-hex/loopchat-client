@@ -27,13 +27,11 @@ export class TimeAxis extends Component {
   constructor(props) {
     super(props)
 
+    // setup onWheel handler.
     this.onWheel = newTransform([
       scale('x', event => Math.abs(event.deltaY) < 15 ? 0 : event.deltaY / 1000),
       translate('x', event => event.deltaX, {min: -30000, max: 0}),
     ])(['.time-axis', '.track'])
-    
-    this.translation = 0
-    this.scale = 1
   }
 
   renderTicks() {
@@ -70,51 +68,11 @@ export class TimeAxis extends Component {
     )    
   }
 
-  handleWheel(e) {
-    this.onWheel(e)
-    
-    // if (this.translate(e) || this.scaleX(e)) {
-    //   this.timeAxisElem.setAttribute(
-    //     'transform',
-    //     `translate(${this.translation}, 0), scale(${this.scale}, 1)`,
-    //   )
-
-    //   // get list of tracks so we can transform them in conjunction with
-    //   // the scaling of the time axis
-    //   this.trackElems = Array.from(document.getElementsByClassName('track'))
-    //   // translate (and eventually scale all tracks too)
-    //   this.trackElems.forEach(elem => elem.setAttribute('transform', `translate(${this.translation}, 0)`))
-    // }
-  }
-  
-  translate({deltaX}) {
-    if (deltaX !== 0 && this.translation <= 0) {
-      // truncate deltaX if it causes translation to be greater than 0
-      const dX = this.translation + deltaX > 0 ? deltaX - (this.translation + deltaX) : deltaX      
-      this.translation += dX
-
-      return true
-    }
-  }
-
-  scaleX({deltaY}) {
-    if (Math.abs(deltaY) > 15) {
-      this.scale *= 1 + (deltaY / 1000)
-
-      return true
-    }
-  }
-  
-  componentDidMount() {
-
-    console.log(this.trackElems)
-  }
-
   render() {
 
     return (
       <div className={css.timelineAxisContainer}>
-        <svg width={'100%'} height={'100%'} onWheel={(e) => this.handleWheel(e)}>
+        <svg width={'100%'} height={'100%'} onWheel={(e) => this.onWheel(e)}>
           <g className='time-axis' ref={(elem) => {this.timeAxisElem = elem}}>
             <rect
               x={0}

@@ -1,6 +1,6 @@
 // SVG transform helper functions
 
-import {has, keys, reduce} from 'lodash'
+import {get, has, keys, map, merge, reduce} from 'lodash'
 
 
 /**
@@ -14,6 +14,9 @@ import {has, keys, reduce} from 'lodash'
  * @param {Array} selectors: classnames or ids of SVG elements. Must include '.' or '#'
  * @returns {function} the returned function takes an event and applies the curried
  * transforms to elements of the given classnames.
+ *
+ * TODO (cw|12.5.2017) allow for post-transform callbacks s.t. we can do things like
+ * re-draw an svg canvas if we reach a certain scale or something.
  */
 export const newTransform = transforms => selectors => event =>
   selectors.forEach(
@@ -31,11 +34,14 @@ export const newTransform = transforms => selectors => event =>
       elems.forEach(elem => {
         if (!elem) return
 
+        // get initial transform string from attributes
+        const initialTransformStr = elem.getAttribute('transform') || ''        
+        
         // aggregate all applied transformations into a map s.t. no transforms are duped.
         const transformMap = reduce(
           transforms,
-          (acc, f) => additiveMerge(acc, f(event, elem)),
-          {},
+          (acc, f) => f(event, acc),
+          parseTransform(initialTransformStr),
         )
 
         // aggregate comma delimited string of transformations, e.g. 'scale(1, 1), translate(10, 0)'
@@ -52,26 +58,11 @@ export const newTransform = transforms => selectors => event =>
     }
   )
 
-/**
- * take two maps and merge them, but perform element-wise addition between the
- * values of conflicting keys in both maps. The assumptions here are (1) values
- * of keys are arrays, (2) values of keys shared between maps are of the same length.
- * @param {Object} mapA: {<string>: <Array>}
- * @param {Object} mapB: {<string>: <Array>}
- * @returns {Object} 
- */
-export const additiveMerge = (mapA, mapB) =>
-  reduce(
-    keys(mapB),
-    (acc, key) => {
-      const aggregatedValue = has(acc, key)
-            ? map(mapA[key], (v, i) => v + mapB[key][i])
-            : mapB[key]
-
-      return {...acc, [key]: aggregatedValue}
-    },
-    mapA,
-  )
+// TODO (cw|12.5.2017) we want to be able to merge the transforms of pre-existing svg elements
+// into newly created ones. For example, if we have a pre-existing timeline and we have already
+// scrolled and re-scaled, then we want any newly added tracks to be added with the same translation
+// and scaling.
+// export const mergeTransforms = (from, to) => {}
 
 /**
  * factory function for a translator. Curry in the dimension of the transform (e.g. 'x' or 'y'),
@@ -83,117 +74,97 @@ export const additiveMerge = (mapA, mapB) =>
  * single floating point number, i.e. event -> float. Used to allow or an arbitrary event to
  * control a translation.
  * @param {Object} bounds: {min, max}, used to enforce boundary conditions.
+ * @param {Object} event: an event we want to control a transformation.
+ * @param {Object} transformMap: a map of transforms. e.g. {scale: [1, 1], translate: [0, 0]}.
  * @returns {function} takes an event and an element and returns a string representation of
  * the translation transform.
  */
-export const translate = (dimension = 'x', processEvent = e => 0, bounds = {min: 0, max: Number.MAX_VALUE}) => {
-  // generate parser only once
-  const name = 'translate'
-  const identityValue = 0
-  const parseTransformValuesFrom = makeTransformValueParser(name)
-
-  // translate as a closure
-  const f = (event, elem) => {
-    const delta = processEvent(event)
-    const {min, max} = bounds
-    const currentTransformStr = elem.getAttribute('transform') || ''
-    const currentTranslationMap = parseTransformValuesFrom(currentTransformStr)
-    const currentTranslation = currentTranslationMap[dimension]
-
-    // only apply transform if a change has occured and the change is within bounds.
-    if (delta !== 0 && currentTranslation >= min && currentTranslation <= max) {
-      const nextTranslation = currentTranslation + delta
-      const hitMax = nextTranslation > max
-      const hitMin = nextTranslation < min
-      const hitBound = hitMin || hitMax
-
-      // normalize delta to not overstep
-      const deltaHat = hitBound
-            ? hitMax ? delta - nextTranslation : delta + (min - nextTranslation)
-            : delta
-
-      // construct new transformation string
-      const x = dimension === 'x' ? currentTranslation + deltaHat : identityValue
-      const y = dimension === 'y' ? currentTranslation + deltaHat : identityValue
-      
-      return ({[name]: [x, y]})
-    } else {
-      
-      // nothing to be done.
-      return {[name]: [currentTranslationMap.x, currentTranslationMap.y]}
-    }
-  }
-
-  return f
-}
-
-export const scale = (dimension = 'x', processEvent = e => 0, bounds = {min: 1, max: 2}) => {
-  // generate parser only once
-  const name = 'scale'
-  const identityValue = 1
-  const parseTransformValuesFrom = makeTransformValueParser(name, identityValue)
-
-  const f = (event, elem) => {
-    const delta = processEvent(event)
-    const {min, max} = bounds
-    const currentTransformStr = elem.getAttribute('transform') || ''
-    const currentScaleMap = parseTransformValuesFrom(currentTransformStr)
-    const currentScale = currentScaleMap[dimension]
-
-    // only apply transform if a change has occured and the change is within bounds.
-    if (delta !== 0  && currentScale >= min && currentScale <= max) {
-      const nextScale = currentScale * (1 + delta)
-      const hitMax = nextScale > max
-      const hitMin = nextScale < min
-      const hitBound = hitMin || hitMax
-
-      // normalize scale to not overstep
-      const normalizedScale = hitBound
-            ? hitMax ? max : min
-            : nextScale
-
-      // construct new transformation string
-      const x = dimension === 'x' ? normalizedScale : identityValue
-      const y = dimension === 'y' ? normalizedScale : identityValue
-
-      console.log({[name]: [x, y]})
-      
-      return ({[name]: [x, y]})
-    } else {
-      console.log('yo ', {[name]: [currentScaleMap.x, currentScaleMap.y]})
-
-      // nothing to be done.
-      return {[name]: [currentScaleMap.x, currentScaleMap.y]}
-    }
-  }
-
-  return f
+export const translate = (dimension = 'x', processEvent = e => 0, bounds = {min: 0, max: Number.MAX_VALUE}) =>
+  (event, transformMap) => {
+    // generate parser only once
+    const name = 'translate'
+    const identity = 0
+    const computeNextScale = (z, dz) => z + dz
+    const update = updateTransform(name, bounds, dimension, identity, computeNextScale)
+    
+    return update(processEvent(event), transformMap)
 }
 
 /**
- * factory function for a parser of transform strings. Returns a closure s.t. we
- * only have to build the regexp once rather than each times we want to parse a
- * string.
- * @param {String} transformName: the name of the transform function, e.g. 'scale'
- * @returns {function} a closure using a pre-compiled regexp. Takes a transform
- * string as only argument, e.g. `scale(2, 4), translate(0,0)`, and returns an
- * object {x, y} with the values of the transformName provided to the factory
- * function, e.g. {x: 2, y: 4} for 'scale'.
+ * factory for creating an svg scaler.
+ * @param {String} dimension: 'x'|'y'
+ * @param {function} processEvent: (event) => <float>. pre-process event.
+ * @param {Object} bounds: {min, max}
+ * @param {Object} event: an event we want to control a transformation.
+ * @param {Object} transformMap: a map of transforms. e.g. {scale: [1, 1], translate: [0, 0]}.
+ * @returns {Object} a transformMap
  */
-export const makeTransformValueParser = (transformName, defaultValue = 0) => {
-  // build regex only once
-  const valueMatch = '\\s*(-?[\\d.]*)\\s*'
-  const r = new RegExp(`${transformName}\\(${valueMatch}[,]${valueMatch}`)
+export const scale = (dimension = 'x', processEvent = e => 0, bounds = {min: 1, max: 2}) =>
+  (event, transformMap) => {
+    const name = 'scale'
+    const identity = 1
+    const computeNextScale = (z, dz) => z * (1 + dz)
+    const update = updateTransform(name, bounds, dimension, identity, computeNextScale)
 
-  // implement parser in closure
-  const g = transformString => {
-    const matches = transformString.match(r) || []
+    return update(processEvent(event), transformMap)
+}
 
-    return matches.length === 3
-      ? {x: parseFloat(matches[1]), y: parseFloat(matches[2])}
-      : {x: defaultValue, y: defaultValue}
-  }
+/**
+ * factory for generating update functions for different transforms. The generated function
+ * performs bounds checking on transformed values. Returns an updated map of transforms.
+ * @param {String} name: name of transform we are updating. e.g. 'scale'
+ * @param {Object} bounds: {min, max}
+ * @param {String} dim: dimension we are updating. 'x'|'y'
+ * @param {Number} I: identity value of the transform. e.g. I = 0 for translate.
+ * @param {function} computeNextTransform: (z, dz) => <float>. computes the next.
+ * @returns {Object} transform Map
+ */
+export const updateTransform = (name, bounds, dim = 'x', I = 0, computeNextTransform = (z, dz) => z + dz) =>
+  (dz, T) => {
+    const {min, max} = bounds
+    const Z = get(T, `${name}`, [I, I])
+    const z = Z[dim === 'x' ? 0 : 1]
+    const zhat = Z[dim === 'x' ? 1 : 0]
 
-  // return closure
-  return g
+    // check if there is even someting to do.
+    if (dz !== 0  && z >= min && z <= max) {
+      const next = computeNextTransform(z, dz)
+      const hitMax = next > max
+      const hitMin = next < min
+      const hitBound = hitMin || hitMax
+      
+      // if bounds have been reached, just set the transform to the bound
+      if (hitBound) {
+        const norm = hitMax ? max : min
+        return {...T, [name]: dim === 'x' ? [norm, zhat] : [zhat, norm]}
+      }
+      
+      // update transform in appropriate dimension
+      return {...T, [name]: dim === 'x' ? [next, zhat] : [zhat, next]}
+    }
+    
+    // there was nothing to be done.
+    return T
+}
+
+/**
+ * parses an SVG transform string into a map keyed by transform names with
+ * array values corresponding to the transform parameters, e.g. `scale(1.3, 1)`
+ * is parsed into {scale: [1.3, 1]}.
+ * @param {String} transformString
+ * @returns {Object} keyed by transform name with parameter arrays as values.
+ */
+export const parseTransform = transformString => {
+  const transformRegExp = /(\w+\(\s*(\-?\d+\.?\d*e?\-?\d*\s*,*?\s*)+\))+/g
+  const transformTokenRegExp = /[\w\.\-]+/g
+
+  return reduce(
+    transformString.match(transformRegExp),
+    (acc, transform) => {
+      const tokens = transform.match(transformTokenRegExp)
+      
+      return {...acc, [tokens.shift()]: map(tokens, v => parseFloat(v))}
+    },
+    {},
+  )
 }
