@@ -6,7 +6,7 @@ import {
   DEFAULT_UNIT_HEIGHT_PER_KBD_NOTE,
   MIDI_NOTE_MAX,
 } from '../constants'
-import {darkestBlue, darkBlue} from '../../../../../styles/palette.css'
+import {grey, midGrey} from '../../../../../styles/palette.css'
 
 
 export class KeyboardUnderlay extends Component {
@@ -27,7 +27,7 @@ export class KeyboardUnderlay extends Component {
         const pitchY = (MIDI_NOTE_MAX - currentPitch) * DEFAULT_UNIT_HEIGHT_PER_KBD_NOTE
         const keyIsBlack = this.isBlackKey(currentPitch)
         const style = {
-          fill: keyIsBlack ? darkestBlue : darkBlue
+          fill: keyIsBlack ? midGrey : grey
         }
 
         return (

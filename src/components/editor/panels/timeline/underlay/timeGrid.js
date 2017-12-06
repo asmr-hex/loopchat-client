@@ -7,6 +7,7 @@ import {
   DEFAULT_N_SECONDS,
   MIDI_NOTE_MAX,
 } from '../constants'
+import {lightGrey} from '../../../../../styles/palette.css'
 
 
 export class TimeGrid extends Component {
@@ -18,8 +19,8 @@ export class TimeGrid extends Component {
   static defaultProps = {
     show: true,
     style: {
-      stroke: 'white',
-      strokeDasharray: '3,5',
+      stroke: lightGrey,
+      // strokeDasharray: '3,5',
     },
   }
   

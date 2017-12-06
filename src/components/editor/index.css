@@ -1,4 +1,4 @@
-@value midGrey from '../../styles/palette.css';
+@value grey, midGrey from '../../styles/palette.css';
 
 /* timeline editor variables */
 /* TODO (cw|11.29.2017) rename with scope */
@@ -21,6 +21,7 @@
     display: flex;
     flex-direction: row;
     height: trackPanelHeight;
+    border-bottom: 15px solid grey;
 }
 
 .playback-processing-panels {

@@ -75,7 +75,7 @@ export class Editor extends Component {
 
     return (
       <div className={styles.timelineEditor}>
-        <TrackPanels id={snippetId} styles={{background: 'green'}}/>
+        <TrackPanels id={snippetId}/>
         <PlaceHolderPanel styles={{background: 'red'}}/>
         <PlaceHolderPanel styles={{background: 'blue'}}/>
       </div>

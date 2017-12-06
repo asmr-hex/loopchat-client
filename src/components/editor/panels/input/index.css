@@ -1,4 +1,4 @@
-@value midGrey from '../../../../styles/palette.css';
+@value grey, midGrey from '../../../../styles/palette.css';
 
 
 @value timeAxisHeight: 32px;
@@ -10,13 +10,14 @@
     flex-basis: 20%;
     min-width: 200px;
     max-width: 400px;
+    background-color: grey;
 }
 
 .input-control-menu {
     display: flex;
     flex-basis: timeAxisHeight;
     min-height: timeAxisHeight;
-    background-color: black;
+    background-color: midGrey;
 }
 
 .track-input-panel-container {
@@ -34,6 +35,6 @@
     flex-basis: trackHeightBasis;
     min-height: trackMinHeight;
     max-height: trackMaxHeight;
-    background-color: red;
-    border-bottom: 1px solid midGrey;
+    background-color: midGrey;
+    border-bottom: 5px solid grey;
 }

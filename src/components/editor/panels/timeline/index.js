@@ -23,72 +23,28 @@ const mapStateToProps = (state, ownProps) => ({
 export class Timeline extends Component {
   static propTypes = {
     id: string.isRequired,
-    // layout: shape({
-    //   x: number.isRequired,
-    //   y: number.isRequired,
-    //   width: number.isRequired,
-    //   height: number.isRequired,
-    // }).isRequired
   }
 
   constructor(props) {
     super(props)
-
-    // this.state = this.computeInitialSubPanelLayouts()
-  }
-
-  computeInitialSubPanelLayouts() {
-    const {width, height} = this.props.layout
-    
-    // timeAxis
-    const timeAxisView = {
-      x: 0,
-      y: 0,
-      width,
-      height: 20,
-    }
-    
-    // tracksView
-    const tracksView = {
-      x: 0,
-      y: timeAxisView.height,
-      width,
-      height: height - timeAxisView.height,
-    }
-
-    return {timeAxisView, tracksView}
   }
 
   renderTracks() {
-    const {timeInterval, tracks} = this.props // TODO (cw|10.17.2017) get tracks array from here
-    const tracksView = {}//const {tracksView} = this.state
-    
+    const {tracks} = this.props
+
     return map(
       tracks,
       (track, idx) => (
         <Track
           key={idx}
-          index={idx}
           id={track.id}
           type={track.type}
-          view={tracksView}
-          timeInterval={timeInterval}
-          trackCount={tracks.length}
           />
       )
     )
   }
   
   render() {
-    const styles = {
-      // width: this.props.layout.width,
-      // height: this.props.layout.height,
-      // left: this.props.layout.x,
-      // top: this.props.layout.y,
-      // backgroundColor: 'green',
-    }
-
-    // NOTE (cw|11.29.2017) wrap stuff in AutoSizer HOC? https://github.com/bvaughn/react-virtualized/blob/master/docs/usingAutoSizer.md
     return (
       <div className={css.timelineContainer}>
         <TimeAxis/>
@@ -99,25 +55,3 @@ export class Timeline extends Component {
     )
   }
 }
-
-//   <TimeAxis
-// show={true}
-// view={this.state.timeAxisView}
-// timeInterval={this.props.timeInterval}
-//   />
-//   </svg>
-//   </div>
-
-
-//   <div className={`timeline-container-${this.props.id}`} style={{...styles}}>
-//   <svg viewBox={`0 0 ${styles.width} ${styles.height}`} className={`timeline-${this.props.id}`} ref={element => this.element = element}>
-//   {this.renderTracks()}
-//   <Scrubber
-// view={this.props.layout}
-// time={this.props.scrubberTime}
-// timeInterval={this.props.timeInterval}
-// playing={this.props.playing}
-// timelineId={this.props.id}
-//   />
-//   </svg>
-//   </div>

@@ -9,6 +9,7 @@ import {
   DEFAULT_N_SECONDS,
 } from './constants.js'
 import {newTransform, scale, translate} from './transforms'
+import {midGrey, lightGrey} from '../../../../styles/palette.css'
 
 
 export class TimeAxis extends Component {
@@ -51,15 +52,15 @@ export class TimeAxis extends Component {
             y1={y1}
             x2={idx * DEFAULT_UNIT_LENGTH_PER_SECOND}
             y2={y2}
-            stroke={'#b24c72'}
+            stroke={lightGrey}
             strokeWidth={1}
             />
           <text
-            x={idx * DEFAULT_UNIT_LENGTH_PER_SECOND}
-            y={tickHeightCompliment}
+            x={idx * DEFAULT_UNIT_LENGTH_PER_SECOND - 4}
+            y={tickHeightCompliment - 5}
             fontFamily={'helvetica'}
             fontSize={'8px'}
-            fill={'black'}
+            fill={lightGrey}
           >
             {idx}
           </text>
@@ -79,7 +80,7 @@ export class TimeAxis extends Component {
               y={0}
               width={DEFAULT_TIMELINE_LENGTH} // this width should be the total timeline width
               height={timeAxisHeight}
-              fill={'pink'}
+              fill={midGrey}
               />
             {this.renderTicks()}
           </g>

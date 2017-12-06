@@ -1,10 +1,11 @@
 @value timeAxisHeight from '../input/index.css';
+@value grey from '../../../../styles/palette.css';
 
 .timeline-container {
     composes: container from '../../../../styles/main.css';
     flex-direction: column;
     min-width: 300px;
-    background-color: fuchsia;
+    background-color: grey;
     overflow: hidden;
 }
 
