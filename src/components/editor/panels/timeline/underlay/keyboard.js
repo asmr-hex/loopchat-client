@@ -6,6 +6,7 @@ import {
   DEFAULT_UNIT_HEIGHT_PER_KBD_NOTE,
   MIDI_NOTE_MAX,
 } from '../constants'
+import {darkestBlue, darkBlue} from '../../../../../styles/palette.css'
 
 
 export class KeyboardUnderlay extends Component {
@@ -14,7 +15,7 @@ export class KeyboardUnderlay extends Component {
   }
 
   renderKeyUnderlays() {
-    const {show, x, y, width, height, pitchStart, pitchEnd} = this.props
+    const {show} = this.props
 
     // return nothing if keyboard underlay is disabled
     if (!show) return []
@@ -24,33 +25,22 @@ export class KeyboardUnderlay extends Component {
       offset => {
         const currentPitch = MIDI_NOTE_MAX - offset
         const pitchY = (MIDI_NOTE_MAX - currentPitch) * DEFAULT_UNIT_HEIGHT_PER_KBD_NOTE
-        
-        return this.renderKeyRect(
-          x,
-          pitchY,
-          width,
-          0, // get rid of this
-          this.isBlackKey(currentPitch),
-          offset,
-        )
+        const keyIsBlack = this.isBlackKey(currentPitch)
+        const style = {
+          fill: keyIsBlack ? darkestBlue : darkBlue
+        }
+
+        return (
+          <rect
+            x={0}
+            y={pitchY}
+            width={DEFAULT_TIMELINE_LENGTH}
+            height={DEFAULT_UNIT_HEIGHT_PER_KBD_NOTE}
+            style={style}
+            key={offset}
+            />
+        )    
       }
-    )
-  }
-
-  renderKeyRect(x, y, width, height, keyIsBlack, id, blackKeyColor='#eb8291', whiteKeyColor='#ffc97f') {
-    const style = {
-      fill: keyIsBlack ? blackKeyColor : whiteKeyColor
-    }
-
-    return (
-      <rect
-        x={0}
-        y={y}
-        width={DEFAULT_TIMELINE_LENGTH}
-        height={DEFAULT_UNIT_HEIGHT_PER_KBD_NOTE}
-        style={style}
-        key={id}
-      />
     )
   }
 

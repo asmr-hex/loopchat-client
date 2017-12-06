@@ -61,35 +61,6 @@ export class MidiTrack extends Component {
 
     // initialize this track's view
     this.computeTrackView()
-    
-    // initialize scaling factors
-    this.computeScalingFactors()
-
-    this.yTranslation = 0
-  }
-
-  componentWillUpdate() {
-
-    // // recompute this track's view
-    // this.computeTrackView()
-    
-    // // recompte scaling factors incase something has changed. TODO (cw|10.17.2017) further optimization
-    // // is possible to only recompute when necessary.
-    // this.computeScalingFactors()
-
-    // console.log("RECOMPUTED SCALOING FACTORS FOR ", this.props.id)
-  }
-  
-  computeScalingFactors() {
-    const {timeInterval, trackCount} = this.props
-    const {view, pitchInterval} = this
-    
-    const scale = {
-      x: view.width / (timeInterval.end - timeInterval.start),
-      y: (view.height / trackCount) / (pitchInterval.end - pitchInterval.start + 1),
-    }
-
-    this.scale = scale
   }
 
   computeTrackView() {
@@ -125,48 +96,9 @@ export class MidiTrack extends Component {
 
   handleWheel(e) {
     this.onVerticalWheel(e)
-    // if (this.scrollKbd(e)) {
-    //   this.trackElement.setAttribute('transform', `translate(0, ${this.yTranslation})`) 
-    // }
+    this.onHorizontalWheel(e)
   }
 
-  scrollTime({deltaX}) {
-    const minBound = -DEFAULT_TIMELINE_LENGTH
-    const xTranslation = parseFloat(this.trackElement.getAttribute('transform').match(/translate\(\s*(-?[\d.]*)\s*[,]\s*(-?[\d.]*)\s*/)[1])
-    
-    if (deltaX !== 0 && xTranslation <= 0 && xTranslation >= minBound) {
-      const transl = xTranslation + deltaX
-      const hitMaxBound = transl > 0
-      const hitMinBound = transl < minBound
-      const outOfBounds = hitMaxBound || hitMinBound
-
-      const dx = outOfBounds ? hitMaxBound ? deltaX - transl : deltaX + (minBound - transl) : deltaX
-
-      return true
-    }
-
-    return false
-  }
-  
-  scrollKbd({deltaY}) {
-    const minBound = parseFloat(trackHeightBasis) - (MIDI_NOTE_MAX * DEFAULT_UNIT_HEIGHT_PER_KBD_NOTE)
-    
-    if (deltaY !== 0 && this.yTranslation <= 0 && this.yTranslation >= minBound) {
-      const transl = this.yTranslation + deltaY
-      const hitMaxBound = transl > 0
-      const hitMinBound = transl < minBound
-      const outOfBounds = hitMaxBound || hitMinBound
-      
-      const dy = outOfBounds ? hitMaxBound ? deltaY - transl : deltaY + (minBound - transl) : deltaY
-            
-      this.yTranslation += dy
-
-      return true
-    }
-
-    return false
-  }
-  
   render() {
     // recompute the visible pitch interval
     this.computeVisiblePitchInterval()
@@ -174,25 +106,16 @@ export class MidiTrack extends Component {
     // recompute this track's view
     this.computeTrackView()
     
-    // recompte scaling factors incase something has changed. TODO (cw|10.17.2017) further optimization
-    // is possible to only recompute when necessary.
-    this.computeScalingFactors()
-
     const {id, timeInterval} = this.props
-    const {scale, view, pitchInterval} = this
+    const {view, pitchInterval} = this
     
     return (
       <div className={css.timelineTrackContainer}>
         <svg width={'100%'} height={'100%'} onWheel={(e) => this.handleWheel(e)}>
           <g className={'track'} id={`track-${id}`} ref={(elem) => {this.trackElement = elem}}>
-            <KeyboardUnderlay
+            <KeyboardUnderlay show={true}/>
+            <TimeGrid
               show={true}
-              x={view.x}
-              y={view.y}
-              width={view.width}
-              height={view.height}
-              pitchStart={pitchInterval.start}
-              pitchEnd={pitchInterval.end}
               />
           </g>
         </svg>
@@ -202,12 +125,7 @@ export class MidiTrack extends Component {
 }
 
 
-//   <TimeGrid
-// show={true}
-// view={view}
-// timeInterval={timeInterval}
-// scale={scale}
-//   />
+
 //   <MidiNotes
 // notes={this.props.recording}
 // inProgressRecordings={this.props.inProgressRecordings}
