@@ -76,6 +76,7 @@ export class Editor extends Component {
     return (
       <div className={styles.timelineEditor}>
         <TrackPanels id={snippetId}/>
+        <TimelineControlPanel timelineId={snippetId}/>
         <PlaceHolderPanel styles={{background: 'red'}}/>
         <PlaceHolderPanel styles={{background: 'blue'}}/>
       </div>
@@ -102,5 +103,4 @@ export const PlaceHolderPanel = props => {
   )
 }
 
-  // <TimelineControlPanel layout={layout.timelineControlPanel} timelineId={snippetId}/>
   // <ProcessingControlPanel layout={layout.processingControlPanel} id={snippetId}/>

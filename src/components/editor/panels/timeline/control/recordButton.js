@@ -3,6 +3,9 @@ import {string} from 'prop-types'
 import {connect, bool} from 'react-redux'
 import uuidV4 from 'uuid/v4'
 import {forEach, filter, map, reduce} from 'lodash'
+import {IconButton} from 'material-ui'
+import RecordIcon from 'material-ui/svg-icons/toggle/radio-button-checked'
+import RecordingIcon from 'material-ui/svg-icons/av/album'
 import {startMidiOverdubs, stopMidiOverdubs} from '../../../../../redux/actions/recordings/midi/midi'
 import {updateRecordingStatus} from '../../../../../redux/actions/timelines/timelines'
 import {sendMessage} from '../../../../../redux/actions/messages'
@@ -12,6 +15,7 @@ import {
   getActiveTracksFromTimeline,
 } from '../../../../../redux/selectors/timelines'
 import {getUserMidiOverdubFromTrack} from '../../../../../redux/selectors/tracks/recordings'
+import {blue, grey, orange, purple, red} from '../../../../../styles/palette.css'
 
 
 const actions = {
@@ -29,11 +33,16 @@ const mapStateToProps = (state, ownProps) => {
     (acc, track) => ({...acc, [track.id]: getUserMidiOverdubFromTrack(state, track.id, userId)}),
     {},
   )
+  const recordableTracks = filter(
+    activeTracks,
+    track => track.inputDeviceId !== NULL_DEVICE,
+  )
 
   return {
     activeTracks,
     trackOverdubsByThisUser,
-    recordingInProgress: getTimelineProperty(state, ownProps.timelineId, 'recording'),  
+    recordingInProgress: getTimelineProperty(state, ownProps.timelineId, 'recording'),
+    recordableTracks,
   }
 }
 
@@ -47,6 +56,7 @@ export class RecordButton extends Component {
     const {
       sendMessage,
       activeTracks,
+      recordableTracks,
       trackOverdubsByThisUser,
       timelineId,
       recordingInProgress,
@@ -56,12 +66,10 @@ export class RecordButton extends Component {
     } = this.props
 
     // filter out tracks which don't have an input device set
-    const tracks = filter(activeTracks, track => track.inputDeviceId !== NULL_DEVICE) // TODO (cw|10.25.2017) make the NULL device a constant
-
-    if (tracks.length === 0) return
+    if (recordableTracks.length === 0) return
 
     const recordingContexts = map(
-      tracks,
+      recordableTracks,
       track => ({
         recordingId: track.recordingId,
         inputDeviceId: track.inputDeviceId,
@@ -82,14 +90,36 @@ export class RecordButton extends Component {
   }
 
   render() {
-    const {recordingInProgress} = this.props
+    const {recordingInProgress, recordableTracks} = this.props
+    const disabled = recordableTracks.length === 0
+    const disabledMsg = 'plz select trax 2 record ^-^'
+    const iconStyles = {
+      height: 36,
+      width: 36,
+    }
+    const buttonStyles = {
+      width: 72,
+      height: 72,
+      padding: 16,
+    }
 
-    return (
-      <button onClick={() => this.handleRecording()}>
-        {
-          recordingInProgress ? 'stop' : 'record'
-        }
-      </button>
-    )
+    const icon = recordingInProgress
+          ? (<RecordingIcon color={red} hoverColor={orange}/>)
+          : (<RecordIcon color={disabled ? grey : purple} hoverColor={disabled ? grey : blue}/>)      
+    
+    return disabled
+      ? (
+         <IconButton iconStyle={iconStyles} style={buttonStyles} tooltip={disabledMsg}>
+           {icon}
+         </IconButton>
+        )
+     : (
+         <IconButton
+           iconStyle={iconStyles}
+           style={buttonStyles}
+           onClick={() => this.handleRecording()}>
+           {icon}
+         </IconButton>
+       )
   }
 }

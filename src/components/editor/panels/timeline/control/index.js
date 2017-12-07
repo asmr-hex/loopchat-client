@@ -5,6 +5,7 @@ import {addNewTrackToTimeline} from '../../../../../redux/actions/timelines/time
 import {getTimelineProperty} from '../../../../../redux/selectors/timelines'
 import {PlayButton} from './playButton'
 import {RecordButton} from './recordButton'
+import styles from './index.css'
 
 
 const actions = {
@@ -19,12 +20,6 @@ const mapStateToProps = (state, ownProps) => ({
 export class TimelineControlPanel extends Component {
   static propTypes = {
     timelineId: string.isRequired,
-    layout: shape({
-      x: number.isRequired,
-      y: number.isRequired,
-      width: number.isRequired,
-      height: number.isRequired,
-    }).isRequired
   }
 
   newTrack() {
@@ -35,20 +30,9 @@ export class TimelineControlPanel extends Component {
   
   render() {
     const {timelineId} = this.props
-    const styles = {
-      width: this.props.layout.width,
-      height: this.props.layout.height,
-      left: this.props.layout.x,
-      top: this.props.layout.y,
-      backgroundColor: 'orange',
-    }
 
     return (
-      <div className={`timeline-controls-${timelineId}`} style={{...styles}}>
-        timeline controls
-        <button onClick={() => this.newTrack()}>
-          + Track
-        </button>
+      <div className={styles.timelineControls}>
         <PlayButton
           timelineId={this.props.timelineId}
           playing={this.props.playing}
@@ -57,6 +41,6 @@ export class TimelineControlPanel extends Component {
           timelineId={timelineId}
         />
       </div>
-    )
+   )
   }
 }  

@@ -1,0 +1,10 @@
+@value grey from '../../../../../styles/palette.css';
+
+.timeline-controls {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    height: 60px;
+    border-bottom: 10px solid grey;
+}
