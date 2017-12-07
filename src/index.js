@@ -14,7 +14,6 @@ import {composeWithDevTools} from 'redux-devtools-extension'
 import {wwvvMuiTheme} from './styles/muiTheme'
 import {container} from './styles/main.css'
 
-
 // setup redux store
 let store = createStore(
   reducers,
