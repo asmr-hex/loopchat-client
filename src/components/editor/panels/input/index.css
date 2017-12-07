@@ -6,16 +6,16 @@
 .input-control-panel {
     display: flex;
     flex-direction: column;
-    /* align-items: flex-start; */
     flex-basis: 20%;
-    min-width: 200px;
-    max-width: 400px;
+    /* min-width: 200px; */
+    /* max-width: 400px; */
     background-color: grey;
+    transition: flex-basis 0.6s cubic-bezier(0.37, 0.795, 0.52, 0.94);
 }
 
 .input-control-menu {
     display: flex;
-    justify-content: flexStart;
+    justify-content: space-between;
     align-items: center;
     flex-basis: timeAxisHeight;
     min-height: timeAxisHeight;
