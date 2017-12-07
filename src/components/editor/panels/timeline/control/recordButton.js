@@ -15,7 +15,7 @@ import {
   getActiveTracksFromTimeline,
 } from '../../../../../redux/selectors/timelines'
 import {getUserMidiOverdubFromTrack} from '../../../../../redux/selectors/tracks/recordings'
-import {blue, grey, orange, purple, red} from '../../../../../styles/palette.css'
+import {blue, grey, orange, green, red} from '../../../../../styles/palette.css'
 
 
 const actions = {
@@ -105,7 +105,7 @@ export class RecordButton extends Component {
 
     const icon = recordingInProgress
           ? (<RecordingIcon color={red} hoverColor={orange}/>)
-          : (<RecordIcon color={disabled ? grey : purple} hoverColor={disabled ? grey : blue}/>)      
+          : (<RecordIcon color={disabled ? grey : blue} hoverColor={disabled ? grey : green}/>)      
     
     return disabled
       ? (

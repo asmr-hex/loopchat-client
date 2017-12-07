@@ -5,6 +5,7 @@ import {addNewTrackToTimeline} from '../../../../../redux/actions/timelines/time
 import {getTimelineProperty} from '../../../../../redux/selectors/timelines'
 import {PlayButton} from './playButton'
 import {RecordButton} from './recordButton'
+import {SkipButton} from './skipButton'
 import styles from './index.css'
 
 
@@ -33,13 +34,15 @@ export class TimelineControlPanel extends Component {
 
     return (
       <div className={styles.timelineControls}>
+        <SkipButton direction='start' timelineId={this.props.timelineId}/>
+        <RecordButton
+          timelineId={timelineId}
+          />
         <PlayButton
           timelineId={this.props.timelineId}
           playing={this.props.playing}
           />
-        <RecordButton
-          timelineId={timelineId}
-        />
+        <SkipButton direction='end'timelineId={this.props.timelineId}/>
       </div>
    )
   }
