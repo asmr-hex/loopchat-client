@@ -8,6 +8,7 @@ export class Track extends Component {
   static propTypes = {
     id: string.isRequired,
     type: string.isRequired,
+    timelineId: string.isRequired,
   }
 
   constructor(props) {

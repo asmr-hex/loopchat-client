@@ -4,6 +4,7 @@ import {string, bool, array} from 'prop-types'
 import {IconButton} from 'material-ui'
 import PlayIcon from 'material-ui/svg-icons/av/play-arrow'
 import StopIcon from 'material-ui/svg-icons/av/stop'
+import {startScrubber, stopScrubber} from '../../timeline/scrubber'
 import {startPlayback, stopPlayback} from '../../../../../redux/actions/timelines/timelines'
 import {blue, green, orange, red} from '../../../../../styles/palette.css'
 
@@ -24,11 +25,13 @@ export class PlayButton extends Component {
     
     if (!playing) {
       startPlayback(timelineId)
+      startScrubber()
     } else {
       stopPlayback(timelineId)
+      stopScrubber()
     }
   }
-  
+
   render() {
     const {playing} = this.props
     const iconStyles = {

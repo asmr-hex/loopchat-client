@@ -13,9 +13,6 @@ import css from './index.css'
 const actions = {}
 
 const mapStateToProps = (state, ownProps) => ({
-  scrubberTime: getTimelineProperty(state, ownProps.id, 'scrubberTime'),
-  playing: getTimelineProperty(state, ownProps.id, 'playing'),
-  timeInterval: getTimelineUIProperty(state, ownProps.id, 'timeInterval'),
   tracks: getTracksFromTimeline(state, ownProps.id),
 })
 
@@ -30,7 +27,7 @@ export class Timeline extends Component {
   }
 
   renderTracks() {
-    const {tracks} = this.props
+    const {tracks, id} = this.props
 
     return map(
       tracks,
@@ -39,15 +36,18 @@ export class Timeline extends Component {
           key={idx}
           id={track.id}
           type={track.type}
+          timelineId={id}
           />
       )
     )
   }
   
   render() {
+    const {id} = this.props
+
     return (
       <div className={css.timelineContainer}>
-        <TimeAxis/>
+        <TimeAxis timelineId={id}/>
         <div className={css.tracksContainer}>
           {this.renderTracks()}
         </div>

@@ -58,6 +58,10 @@ export const newTransform = transforms => selectors => event =>
     }
   )
 
+export const getTransformMaps = selectors => {
+  
+}
+
 // TODO (cw|12.5.2017) we want to be able to merge the transforms of pre-existing svg elements
 // into newly created ones. For example, if we have a pre-existing timeline and we have already
 // scrolled and re-scaled, then we want any newly added tracks to be added with the same translation

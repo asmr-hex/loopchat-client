@@ -116,7 +116,10 @@ export class InputControlPanel extends Component {
             onMouseLeave={(e) => this.updateItemColors(e, audioIconId, yellow)}
             />
           </IconMenu>
-          <IconButton tooltip={collapsed ? 'expand' : 'collapse'} onClick={() => this.expandCollapse()}>
+          <IconButton
+            tooltip={collapsed ? 'expand' : 'collapse'}
+            onClick={() => this.expandCollapse()}
+            >
             {collapsed ? <ExpandIcon color={blue} hoverColor={green}/> : <CollapseIcon color={blue} hoverColor={green}/>}
           </IconButton>
         </div>

@@ -1,8 +1,9 @@
 import React, {Component} from 'react'
-import {object, bool} from 'prop-types'
+import {object, bool, string} from 'prop-types'
 import {ceil, floor, map, range} from 'lodash'
 import css from './index.css'
 import {timeAxisHeight} from '../input/index.css'
+import {Scrubber} from './scrubber'
 import {
   DEFAULT_TIMELINE_LENGTH,
   DEFAULT_UNIT_LENGTH_PER_SECOND,
@@ -14,6 +15,7 @@ import {midGrey, lightGrey} from '../../../../styles/palette.css'
 
 export class TimeAxis extends Component {
   static propTypes = {
+    timelineId: string.isRequired,
     show: bool,
     style: object,
   }
@@ -70,6 +72,7 @@ export class TimeAxis extends Component {
   }
 
   render() {
+    const {timelineId} = this.props
 
     return (
       <div className={css.timelineAxisContainer}>
@@ -83,6 +86,7 @@ export class TimeAxis extends Component {
               fill={midGrey}
               />
             {this.renderTicks()}
+            <Scrubber timelineId={timelineId} type={'circle'}/>
           </g>
         </svg>
       </div>

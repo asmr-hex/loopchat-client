@@ -10,6 +10,7 @@ import {
 import {KeyboardUnderlay} from '../underlay/keyboard'
 import {TimeGrid} from '../underlay/timeGrid'
 import {MidiNotes} from '../midi/notes'
+import {Scrubber} from '../scrubber'
 import css from './index.css'
 import {trackHeightBasis} from '../../input/index.css'
 import {
@@ -31,6 +32,7 @@ const mapStateToProps = (state, ownProps) => ({
 export class MidiTrack extends Component {
   static propTypes = {
     id: string.isRequired,
+    timelineId: string.isRequired,
   }
 
   constructor(props) {
@@ -51,7 +53,7 @@ export class MidiTrack extends Component {
   }
 
   render() { 
-    const {id} = this.props
+    const {id, timelineId} = this.props
     
     return (
       <div className={css.timelineTrackContainer}>
@@ -59,6 +61,7 @@ export class MidiTrack extends Component {
           <g className={'track'} id={`track-${id}`} ref={(elem) => {this.trackElement = elem}}>
             <KeyboardUnderlay show={true}/>
             <TimeGrid show={true}/>
+            <Scrubber timelineId={timelineId}/>
           </g>
         </svg>
       </div>

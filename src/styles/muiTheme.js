@@ -6,6 +6,6 @@ import {black, white} from './palette.css'
 export const wwvvMuiTheme = getMuiTheme({
   fontFamily: 'Share Techno Mono, monospace',
   palette: {canvasColor: '#00000000'},
-  tooltip: {rippleBackgroundColor: black, color: white},
+  tooltip: {rippleBackgroundColor: black, color: white, },
 })
 
