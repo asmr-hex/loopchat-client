@@ -56,11 +56,11 @@ export class Scrubber extends Component {
   }
 
   componentDidMount() {
-    this.registerDragHandler(this.onDrag)
+    this.registerDragHandler(this.onDrag, () => this.state.playing)
   }
   
   componentDidUpdate() {
-    this.registerDragHandler(this.onDrag)
+    this.registerDragHandler(this.onDrag, () => this.state.playing)
     
     // if no state change has occurred, do nothing
     if (this.state.playing === this.props.playing) return
@@ -72,14 +72,20 @@ export class Scrubber extends Component {
     // if (!this.props.playing) this.stopPlayback()
   }
 
-  registerDragHandler(transform) {
-    const glub = debounce(() => console.log('OK'), 250) // TODO (cw|12.8.2017) use this to debounce dispatching update scrubber time to redux store.
+  registerDragHandler(transform, isPlaying) {
     selectAll('.scrubber').each(function() {
       const element = select(this)
 
       const f = scrubber => drag().on('drag', () => {
+
+        // stop animation
+        if (isPlaying()) stopScrubber()
+        
         transform(currentEvent)
-        glub()
+      }).on('end', () => {
+        console.log('DISPATCH UPDATED SCRUBBER TIME')
+
+        if (isPlaying()) startScrubber()
       })
       
       element.call(f(element))
@@ -89,27 +95,44 @@ export class Scrubber extends Component {
   render() {
     const {time, style, type} = this.props
     const glowFilter = 'scrubber-glow-filter'
-    
+
+    // add a transparent line which is bigger to increase mouse click hit area
     const line = (
-      <line
-        className={'scrubber'}
-        x1={time * DEFAULT_UNIT_LENGTH_PER_SECOND}
-        y1={0}
-        x2={time * DEFAULT_UNIT_LENGTH_PER_SECOND}
-        y2={DEFAULT_UNIT_HEIGHT_PER_KBD_NOTE * MIDI_NOTE_MAX}
-        style={{...style, filter: `url(#${glowFilter})`}}
-        />
+      <g className={'scrubber'} style={{cursor: 'move'}}>
+        <line
+          x1={time * DEFAULT_UNIT_LENGTH_PER_SECOND}
+          y1={0}
+          x2={time * DEFAULT_UNIT_LENGTH_PER_SECOND}
+          y2={DEFAULT_UNIT_HEIGHT_PER_KBD_NOTE * MIDI_NOTE_MAX}
+          style={{...style, filter: `url(#${glowFilter})`}}
+          />
+        <line
+          x1={time * DEFAULT_UNIT_LENGTH_PER_SECOND}
+          y1={0}
+          x2={time * DEFAULT_UNIT_LENGTH_PER_SECOND}
+          y2={DEFAULT_UNIT_HEIGHT_PER_KBD_NOTE * MIDI_NOTE_MAX}
+          style={{...style, stroke: '#00000000', strokeOpactiy: 0, strokeWidth: 10}}
+          />
+      </g>
     )
 
+    // add a transparent circle which is bigger to increase mouse click hit area
     const radius = 0.15 * parseFloat(timeAxisHeight)
     const circle = (
-      <circle
-        className={'scrubber'}
-        cx={time * DEFAULT_UNIT_LENGTH_PER_SECOND}
-        cy={parseFloat(timeAxisHeight) - radius}
-        r={radius}
-        style={{...style, filter: `url(#${glowFilter})`}}
-        />
+      <g className={'scrubber'} style={{cursor: 'move'}}>
+        <circle
+          cx={time * DEFAULT_UNIT_LENGTH_PER_SECOND}
+          cy={parseFloat(timeAxisHeight) - radius}
+          r={radius}
+          style={{...style, filter: `url(#${glowFilter})`}}
+          />
+        <circle
+          cx={time * DEFAULT_UNIT_LENGTH_PER_SECOND}
+          cy={parseFloat(timeAxisHeight) - radius}
+          r={2*radius}
+          style={{...style, fill: '#00000000', stroke: '#00000000', fillOpacity: 0}}
+          />
+      </g>
     )
     
     return (
