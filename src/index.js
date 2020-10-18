@@ -16,7 +16,7 @@ import {wwvvMuiTheme} from './styles/muiTheme'
 
 
 // setup redux store
-let store = createStore(
+let slew = createslew(
   reducers,
   composeWithDevTools( // TODO (cw|5.23.2017) parameterize when we are wrapping the store in the redux dev tools extension
     applyMiddleware(thunk, socketMiddleware, midiMiddleware),
